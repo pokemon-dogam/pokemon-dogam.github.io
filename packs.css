@@ -14,6 +14,17 @@
 .pack-art{position:relative;display:grid;place-items:center;height:194px;overflow:hidden;background:radial-gradient(circle at 50% 42%,#fff 0 36%,#f5f7fb 70%,#edf1f7 100%)}
 .pack-art::after{content:"";position:absolute;left:15%;right:15%;bottom:13px;height:14px;border-radius:50%;background:rgba(23,35,63,.12);filter:blur(8px);opacity:1}
 .pack-image{position:relative;z-index:1;display:block;width:126px;height:161px;background-image:url("./assets/packs/pack-sprite.webp?v=20260725"),linear-gradient(135deg,var(--pack-a),var(--pack-b));background-repeat:no-repeat;background-size:1000% 700%,100% 100%;background-position:var(--sprite-x) var(--sprite-y),center;filter:drop-shadow(0 8px 9px rgba(23,35,63,.20));opacity:1;transition:filter .2s ease}
+.pack-image.is-promo,.pack-dialog-image.is-promo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;border:1px solid rgba(255,255,255,.42);border-radius:7px 7px 5px 5px;background-image:linear-gradient(115deg,rgba(255,255,255,.04) 0 34%,rgba(255,255,255,.27) 43%,rgba(255,255,255,.06) 51% 68%,rgba(255,255,255,.2) 75%,rgba(255,255,255,.04) 84%),repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,rgba(0,0,0,.035) 1px 3px),linear-gradient(145deg,var(--pack-a),var(--pack-b));background-position:center;background-size:auto;color:#fff;text-align:center;box-shadow:inset 0 8px 0 rgba(255,255,255,.12),inset 0 -8px 0 rgba(0,0,0,.1)}
+.pack-image.is-promo::before,.pack-image.is-promo::after,.pack-dialog-image.is-promo::before,.pack-dialog-image.is-promo::after{content:"";position:absolute;z-index:0;left:0;right:0;height:7px;background:repeating-linear-gradient(0deg,rgba(255,255,255,.52) 0 1px,rgba(20,28,45,.22) 1px 2px)}
+.pack-image.is-promo::before,.pack-dialog-image.is-promo::before{top:4px}
+.pack-image.is-promo::after,.pack-dialog-image.is-promo::after{bottom:4px}
+.promo-pack-hole,.promo-pack-brand,.promo-pack-series,.promo-pack-title,.promo-pack-volume,.promo-pack-not-for-sale{position:relative;z-index:1;display:block}
+.promo-pack-hole{width:17px;height:7px;margin:0 auto 7px;border-radius:999px;background:rgba(21,30,48,.34);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.promo-pack-brand{font-size:.43rem;font-weight:900;letter-spacing:.075em;opacity:.88}
+.promo-pack-series{max-width:86%;font-size:.68rem;line-height:1.15;text-shadow:0 1px 3px rgba(0,0,0,.28)}
+.promo-pack-title{font-size:.76rem;font-weight:900;line-height:1.12;letter-spacing:-.04em}
+.promo-pack-volume{margin-top:2px;padding:3px 9px;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:rgba(21,30,48,.19);font-size:.65rem;line-height:1}
+.promo-pack-not-for-sale{margin-top:4px;font-size:.46rem;font-weight:800;letter-spacing:.12em;opacity:.78}
 .pack-card.is-missing .pack-image{filter:grayscale(1) drop-shadow(0 7px 8px rgba(23,35,63,.12));opacity:.42}
 .pack-card.is-missing .pack-art::after{opacity:.45}
 .pack-card-body{padding:14px 15px 16px;border-top:1px solid rgba(223,228,238,.8)}
@@ -25,6 +36,13 @@
 .pack-dialog{width:min(680px,calc(100% - 32px))}
 .pack-dialog-image-wrap{min-height:420px}
 .pack-dialog-image{display:block;width:220px;height:281px;background-image:url("./assets/packs/pack-sprite.webp?v=20260725"),linear-gradient(135deg,var(--pack-a),var(--pack-b));background-repeat:no-repeat;background-size:1000% 700%,100% 100%;background-position:var(--sprite-x) var(--sprite-y),center;filter:drop-shadow(0 16px 18px rgba(23,35,63,.24));transition:filter .2s ease,opacity .2s ease}
+.pack-dialog-image.is-promo{display:flex;gap:7px;filter:drop-shadow(0 16px 18px rgba(23,35,63,.24))}
+.pack-dialog-image.is-promo .promo-pack-hole{width:29px;height:11px;margin-bottom:14px}
+.pack-dialog-image.is-promo .promo-pack-brand{font-size:.72rem}
+.pack-dialog-image.is-promo .promo-pack-series{font-size:1.08rem}
+.pack-dialog-image.is-promo .promo-pack-title{font-size:1.25rem}
+.pack-dialog-image.is-promo .promo-pack-volume{padding:5px 15px;font-size:1rem}
+.pack-dialog-image.is-promo .promo-pack-not-for-sale{font-size:.68rem}
 .pack-dialog-image-wrap.is-missing .pack-dialog-image{filter:grayscale(1) drop-shadow(0 14px 16px rgba(23,35,63,.14));opacity:.55}
 @media(max-width:1050px){.pack-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.pack-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pack-art{height:170px}.pack-image{width:108px;height:138px}.pack-card-body{padding:12px}.pack-filter-panel{padding:14px}}
