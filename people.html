@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="포켓몬 게임 1세대부터 9세대까지 주요 주인공, 라이벌, 관장, 챔피언, 악의 조직 인물을 정리한 인물도감"
+    />
+    <meta name="theme-color" content="#17233f" />
+    <title>인물도감 | MY POKÉMON DEX</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=20260730-3" />
+    <link rel="stylesheet" href="./legal.css?v=20260806-1" />
+    <link rel="stylesheet" href="./people.css?v=20260810-1" />
+    <script src="./image-protection.js?v=20260806-1" defer></script>
+    <script src="./legal.js?v=20260806-1" defer></script>
+    <script src="./people.js?v=20260810-1" defer></script>
+  </head>
+  <body data-page="people">
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="MY POKÉMON DEX 홈">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-copy">
+          <strong>MY POKÉMON DEX</strong>
+          <small>COLLECTION ARCHIVE</small>
+        </span>
+      </a>
+      <span class="header-chip">PUBLIC VIEW</span>
+    </header>
+
+    <div class="site-layout">
+      <aside class="sidebar" aria-label="도감 메뉴">
+        <div class="sidebar-label">MY COLLECTIONS</div>
+        <nav class="collection-nav">
+          <a class="collection-link" href="./">
+            <span class="collection-icon" aria-hidden="true">DB</span>
+            <span><strong>통합 대시보드</strong><small>ALL COLLECTIONS</small></span>
+          </a>
+          <a class="collection-link" href="./national.html">
+            <span class="collection-icon" aria-hidden="true">01</span>
+            <span><strong>전국도감</strong><small>1세대–9세대</small></span>
+          </a>
+          <a class="collection-link" href="./packs.html">
+            <span class="collection-icon" aria-hidden="true">02</span>
+            <span><strong>팩 전종수집</strong><small>S · SV · M · PROMO</small></span>
+          </a>
+          <a class="collection-link" href="./artists.html">
+            <span class="collection-icon" aria-hidden="true">03</span>
+            <span><strong>작가 도감</strong><small>29 ARTISTS</small></span>
+          </a>
+          <a class="collection-link" href="./series.html">
+            <span class="collection-icon" aria-hidden="true">04</span>
+            <span><strong>시리즈 도감</strong><small>31 SETS</small></span>
+          </a>
+          <a class="collection-link" href="./pokemon-collections.html">
+            <span class="collection-icon" aria-hidden="true">05</span>
+            <span><strong>포켓몬 컬렉션</strong><small>47 POKÉMON</small></span>
+          </a>
+          <a class="collection-link" href="./ar.html">
+            <span class="collection-icon collection-icon--ar" aria-hidden="true">06</span>
+            <span><strong>AR 전종도감</strong><small>SV · M · 498 CARDS</small></span>
+          </a>
+          <a class="collection-link is-active" href="./people.html" aria-current="page">
+            <span class="collection-icon collection-icon--red" aria-hidden="true">07</span>
+            <span><strong>인물도감</strong><small>TRAINER ARCHIVE</small></span>
+          </a>
+        </nav>
+      </aside>
+
+      <main id="main-content" class="main-content">
+        <section class="hero people-hero" aria-labelledby="page-title">
+          <div class="hero-glow hero-glow--one" aria-hidden="true"></div>
+          <div class="hero-glow hero-glow--two" aria-hidden="true"></div>
+          <div class="hero-content">
+            <p class="eyebrow">TRAINER ARCHIVE · COLLECTION 07</p>
+            <h1 id="page-title">인물도감</h1>
+            <p class="hero-description">
+              1세대부터 9세대까지,<br />게임 속 주요 인물과 포켓몬 카드를 함께 살펴보는 아카이브
+            </p>
+          </div>
+          <div class="hero-progress" aria-label="인물 카드 확인 현황">
+            <div class="progress-ring" id="people-progress-ring" aria-hidden="true">
+              <div><strong id="people-rate">—</strong><span>VERIFIED</span></div>
+            </div>
+            <div class="hero-progress-copy">
+              <span>카드 확인 현황</span>
+              <strong>
+                <b id="people-confirmed">—</b>
+                <small>/ <span id="people-total">—</span>명</small>
+              </strong>
+              <p>추가 확인 <b id="people-unconfirmed">—</b>명</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid people-stats-grid" aria-label="인물도감 요약">
+          <article class="stat-card stat-card--owned">
+            <span class="stat-icon" aria-hidden="true">人</span>
+            <div><span>등록 인물</span><strong><b id="stat-people-total">—</b><small>명</small></strong></div>
+          </article>
+          <article class="stat-card stat-card--rate">
+            <span class="stat-icon" aria-hidden="true">✓</span>
+            <div><span>카드 확인 완료</span><strong><b id="stat-people-confirmed">—</b><small>명</small></strong></div>
+          </article>
+          <article class="stat-card stat-card--missing">
+            <span class="stat-icon" aria-hidden="true">?</span>
+            <div><span>카드 추가 확인</span><strong><b id="stat-people-unconfirmed">—</b><small>명</small></strong></div>
+          </article>
+        </section>
+
+        <section class="catalog-panel" aria-labelledby="people-catalog-title">
+          <div class="catalog-heading people-catalog-heading">
+            <div>
+              <p class="section-kicker">TRAINER CATALOG</p>
+              <h2 id="people-catalog-title">세대별 인물 목록</h2>
+            </div>
+            <p class="catalog-caption">인물을 누르면 역할과 확인된 카드를 볼 수 있습니다.</p>
+          </div>
+
+          <div class="people-generation-overview" aria-label="세대별 등록 인물 수">
+            <div class="people-overview-heading">
+              <span class="filter-label">세대별 인물 수</span>
+              <small>세대를 누르면 바로 필터링됩니다.</small>
+            </div>
+            <div id="people-generation-summary" class="people-generation-summary"></div>
+          </div>
+
+          <div class="filter-panel people-filter-panel">
+            <label class="search-field">
+              <span class="search-icon" aria-hidden="true"></span>
+              <span class="sr-only">인물 검색</span>
+              <input
+                id="people-search"
+                type="search"
+                autocomplete="off"
+                placeholder="한국어 또는 영어 인물명 검색"
+              />
+              <kbd>⌘ K</kbd>
+            </label>
+            <div class="people-filter-groups">
+              <div class="filter-group people-filter-group">
+                <span class="filter-label">세대</span>
+                <div
+                  id="people-generation-filters"
+                  class="pill-group people-pills"
+                  role="group"
+                  aria-label="세대 선택"
+                ></div>
+              </div>
+              <div class="filter-group people-filter-group">
+                <span class="filter-label">분류</span>
+                <div
+                  id="people-category-filters"
+                  class="pill-group people-pills people-category-pills"
+                  role="group"
+                  aria-label="인물 분류 선택"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-bar">
+            <p>
+              검색 결과 <strong id="people-result-count">—</strong>명
+              <span id="people-active-filter-label"></span>
+            </p>
+            <button id="people-reset-filters" class="text-button" type="button" hidden>
+              필터 초기화
+            </button>
+          </div>
+
+          <div id="people-grid" class="card-grid people-grid" aria-live="polite" aria-busy="true"></div>
+
+          <div id="people-empty" class="empty-state" hidden>
+            <span class="empty-ball" aria-hidden="true"><span></span></span>
+            <h3>검색 결과가 없습니다</h3>
+            <p>인물 이름이나 필터를 바꿔보세요.</p>
+            <button class="primary-button" type="button" data-people-reset>전체 인물 보기</button>
+          </div>
+
+          <div class="load-more-wrap">
+            <p id="people-visible-count" class="visible-count"></p>
+            <button id="people-load-more" class="primary-button" type="button" hidden>
+              인물 더 보기
+            </button>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <div class="site-footer-main">
+            <nav class="site-footer-links" aria-label="정책 및 문의">
+              <a href="./privacy.html">개인정보처리방침</a>
+              <a href="./terms.html">이용약관</a>
+              <a href="mailto:pokemon.dogam.support@gmail.com">문의·삭제 요청</a>
+              <a href="https://pokemoncard.co.kr/" target="_blank" rel="noopener noreferrer">포켓몬 카드 공식 사이트 ↗</a>
+            </nav>
+            <p>본 사이트는 개인이 운영하는 비공식 팬 사이트이며, 포켓몬 관련 권리자 및 ㈜포켓몬코리아와 제휴·승인·후원 관계가 없습니다.</p>
+            <p>Pokémon 및 관련 명칭·상표·캐릭터, 카드 이미지와 카드 텍스트의 권리는 각 권리자에게 있습니다. ©<span data-current-year>2026</span> Pokémon. ©1995–<span data-current-year>2026</span> Nintendo/Creatures Inc./GAME FREAK inc.</p>
+          </div>
+          <p class="site-footer-note">영문 TCG 데이터 기준 · 미확인은 추가 검수 대상입니다.</p>
+        </footer>
+      </main>
+    </div>
+
+    <dialog id="people-dialog" class="card-dialog people-dialog" aria-labelledby="people-dialog-name-ko">
+      <button id="people-dialog-close" class="dialog-close" type="button" aria-label="닫기">×</button>
+      <div id="people-dialog-visual" class="dialog-card-image people-dialog-visual"></div>
+      <div class="dialog-card-copy people-dialog-copy">
+        <div class="dialog-badges">
+          <span id="people-dialog-generation" class="number-badge"></span>
+          <span id="people-dialog-category" class="people-category-badge"></span>
+          <span id="people-dialog-card-status" class="people-card-status"></span>
+        </div>
+        <h2 id="people-dialog-name-ko"></h2>
+        <p id="people-dialog-name-en" class="dialog-name-en"></p>
+        <dl class="dialog-details people-dialog-details">
+          <div><dt>등장 세대</dt><dd id="people-dialog-generation-detail"></dd></div>
+          <div><dt>역할</dt><dd id="people-dialog-role"></dd></div>
+          <div><dt>소속·지역</dt><dd id="people-dialog-affiliation"></dd></div>
+          <div><dt>대표 카드</dt><dd id="people-dialog-representative"></dd></div>
+        </dl>
+        <section class="people-card-archive" aria-labelledby="people-card-archive-title">
+          <div class="people-card-archive-heading">
+            <h3 id="people-card-archive-title">확인된 포켓몬 카드</h3>
+            <span id="people-dialog-card-count"></span>
+          </div>
+          <div id="people-dialog-card-list" class="people-card-list"></div>
+          <p id="people-dialog-card-empty" class="people-card-empty" hidden>
+            영문 카드명 기준으로 대표 이미지를 아직 연결하지 못했습니다. 일본·한국 한정 카드와 카드 일러스트 속 등장 여부는 추가 검수가 필요합니다.
+          </p>
+        </section>
+      </div>
+    </dialog>
+
+    <div id="people-error" class="app-error" role="alert" hidden>
+      <strong>인물도감 데이터를 불러오지 못했습니다.</strong>
+      <span>잠시 후 페이지를 새로고침해 주세요.</span>
+    </div>
+  </body>
+</html>
