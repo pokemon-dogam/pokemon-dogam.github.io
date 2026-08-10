@@ -3,10 +3,10 @@
 const SPRITE_COLUMNS = 10;
 const SPRITE_ROWS = 7;
 const FIREBASE_SDK_VERSION = "10.12.5";
-const PROMO_DATA_URL = "./data/promo-packs.json?v=20260810-2";
+const PROMO_DATA_URL = "./data/promo-packs.json?v=20260810-3";
 
 // 정규 확장팩 목록은 대시보드와 Google Sheets 동기화에서도 이 배열을 읽는다.
-// 프로모팩은 data/promo-packs.json에서 별도로 불러온다.
+// 프로모팩·단일 배포 카드는 data/promo-packs.json에서 별도로 불러온다.
 const packs = [
   ["S","소드","s1W",0],["S","실드","s1H",0],["S","VMAX라이징","s1a",0],["S","반역크래시","s2",0],["S","폭염워커","s2a",0],["S","무한존","s3",0],["S","전설의 고동","s3a",0],["S","앙천의 볼트태클","s4",0],["S","샤이니스타V","s4a",0],["S","일격마스터","s5I",0],["S","연격마스터","s5R",0],["S","쌍벽의 파이터","s5a",0],["S","백은의 랜스","s6H",0],["S","칠흑의 가이스트","s6K",0],["S","이브이 히어로즈","s6a",0],["S","마천퍼펙트","s7D",0],["S","창공스트림","s7R",0],["S","퓨전아츠","s8",0],["S","25th","s8a",0],["S","VMAX 클라이맥스","s8b",0],["S","스타버스","s9",0],["S","배틀리전","s9a",0],["S","스페이스저글러","s10P",0],["S","타임게이저","s10D",0],["S","다크판타스마","s10a",0],["S","Pokémon GO","s10b",0],["S","로스트어비스","s11",0],["S","백열의 아르카나","s11a",0],["S","패러다임트리거","s12",0],["S","VSTAR유니버스","s12a",0],
   ["SV","스칼렛ex","sv1S",1],["SV","바이올렛ex","sv1V",0],["SV","트리플렛비트","sv1a",1],["SV","클레이버스트","sv2D",0],["SV","스노해저드","sv2P",0],["SV","포켓몬카드 151","sv2a",0],["SV","흑염의 지배자","sv3",1],["SV","레이징서프","sv3a",1],["SV","고대의 포효","sv4K",0],["SV","미래의 일섬","sv4M",0],["SV","샤이니트레저ex","sv4a",0],["SV","와일드포스","sv5K",1],["SV","사이버저지","sv5M",0],["SV","크림슨헤이즈","sv5a",1],["SV","변환의 가면","sv6",0],["SV","나이트원더러","sv6a",1],["SV","스텔라미라클","sv7",0],["SV","낙원드래고나","sv7a",1],["SV","초전브레이커","sv8",1],["SV","테라스탈페스ex","sv8a",0],["SV","배틀파트너즈","sv9",1],["SV","열풍의 아레나","sv9a",0],["SV","로켓단의 영광","sv10",1],["SV","블랙볼트","sv11B",0],["SV","화이트플레어","sv11W",0],
@@ -135,6 +135,8 @@ function sanitizePromoPack(value, custom = false) {
 
   return {
     id,
+    kind: value.kind === "card" ? "card" : "pack",
+    cardNumber: safeText(value.cardNumber, 30),
     name,
     era: allowedPromoEras.has(eraValue) ? eraValue : "OTHER",
     year,
@@ -144,7 +146,7 @@ function sanitizePromoPack(value, custom = false) {
     description: safeText(value.description, 300),
     note: safeText(value.note, 500),
     keywords: Array.isArray(value.keywords)
-      ? value.keywords.slice(0, 20).map((item) => safeText(item, 50)).filter(Boolean)
+      ? value.keywords.slice(0, 30).map((item) => safeText(item, 100)).filter(Boolean)
       : [],
     source: validHttpUrl(value.source),
     custom: Boolean(custom),
@@ -218,15 +220,17 @@ function applyPackDocument(data = {}, fallbackOwnedCodes = []) {
 
 async function loadPromoMaster() {
   const response = await fetch(PROMO_DATA_URL, { cache: "no-store" });
-  if (!response.ok) throw new Error(`프로모팩 DB HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`프로모 DB HTTP ${response.status}`);
   const data = await response.json();
-  if (!Array.isArray(data.packs)) throw new Error("프로모팩 DB 형식이 올바르지 않습니다.");
+  if (!Array.isArray(data.packs) || (data.cards != null && !Array.isArray(data.cards))) {
+    throw new Error("프로모 DB 형식이 올바르지 않습니다.");
+  }
 
   const unique = new Map();
-  data.packs.forEach((item) => {
+  [...data.packs, ...(data.cards || [])].forEach((item) => {
     const pack = sanitizePromoPack(item, false);
     if (!pack || unique.has(pack.id)) {
-      throw new Error(`프로모팩 DB 항목을 확인해 주세요: ${item?.id || "unknown"}`);
+      throw new Error(`프로모 DB 항목을 확인해 주세요: ${item?.id || "unknown"}`);
     }
     unique.set(pack.id, pack);
   });
@@ -725,9 +729,9 @@ function promoPaletteFor(pack) {
 
 function createPromoFallback(pack) {
   const artwork = document.createElement("span");
-  artwork.className = "promo-artwork";
+  artwork.className = `promo-artwork${pack.kind === "card" ? " is-single-card" : ""}`;
   artwork.setAttribute("role", "img");
-  artwork.setAttribute("aria-label", `${pack.name} 기본 프로모팩 이미지`);
+  artwork.setAttribute("aria-label", `${pack.name} 기본 프로모 이미지`);
   const colors = promoPaletteFor(pack);
   artwork.style.setProperty("--pack-a", colors[0]);
   artwork.style.setProperty("--pack-b", colors[1]);
@@ -743,7 +747,7 @@ function createPromoFallback(pack) {
   series.textContent = `${promoEraLabels[pack.era]} PROMO`;
   const title = document.createElement("span");
   title.className = "promo-pack-title";
-  title.textContent = "프로모 카드 팩";
+  title.textContent = pack.kind === "card" ? "프로모 카드" : "프로모 카드 팩";
   const volume = document.createElement("b");
   volume.className = "promo-pack-volume";
   volume.textContent = pack.volume > 0
@@ -761,7 +765,7 @@ function createPromoVisual(pack) {
   visual.className = "promo-card-art";
   const badge = document.createElement("span");
   badge.className = "promo-badge";
-  badge.textContent = "PROMO";
+  badge.textContent = pack.kind === "card" ? "배포 카드" : "프로모팩";
   if (pack.image) {
     const image = document.createElement("img");
     image.className = "promo-pack-photo";
@@ -795,7 +799,7 @@ function updatePromoAction(button, pack) {
 
 async function togglePromoPack(pack, button) {
   if (!canEditPackCollection()) {
-    alert("Google 로그인 후 내 프로모팩 컬렉션을 변경할 수 있습니다.");
+    alert("Google 로그인 후 내 프로모 컬렉션을 변경할 수 있습니다.");
     return;
   }
   button.disabled = true;
@@ -824,7 +828,7 @@ async function togglePromoPack(pack, button) {
     renderPromo();
   } catch (error) {
     console.error(error);
-    alert(error.message || "프로모팩 컬렉션을 저장하지 못했습니다.");
+    alert(error.message || "프로모 컬렉션을 저장하지 못했습니다.");
     updatePromoAction(button, pack);
   }
 }
@@ -844,7 +848,11 @@ function createPromoCard(pack, collectionView = false) {
   top.className = "promo-card-top";
   const meta = document.createElement("span");
   meta.className = "promo-card-meta";
-  meta.textContent = `${promoEraLabels[pack.era]} · ${pack.year || "연도 미확인"}`;
+  meta.textContent = [
+    promoEraLabels[pack.era],
+    pack.cardNumber,
+    pack.year || "연도 미확인"
+  ].filter(Boolean).join(" · ");
   top.append(meta);
   if (pack.custom) {
     const custom = document.createElement("span");
@@ -864,7 +872,7 @@ function createPromoCard(pack, collectionView = false) {
   type.className = "promo-type-label";
   type.textContent = promoTypeLabels[pack.type] || promoTypeLabels.other;
   const description = document.createElement("p");
-  description.textContent = pack.description || "사용자가 직접 등록한 프로모팩입니다.";
+  description.textContent = pack.description || "사용자가 직접 등록한 프로모 항목입니다.";
   body.append(top, name, type, description);
 
   if (collectionView && pack.note) {
@@ -896,12 +904,14 @@ function createPromoCard(pack, collectionView = false) {
 }
 
 function promoMatches(pack) {
+  const normalized = normalizeSearch(promoQuery);
+  if (!normalized) return false;
   if (promoEra !== "all" && pack.era !== promoEra) return false;
   if (promoType !== "all" && pack.type !== promoType) return false;
-  const normalized = normalizeSearch(promoQuery);
-  if (!normalized) return true;
   return normalizeSearch([
     pack.name,
+    pack.cardNumber,
+    pack.kind === "card" ? "프로모 카드 단일 카드 배포 카드" : "프로모팩 프로모 팩",
     pack.era,
     promoEraLabels[pack.era],
     pack.year,
@@ -935,10 +945,35 @@ function renderMyPromoCollection() {
 }
 
 function renderPromoResults() {
-  const shown = allPromoPacks().filter(promoMatches);
+  const normalized = normalizeSearch(promoQuery);
   const host = $("promo-results");
+  const idle = $("promo-search-idle");
+  const resultsBar = document.querySelector(".promo-results-bar");
+
+  if (!normalized) {
+    host.replaceChildren();
+    host.hidden = true;
+    idle.hidden = false;
+    resultsBar.hidden = true;
+    $("promo-result-count").textContent = "0";
+    $("promo-empty").hidden = true;
+    return;
+  }
+
+  const shown = allPromoPacks().filter(promoMatches).sort((a, b) => {
+    const score = (pack) => {
+      const name = normalizeSearch(pack.name);
+      const number = normalizeSearch(pack.cardNumber);
+      if (name === normalized || number === normalized) return 0;
+      if (name.startsWith(normalized) || number.startsWith(normalized)) return 1;
+      return 2;
+    };
+    return score(a) - score(b) || (b.year || 0) - (a.year || 0) || a.name.localeCompare(b.name, "ko");
+  });
   host.replaceChildren(...shown.map((pack) => createPromoCard(pack, false)));
   host.hidden = shown.length === 0;
+  idle.hidden = true;
+  resultsBar.hidden = false;
   $("promo-result-count").textContent = shown.length;
   $("promo-empty").hidden = shown.length !== 0;
 }
@@ -951,7 +986,7 @@ function renderPromo() {
 
 function openPromoCreateDialog() {
   if (!canEditPackCollection()) {
-    alert("Google 로그인 후 새로운 프로모팩을 등록할 수 있습니다.");
+    alert("Google 로그인 후 새 프로모를 직접 등록할 수 있습니다.");
     return;
   }
   const form = $("promo-create-form");
@@ -991,11 +1026,13 @@ async function saveCustomPromo(event) {
   const form = event.currentTarget;
   if (!form.reportValidity()) return;
   if (customPromoPacks.length >= 200) {
-    setPromoCreateMessage("직접 등록 프로모팩은 계정당 최대 200종까지 저장할 수 있습니다.", "error");
+    setPromoCreateMessage("직접 등록 프로모는 계정당 최대 200종까지 저장할 수 있습니다.", "error");
     return;
   }
   const draft = sanitizePromoPack({
     id: createCustomPromoId(),
+    kind: $("promo-create-kind").value,
+    cardNumber: $("promo-create-card-number").value,
     name: $("promo-create-name").value,
     era: $("promo-create-era").value,
     year: $("promo-create-year").value,
@@ -1003,7 +1040,11 @@ async function saveCustomPromo(event) {
     image: $("promo-create-image").value,
     description: $("promo-create-description").value,
     note: $("promo-create-note").value,
-    keywords: [$("promo-create-name").value, $("promo-create-description").value],
+    keywords: [
+      $("promo-create-name").value,
+      $("promo-create-card-number").value,
+      $("promo-create-description").value
+    ],
     createdAt: new Date().toISOString()
   }, true);
 
@@ -1011,18 +1052,24 @@ async function saveCustomPromo(event) {
     setPromoCreateMessage("입력 내용을 확인해 주세요.", "error");
     return;
   }
-  const duplicate = allPromoPacks().some(
-    (pack) => normalizeSearch(pack.name) === normalizeSearch(draft.name)
-  );
+  const draftNumber = normalizeSearch(draft.cardNumber);
+  const duplicate = allPromoPacks().some((pack) => {
+    const sameNumber = draftNumber && normalizeSearch(pack.cardNumber) === draftNumber;
+    const sameUnnumberedItem = !draftNumber && !pack.cardNumber
+      && normalizeSearch(pack.name) === normalizeSearch(draft.name)
+      && pack.era === draft.era
+      && pack.year === draft.year;
+    return sameNumber || sameUnnumberedItem;
+  });
   if (duplicate) {
-    setPromoCreateMessage("같은 이름의 프로모팩이 이미 있습니다. 검색 결과에서 등록해 주세요.", "error");
+    setPromoCreateMessage("같은 프로모가 이미 있습니다. 검색 결과에서 등록해 주세요.", "error");
     return;
   }
 
   const save = $("promo-create-save");
   save.disabled = true;
   save.textContent = "저장 중…";
-  setPromoCreateMessage("내 프로모팩 컬렉션에 저장하고 있습니다.", "loading");
+  setPromoCreateMessage("내 프로모 컬렉션에 저장하고 있습니다.", "loading");
   try {
     await enqueuePackWrite(async () => {
       const nextCustom = [...customPromoPacks, draft];
@@ -1044,7 +1091,7 @@ async function saveCustomPromo(event) {
     $("my-promo-title")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
   } catch (error) {
     console.error(error);
-    setPromoCreateMessage(error.message || "프로모팩을 저장하지 못했습니다.", "error");
+    setPromoCreateMessage(error.message || "프로모를 저장하지 못했습니다.", "error");
   } finally {
     save.disabled = false;
     save.textContent = "내 컬렉션에 저장";
@@ -1128,10 +1175,12 @@ async function bootstrapPackDex() {
   try {
     await loadPromoMaster();
   } catch (error) {
-    console.error("프로모팩 마스터 DB를 불러오지 못했습니다.", error);
+    console.error("프로모 마스터 DB를 불러오지 못했습니다.", error);
     $("promo-master-count").textContent = "0";
     $("promo-empty").hidden = false;
-    $("promo-empty").querySelector("h3").textContent = "프로모팩 DB를 불러오지 못했습니다";
+    $("promo-search-idle").hidden = true;
+    document.querySelector(".promo-results-bar").hidden = true;
+    $("promo-empty").querySelector("h3").textContent = "프로모 DB를 불러오지 못했습니다";
     $("promo-empty").querySelector("p").textContent = "잠시 후 페이지를 새로고침해 주세요.";
   }
   void initializePackFirebase();
