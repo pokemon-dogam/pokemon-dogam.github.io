@@ -765,6 +765,19 @@
     return Object.fromEntries(entries);
   }
 
+  async function syncCollectorProjection(category) {
+    try {
+      await window.CollectorPublicSync?.syncCollectionWithRetry?.({
+        db: firebase.db,
+        firestoreModule: firebase.firestoreModule,
+        user: currentUser,
+        collectionId: category,
+      });
+    } catch (error) {
+      console.warn(`${category} 공개 projection 갱신 실패`, error);
+    }
+  }
+
   function validKeys(catalogs) {
     const keys = Object.fromEntries(
       VALID_CATEGORIES.map((category) => [category, new Set()]),
@@ -805,6 +818,7 @@
     }
 
     let applied = 0;
+    const projectionCategories = [];
     for (const category of VALID_CATEGORIES) {
       const rows = changed[category];
       if (!rows.length) continue;
@@ -836,6 +850,7 @@
           },
           { merge: true },
         );
+        projectionCategories.push(category);
         applied += rows.length;
         continue;
       }
@@ -893,8 +908,13 @@
         },
         { merge: true },
       );
+      projectionCategories.push(category);
       applied += rows.length;
     }
+
+    await Promise.all(
+      projectionCategories.map((category) => syncCollectorProjection(category)),
+    );
 
     return { applied, skipped };
   }

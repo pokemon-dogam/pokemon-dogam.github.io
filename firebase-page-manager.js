@@ -20,6 +20,7 @@
   let accountProfile = { baseMode: "empty" };
   let remoteOverrides = {};
   let sharedViewActive = false;
+  let collectorPublicViewActive = false;
   let saveQueue = Promise.resolve();
   let resolveReady;
 
@@ -173,7 +174,8 @@
     const logout = panel.querySelector("#firebase-logout");
     const headerChip = document.querySelector(".header-chip");
     const shared = window.PokemonDexSharedReadonly;
-    sharedViewActive = Boolean(shared?.updateControl?.(currentUser));
+    sharedViewActive = collectorPublicViewActive
+      || Boolean(shared?.updateControl?.(currentUser));
 
     panel.classList.toggle("is-account", Boolean(currentUser));
     panel.classList.toggle("is-owner", isOwnerAccount(currentUser));
@@ -195,6 +197,14 @@
     if (error) {
       status.textContent = "Firebase 연결 오류 · 공개 도감";
       login.hidden = false;
+      logout.hidden = true;
+      return;
+    }
+
+    if (collectorPublicViewActive) {
+      status.textContent = window.CollectorPublicView?.authLabel?.("공개 도감 · 읽기 전용")
+        || "공개 도감 · 읽기 전용";
+      login.hidden = true;
       logout.hidden = true;
       return;
     }
@@ -346,7 +356,28 @@
 
       firebase = { auth, db, authModule, firestoreModule };
       currentUser = await firstAuthUser(auth, authModule);
-      if (currentUser) await loadAccountDocument(currentUser);
+      if (window.CollectorPublicView?.requested) {
+        collectorPublicViewActive = true;
+        sharedViewActive = true;
+        accountProfile = { baseMode: "empty" };
+        userDocumentRef = null;
+        try {
+          const context = await window.CollectorPublicView.loadProjection(
+            db,
+            firestoreModule,
+            mode,
+          );
+          remoteOverrides = window.CollectorPublicView.projectionOverrides(
+            context.projection,
+          );
+        } catch (error) {
+          remoteOverrides = {};
+          window.CollectorPublicView.showAccessError(error);
+          console.warn("공개 도감을 불러오지 못했습니다.", error);
+        }
+      } else if (currentUser) {
+        await loadAccountDocument(currentUser);
+      }
       updateAuthUi();
       resolveReady();
     } catch (error) {
@@ -454,6 +485,16 @@
 
       remoteOverrides = nextOverrides;
       notifyOwnerSheets(key);
+      try {
+        await window.CollectorPublicSync?.syncCollectionWithRetry?.({
+          db: firebase.db,
+          firestoreModule: firebase.firestoreModule,
+          user: currentUser,
+          collectionId: mode,
+        });
+      } catch (error) {
+        console.warn(`${page.documentId} 공개 projection 갱신 실패`, error);
+      }
       return remoteOverrides[key];
     };
 

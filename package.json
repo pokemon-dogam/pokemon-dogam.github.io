@@ -1,0 +1,21 @@
+{
+  "name": "pokemon-dogam-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:syntax && npm run test:registry && npm run test:ui && npm run test:rules:lint && npm run test:rules",
+    "test:syntax": "node scripts/check-static-site.mjs",
+    "test:registry": "node --test tests/collector-registry.test.mjs",
+    "test:ui": "node --test tests/collector-ui-contract.test.mjs",
+    "test:rules:lint": "eslint firestore.rules storage.rules",
+    "test:rules": "firebase emulators:exec --only firestore,storage --project demo-pokemon-dogam \"node --test tests/firestore.rules.test.mjs tests/storage.rules.test.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/eslint-plugin-security-rules": "0.0.2",
+    "@firebase/rules-unit-testing": "5.0.1",
+    "eslint": "9.36.0",
+    "firebase": "12.17.1",
+    "firebase-tools": "15.26.0"
+  }
+}
