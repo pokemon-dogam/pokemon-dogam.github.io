@@ -342,6 +342,35 @@
   font-size: 0.7rem;
 }
 
+.promo-search-idle {
+  display: grid;
+  min-height: 132px;
+  margin-top: 16px;
+  padding: 24px;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  border: 1px dashed #c9d5e3;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fbfcfe, #f5f8fc);
+  color: #778297;
+  text-align: center;
+}
+
+.promo-search-idle strong {
+  color: #33435d;
+  font-size: 0.9rem;
+}
+
+.promo-search-idle span {
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.promo-search-idle[hidden] {
+  display: none;
+}
+
 .promo-pack-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -412,6 +441,16 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+}
+
+.promo-artwork.is-single-card {
+  width: 120px;
+  height: 168px;
+  border-radius: 9px;
+}
+
+.promo-artwork.is-single-card .promo-pack-hole {
+  display: none;
 }
 
 .promo-artwork::before,
@@ -867,6 +906,10 @@
 
 @media print {
   .promo-search-panel,
+  .promo-search-idle,
+  .promo-results-bar,
+  #promo-results,
+  #promo-empty,
   .promo-create-open,
   .promo-collection-action,
   .promo-create-dialog {
