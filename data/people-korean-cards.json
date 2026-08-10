@@ -1,0 +1,2253 @@
+{
+  "red": [
+    {
+      "id": "kr-e31149a6-e2e2-44af-9e26-7a300ff3e0d0",
+      "name": "레드의 도전",
+      "nameEn": "Red's Challenge",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "191/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_191.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_191.png?w=512",
+      "source": "https://collectory.cc/cards/e31149a6-e2e2-44af-9e26-7a300ff3e0d0",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_191.png?w=512"
+    }
+  ],
+  "blue": [
+    {
+      "id": "kr-ace2e9e3-776e-4d7b-926f-3b1042287336",
+      "name": "그린의 전략",
+      "nameEn": "Greens Tactics",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "190/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_190.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_190.png?w=512",
+      "source": "https://collectory.cc/cards/ace2e9e3-776e-4d7b-926f-3b1042287336",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_190.png?w=512"
+    }
+  ],
+  "blaine": [
+    {
+      "id": "kr-70100465-732b-436f-9e4c-95be75594529",
+      "name": "강연의 단판승부",
+      "nameEn": "",
+      "set": "드래곤스톰",
+      "setCode": "BS2018005",
+      "number": "058/053",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6A/SM6A_058.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6A/SM6A_058.png?w=512",
+      "source": "https://collectory.cc/cards/70100465-732b-436f-9e4c-95be75594529",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6A/SM6A_058.png?w=512"
+    }
+  ],
+  "koga": [
+    {
+      "id": "kr-8225293b-ca42-4709-903b-686eb29cf3e9",
+      "name": "독수의 함정",
+      "nameEn": "Koga's Trap",
+      "set": "나이트유니슨",
+      "setCode": "BS2019003-kr",
+      "number": "063/055",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9A/SM9a_063.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9A/SM9a_063.png?w=512",
+      "source": "https://collectory.cc/cards/8225293b-ca42-4709-903b-686eb29cf3e9",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9A/SM9a_063.png?w=512"
+    }
+  ],
+  "lt-surge": [
+    {
+      "id": "kr-20bd8d2d-73d9-48bb-b9a6-08a50e9ccb73",
+      "name": "마티스의 거래",
+      "nameEn": "Lillie's U",
+      "set": "메가브레이브",
+      "setCode": "BS2025009",
+      "number": "091/063",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1L/M1L_091.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1L/M1L_091.png?w=512",
+      "source": "https://collectory.cc/cards/20bd8d2d-73d9-48bb-b9a6-08a50e9ccb73",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1L/M1L_091.png?w=512"
+    }
+  ],
+  "erika": [
+    {
+      "id": "kr-d2f90ce1-4297-455e-9d4d-10db65451ed0",
+      "name": "민화의 초대",
+      "nameEn": "Erika's Invitation",
+      "set": "포켓몬 카드 151",
+      "setCode": "BS2023014",
+      "number": "206/165",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_206.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_206.png?w=512",
+      "source": "https://collectory.cc/cards/d2f90ce1-4297-455e-9d4d-10db65451ed0",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_206.png?w=512"
+    }
+  ],
+  "brock": [
+    {
+      "id": "kr-09e82969-ec4d-449d-9963-8859749315ad",
+      "name": "웅의 스카우트",
+      "nameEn": "",
+      "set": "배틀파트너즈",
+      "setCode": "BS2025001",
+      "number": "123/100",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9/SV9_123.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9/SV9_123.png?w=512",
+      "source": "https://collectory.cc/cards/09e82969-ec4d-449d-9963-8859749315ad",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9/SV9_123.png?w=512"
+    }
+  ],
+  "misty": [
+    {
+      "id": "kr-9fce7878-b609-482b-840d-33a4fa49f59a",
+      "name": "이슬의 의욕",
+      "nameEn": "",
+      "set": "XY BREAK 베이스팩 20주년 기념",
+      "setCode": "BS2016009",
+      "number": "113/100",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/CP6/CP6_113.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/CP6/CP6_113.jpg?w=512",
+      "source": "https://collectory.cc/cards/9fce7878-b609-482b-840d-33a4fa49f59a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/CP6/CP6_113.jpg?w=512"
+    }
+  ],
+  "sabrina": [
+    {
+      "id": "kr-bae368aa-1c37-4b75-a256-9ac09af64e62",
+      "name": "초련의 암시",
+      "nameEn": "",
+      "set": "태그볼트",
+      "setCode": "BS2019001-kr",
+      "number": "109/095",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9/SM9_109.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9/SM9_109.png?w=512",
+      "source": "https://collectory.cc/cards/bae368aa-1c37-4b75-a256-9ac09af64e62",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM9/SM9_109.png?w=512"
+    }
+  ],
+  "giovanni": [
+    {
+      "id": "kr-d28c0a4d-b3a6-4018-89a1-aaae7db9f55d",
+      "name": "비주기의 카리스마",
+      "nameEn": "",
+      "set": "포켓몬 카드 151",
+      "setCode": "BS2023014",
+      "number": "207/165",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_207.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_207.png?w=512",
+      "source": "https://collectory.cc/cards/d28c0a4d-b3a6-4018-89a1-aaae7db9f55d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2a/SV2a_207.png?w=512"
+    }
+  ],
+  "ethan": [
+    {
+      "id": "kr-5c570ec2-25ef-4046-a3f9-13230b03ea54",
+      "name": "심향의 모험",
+      "nameEn": "",
+      "set": "열풍의 아레나",
+      "setCode": "BS2025005",
+      "number": "089/063",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9a/SV9a_089.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9a/SV9a_089.png?w=512",
+      "source": "https://collectory.cc/cards/5c570ec2-25ef-4046-a3f9-13230b03ea54",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV9a/SV9a_089.png?w=512"
+    }
+  ],
+  "jasmine": [
+    {
+      "id": "kr-42b1a09b-7149-444d-b8d8-4ea6af6cb008",
+      "name": "규리의 눈빛",
+      "nameEn": "",
+      "set": "스칼렛&바이올렛 확장팩 「초전브레이커」",
+      "setCode": "BS2024017",
+      "number": "134/106",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_134.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_134.png?w=512",
+      "source": "https://collectory.cc/cards/42b1a09b-7149-444d-b8d8-4ea6af6cb008",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_134.png?w=512"
+    }
+  ],
+  "whitney": [
+    {
+      "id": "kr-f04ecc58-273d-42e9-9387-db30c71a1fb2",
+      "name": "꼭두",
+      "nameEn": "Whitney",
+      "set": "버스트임팩트",
+      "setCode": "BS2018010-kr",
+      "number": "102/095",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0102.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0102.png?w=512",
+      "source": "https://collectory.cc/cards/f04ecc58-273d-42e9-9387-db30c71a1fb2",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0102.png?w=512"
+    }
+  ],
+  "janine": [
+    {
+      "id": "kr-f2492fc8-3b51-4238-b931-51678197e012",
+      "name": "도희의 비기",
+      "nameEn": "Janine's Secret Technique",
+      "set": "테라스탈 페스타 ex",
+      "setCode": "BS2024019",
+      "number": "228/187",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_228.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_228.png?w=512",
+      "source": "https://collectory.cc/cards/f2492fc8-3b51-4238-b931-51678197e012",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_228.png?w=512"
+    }
+  ],
+  "falkner": [
+    {
+      "id": "kr-28ead1b8-ecb2-492a-a79f-fef4c7b4ed3f",
+      "name": "비상",
+      "nameEn": "Falkner",
+      "set": "트리플렛비트",
+      "setCode": "BS2023010",
+      "number": "093/073",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_093.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_093.png?w=512",
+      "source": "https://collectory.cc/cards/28ead1b8-ecb2-492a-a79f-fef4c7b4ed3f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_093.png?w=512"
+    }
+  ],
+  "morty": [
+    {
+      "id": "kr-d308f6b5-3629-43b1-9dae-7ac4071ea2e3",
+      "name": "유빈의 확신",
+      "nameEn": "Morty's Conviction",
+      "set": "와일드포스",
+      "setCode": "BS2024004",
+      "number": "097/071",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_097.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_097.png?w=512",
+      "source": "https://collectory.cc/cards/d308f6b5-3629-43b1-9dae-7ac4071ea2e3",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_097.png?w=512"
+    }
+  ],
+  "lance": [
+    {
+      "id": "kr-387f8387-d1c7-4b67-84d3-b91d82544a5c",
+      "name": "목호",
+      "nameEn": "Lance",
+      "set": "패러다임트리거",
+      "setCode": "BS2022017",
+      "number": "112/098",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_112.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_112.png?w=512",
+      "source": "https://collectory.cc/cards/387f8387-d1c7-4b67-84d3-b91d82544a5c",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_112.png?w=512"
+    }
+  ],
+  "petrel": [
+    {
+      "id": "kr-791cdf32-fffe-45ca-8636-e084cd3a99db",
+      "name": "로켓단의 람다",
+      "nameEn": "",
+      "set": "로켓단의 영광",
+      "setCode": "BS2025006",
+      "number": "119/098",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_119.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_119.png?w=512",
+      "source": "https://collectory.cc/cards/791cdf32-fffe-45ca-8636-e084cd3a99db",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_119.png?w=512"
+    }
+  ],
+  "proton": [
+    {
+      "id": "kr-e00792bb-2877-4a15-ba9d-2e1d2a04896e",
+      "name": "로켓단의 랜스",
+      "nameEn": "Team Rocket's Proton",
+      "set": "로켓단의 영광",
+      "setCode": "BS2025006",
+      "number": "120/098",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_120.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_120.png?w=512",
+      "source": "https://collectory.cc/cards/e00792bb-2877-4a15-ba9d-2e1d2a04896e",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_120.png?w=512"
+    }
+  ],
+  "ariana": [
+    {
+      "id": "kr-321b2f88-ecae-4413-935e-1f8488131a91",
+      "name": "로켓단의 아테나",
+      "nameEn": "",
+      "set": "로켓단의 영광",
+      "setCode": "BS2025006",
+      "number": "129/098",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_129.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_129.png?w=512",
+      "source": "https://collectory.cc/cards/321b2f88-ecae-4413-935e-1f8488131a91",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_129.png?w=512"
+    }
+  ],
+  "archer": [
+    {
+      "id": "kr-6a459346-0cb9-4f69-ad53-787e37808025",
+      "name": "로켓단의 아폴로",
+      "nameEn": "",
+      "set": "로켓단의 영광",
+      "setCode": "BS2025006",
+      "number": "123/098",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_123.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_123.png?w=512",
+      "source": "https://collectory.cc/cards/6a459346-0cb9-4f69-ad53-787e37808025",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV10/SV10_123.png?w=512"
+    }
+  ],
+  "leaf": [
+    {
+      "id": "kr-47b8d44f-f7f9-44e3-ad27-536061451a2d",
+      "name": "블루의 탐색",
+      "nameEn": "Green's Exploration",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "195/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_195.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_195.png?w=512",
+      "source": "https://collectory.cc/cards/47b8d44f-f7f9-44e3-ad27-536061451a2d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_195.png?w=512"
+    }
+  ],
+  "wally": [
+    {
+      "id": "kr-49747334-4c9d-4540-adcc-d3d899dcabba",
+      "name": "민진의 헤아림",
+      "nameEn": "",
+      "set": "메가심포니아",
+      "setCode": "BS2025010",
+      "number": "090/063",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_090.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_090.png?w=512",
+      "source": "https://collectory.cc/cards/49747334-4c9d-4540-adcc-d3d899dcabba",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_090.png?w=512"
+    }
+  ],
+  "flannery": [
+    {
+      "id": "kr-788920f4-aa10-4af2-8a1c-0c0c77f0bfe2",
+      "name": "민지",
+      "nameEn": "Flannery",
+      "set": "백은의 랜스",
+      "setCode": "BS2021004",
+      "number": "081/070",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S6/S6H_081.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S6/S6H_081.png?w=512",
+      "source": "https://collectory.cc/cards/788920f4-aa10-4af2-8a1c-0c0c77f0bfe2",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S6/S6H_081.png?w=512"
+    }
+  ],
+  "roxanne": [
+    {
+      "id": "kr-70b114d0-624a-4384-8580-e1c5b95728e2",
+      "name": "원규",
+      "nameEn": "Roxanne",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "239/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_239.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_239.png?w=512",
+      "source": "https://collectory.cc/cards/70b114d0-624a-4384-8580-e1c5b95728e2",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_239.png?w=512"
+    }
+  ],
+  "winona": [
+    {
+      "id": "kr-62a8ef3f-683f-40d5-9334-0de81f8542d3",
+      "name": "은송",
+      "nameEn": "",
+      "set": "에메랄드 브레이크",
+      "setCode": "BS2015004",
+      "number": "089/078",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY6/XY6_089.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY6/XY6_089.jpg?w=512",
+      "source": "https://collectory.cc/cards/62a8ef3f-683f-40d5-9334-0de81f8542d3",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY6/XY6_089.jpg?w=512"
+    }
+  ],
+  "norman": [
+    {
+      "id": "kr-add3eab4-61bd-45da-b00b-57c3fa446459",
+      "name": "종길",
+      "nameEn": "Norman",
+      "set": "고대의 포효",
+      "setCode": "BS2023021",
+      "number": "087/066",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_087.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_087.png?w=512",
+      "source": "https://collectory.cc/cards/add3eab4-61bd-45da-b00b-57c3fa446459",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_087.png?w=512"
+    }
+  ],
+  "brawly": [
+    {
+      "id": "kr-a3333b6d-005f-4ea6-9233-0c557cd89d65",
+      "name": "철구",
+      "nameEn": "Brawly",
+      "set": "쌍벽의 파이터",
+      "setCode": "BS2021003",
+      "number": "068/070",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_068.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_068.png?w=512",
+      "source": "https://collectory.cc/cards/a3333b6d-005f-4ea6-9233-0c557cd89d65",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_068.png?w=512"
+    }
+  ],
+  "steven": [
+    {
+      "id": "kr-1ab1a89e-3a2a-4d46-b826-98fa5409bfcf",
+      "name": "성호의 결단",
+      "nameEn": "",
+      "set": "창공의 카리스마",
+      "setCode": "BS2018007-kr",
+      "number": "103/096",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_103.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_103.png?w=512",
+      "source": "https://collectory.cc/cards/1ab1a89e-3a2a-4d46-b826-98fa5409bfcf",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_103.png?w=512"
+    }
+  ],
+  "wallace": [
+    {
+      "id": "kr-9b1d792f-85f9-4cc1-ab2f-04c3e2d5a9d5",
+      "name": "윤진",
+      "nameEn": "Wallace",
+      "set": "백열의 아르카나",
+      "setCode": "BS2022016",
+      "number": "083/068",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_083.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_083.png?w=512",
+      "source": "https://collectory.cc/cards/9b1d792f-85f9-4cc1-ab2f-04c3e2d5a9d5",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_083.png?w=512"
+    }
+  ],
+  "maxie": [
+    {
+      "id": "kr-e803c3a3-39d5-4fa0-ac9f-30021eced0bf",
+      "name": "마적의 히든볼트릭",
+      "nameEn": "",
+      "set": "가이아 볼케이노",
+      "setCode": "BS2015001",
+      "number": "077/070",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_GV_077.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_GV_077.jpg?w=512",
+      "source": "https://collectory.cc/cards/e803c3a3-39d5-4fa0-ac9f-30021eced0bf",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_GV_077.jpg?w=512"
+    }
+  ],
+  "archie": [
+    {
+      "id": "kr-132c2c5e-85a7-40cd-ac9e-fda6d25e6eb6",
+      "name": "아강의 비장의카드",
+      "nameEn": "",
+      "set": "타이달스톰",
+      "setCode": "BS2015002-kr",
+      "number": "077/070",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_TS_077.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_TS_077.jpg?w=512",
+      "source": "https://collectory.cc/cards/132c2c5e-85a7-40cd-ac9e-fda6d25e6eb6",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY5/XY5_TS_077.jpg?w=512"
+    }
+  ],
+  "dawn": [
+    {
+      "id": "kr-398a394d-24e3-4afe-8fb9-9f6d387829f8",
+      "name": "빛나",
+      "nameEn": "Dawn Wings Necrozma-GX",
+      "set": "인페르노X",
+      "setCode": "BS2025014",
+      "number": "115/080",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2/M2_115.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2/M2_115.png?w=512",
+      "source": "https://collectory.cc/cards/398a394d-24e3-4afe-8fb9-9f6d387829f8",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2/M2_115.png?w=512"
+    }
+  ],
+  "barry": [
+    {
+      "id": "kr-e69ee271-4322-46c4-8ece-fef3f195b99f",
+      "name": "용식",
+      "nameEn": "",
+      "set": "스타트 덱 100",
+      "setCode": "BS2022003",
+      "number": "403/414",
+      "rarity": "N",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SI/SI_403.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SI/SI_403.png?w=512",
+      "source": "https://collectory.cc/cards/e69ee271-4322-46c4-8ece-fef3f195b99f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SI/SI_403.png?w=512"
+    }
+  ],
+  "roark": [
+    {
+      "id": "kr-97f5d736-9ca9-4a01-9d25-d079804a2a32",
+      "name": "강석",
+      "nameEn": "Roark",
+      "set": "미래의 일섬",
+      "setCode": "BS2023022",
+      "number": "085/066",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_085.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_085.png?w=512",
+      "source": "https://collectory.cc/cards/97f5d736-9ca9-4a01-9d25-d079804a2a32",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_085.png?w=512"
+    }
+  ],
+  "crasher-wake": [
+    {
+      "id": "kr-b3c5e6c9-d6c0-458c-805b-6bc9036894e2",
+      "name": "맥실러",
+      "nameEn": "Crasher Wake",
+      "set": "울트라포스",
+      "setCode": "BS2018003",
+      "number": "055/050",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5+/SM5plus_055.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5+/SM5plus_055.png?w=512",
+      "source": "https://collectory.cc/cards/b3c5e6c9-d6c0-458c-805b-6bc9036894e2",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5+/SM5plus_055.png?w=512"
+    }
+  ],
+  "fantina": [
+    {
+      "id": "kr-8caca2d0-bef5-409d-87b8-3557ff498600",
+      "name": "멜리사",
+      "nameEn": "Fantina",
+      "set": "로스트어비스",
+      "setCode": "BS2022014",
+      "number": "113/100",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11/S11_113.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11/S11_113.png?w=512",
+      "source": "https://collectory.cc/cards/8caca2d0-bef5-409d-87b8-3557ff498600",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11/S11_113.png?w=512"
+    }
+  ],
+  "candice": [
+    {
+      "id": "kr-e9fe749a-0d83-4a52-a6d1-8bee2bfd9438",
+      "name": "무청",
+      "nameEn": "Candice",
+      "set": "패러다임트리거",
+      "setCode": "BS2022017",
+      "number": "113/098",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_113.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_113.png?w=512",
+      "source": "https://collectory.cc/cards/e9fe749a-0d83-4a52-a6d1-8bee2bfd9438",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12/S12_113.png?w=512"
+    }
+  ],
+  "gardenia": [
+    {
+      "id": "kr-0b9cfd28-c8e8-4cc9-8575-32ef0e9d2aeb",
+      "name": "유채의 활기",
+      "nameEn": "",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "240/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_240.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_240.png?w=512",
+      "source": "https://collectory.cc/cards/0b9cfd28-c8e8-4cc9-8575-32ef0e9d2aeb",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_240.png?w=512"
+    }
+  ],
+  "volkner": [
+    {
+      "id": "kr-caa4ed8f-3c7e-47ea-b70e-7e5d3a828477",
+      "name": "전진",
+      "nameEn": "Volkner",
+      "set": "울트라문",
+      "setCode": "BS2018002-kr",
+      "number": "071/066",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5M/SM5M_071.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5M/SM5M_071.png?w=512",
+      "source": "https://collectory.cc/cards/caa4ed8f-3c7e-47ea-b70e-7e5d3a828477",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5M/SM5M_071.png?w=512"
+    }
+  ],
+  "cynthia": [
+    {
+      "id": "kr-1d5d6d2c-3501-48db-9b77-86cecbd9eace",
+      "name": "난천의 패기",
+      "nameEn": "",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "236/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_236.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_236.png?w=512",
+      "source": "https://collectory.cc/cards/1d5d6d2c-3501-48db-9b77-86cecbd9eace",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_236.png?w=512"
+    }
+  ],
+  "mars": [
+    {
+      "id": "kr-ca8990b1-653e-4144-9cd9-2529f483dd61",
+      "name": "마스",
+      "nameEn": "Mars",
+      "set": "울트라썬",
+      "setCode": "BS2018001-kr",
+      "number": "070/066",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5S/SM5S_070.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5S/SM5S_070.png?w=512",
+      "source": "https://collectory.cc/cards/ca8990b1-653e-4144-9cd9-2529f483dd61",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM5S/SM5S_070.png?w=512"
+    }
+  ],
+  "cyrus": [
+    {
+      "id": "kr-3b020f1e-636d-4d91-aac3-0ad2918f2fb1",
+      "name": "보스의 지령(태홍)",
+      "nameEn": "Boss's Orders (Cyrus) :Mirror",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "246/172",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_246.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_246.png?w=512",
+      "source": "https://collectory.cc/cards/3b020f1e-636d-4d91-aac3-0ad2918f2fb1",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_246.png?w=512"
+    }
+  ],
+  "rosa": [
+    {
+      "id": "kr-b329c448-34e8-48a8-9146-c2ec7198f03a",
+      "name": "명희의 격려",
+      "nameEn": "",
+      "set": "니힐제로",
+      "setCode": "BS2026002",
+      "number": "115/080",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M3/M3_115.png?w=400",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M3/M3_115.png?w=400",
+      "source": "https://collectory.cc/cards/b329c448-34e8-48a8-9146-c2ec7198f03a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M3/M3_115.png?w=400"
+    }
+  ],
+  "hilda": [
+    {
+      "id": "kr-1cab0392-24a4-40c2-9ea9-d3470b66ec86",
+      "name": "투희",
+      "nameEn": "Hilda",
+      "set": "화이트플레어",
+      "setCode": "BS2025008",
+      "number": "173/086",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11W/SV11W_173.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11W/SV11W_173.png?w=512",
+      "source": "https://collectory.cc/cards/1cab0392-24a4-40c2-9ea9-d3470b66ec86",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11W/SV11W_173.png?w=512"
+    }
+  ],
+  "bianca": [
+    {
+      "id": "kr-b4db106a-fbd2-4c99-8160-01d3d428e7d8",
+      "name": "벨의 진심",
+      "nameEn": "Ciphermaniac's Codebreaking",
+      "set": "사이버저지",
+      "setCode": "BS2024005",
+      "number": "096/071",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5M/SV5M_096.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5M/SV5M_096.png?w=512",
+      "source": "https://collectory.cc/cards/b4db106a-fbd2-4c99-8160-01d3d428e7d8",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5M/SV5M_096.png?w=512"
+    }
+  ],
+  "cheren": [
+    {
+      "id": "kr-2b9701ef-2da1-4ba5-856c-af09923be846",
+      "name": "체렌의 배려심",
+      "nameEn": "",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "244/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_244.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_244.png?w=512",
+      "source": "https://collectory.cc/cards/2b9701ef-2da1-4ba5-856c-af09923be846",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_244.png?w=512"
+    }
+  ],
+  "hugh": [
+    {
+      "id": "kr-2bb3da22-7600-4091-81cb-60565208ba28",
+      "name": "휴이",
+      "nameEn": "Hugh",
+      "set": "프리즈볼트",
+      "setCode": "BS2012008",
+      "number": "056/059",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BW6/bw6_freezevolt_056.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BW6/bw6_freezevolt_056.jpg?w=512",
+      "source": "https://collectory.cc/cards/2bb3da22-7600-4091-81cb-60565208ba28",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BW6/bw6_freezevolt_056.jpg?w=512"
+    }
+  ],
+  "cilan": [
+    {
+      "id": "kr-a55fd237-7e80-4750-9015-044d61dc2d40",
+      "name": "덴트",
+      "nameEn": "Cilan P",
+      "set": "헤일 블리자드",
+      "setCode": "BS2012001",
+      "number": "050/052",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BGR/bw3_hb_050.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BGR/bw3_hb_050.jpg?w=512",
+      "source": "https://collectory.cc/cards/a55fd237-7e80-4750-9015-044d61dc2d40",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/BW/BGR/bw3_hb_050.jpg?w=512"
+    }
+  ],
+  "roxie": [
+    {
+      "id": "kr-aed5e0a8-6c5e-4b7a-99fe-2ede6e924d0f",
+      "name": "보미카",
+      "nameEn": "Roxie",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "194/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_194.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_194.png?w=512",
+      "source": "https://collectory.cc/cards/aed5e0a8-6c5e-4b7a-99fe-2ede6e924d0f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_194.png?w=512"
+    }
+  ],
+  "clay": [
+    {
+      "id": "kr-b3005886-d02e-48f3-a685-826009d0489a",
+      "name": "야콘",
+      "nameEn": "Clay",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "196/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_196.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_196.png?w=512",
+      "source": "https://collectory.cc/cards/b3005886-d02e-48f3-a685-826009d0489a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_196.png?w=512"
+    }
+  ],
+  "elesa": [
+    {
+      "id": "kr-03bb2633-d369-4267-9f91-93fbf1cd55f4",
+      "name": "카밀레의 반짝임",
+      "nameEn": "",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "249/172",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_249.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_249.png?w=512",
+      "source": "https://collectory.cc/cards/03bb2633-d369-4267-9f91-93fbf1cd55f4",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_249.png?w=512"
+    }
+  ],
+  "skyla": [
+    {
+      "id": "kr-e7e7ba10-7525-4c56-a983-7aaa651ff892",
+      "name": "풍란",
+      "nameEn": "Skyla",
+      "set": "샤이니스타 V",
+      "setCode": "BS2020016",
+      "number": "199/190",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_199.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_199.png?w=512",
+      "source": "https://collectory.cc/cards/e7e7ba10-7525-4c56-a983-7aaa651ff892",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_199.png?w=512"
+    }
+  ],
+  "iris": [
+    {
+      "id": "kr-ca517d96-92ec-4dea-9929-03e1e79a3dcc",
+      "name": "아이리스의 투지",
+      "nameEn": "Iris's Fighting Spirit",
+      "set": "MEGA 드림 ex",
+      "setCode": "BS2025015",
+      "number": "248/193",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2a/M2a_248.png",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2a/M2a_248.png",
+      "source": "https://collectory.cc/cards/ca517d96-92ec-4dea-9929-03e1e79a3dcc",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M2a/M2a_248.png"
+    }
+  ],
+  "ghetsis": [
+    {
+      "id": "kr-656c0e2b-d741-4448-aa8b-cf0c21dd32dd",
+      "name": "보스의 지령(게치스)",
+      "nameEn": "Boss's Orders (Ghetsis)",
+      "set": "트리플렛비트",
+      "setCode": "BS2023010",
+      "number": "099/073",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_099.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_099.png?w=512",
+      "source": "https://collectory.cc/cards/656c0e2b-d741-4448-aa8b-cf0c21dd32dd",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1a/SV1a_099.png?w=512"
+    }
+  ],
+  "colress": [
+    {
+      "id": "kr-e32964a0-f719-4061-b384-ca0984fd660e",
+      "name": "아크로마의 실험",
+      "nameEn": "Colress's Experiment",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "238/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_238.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_238.png?w=512",
+      "source": "https://collectory.cc/cards/e32964a0-f719-4061-b384-ca0984fd660e",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_238.png?w=512"
+    }
+  ],
+  "n": [
+    {
+      "id": "kr-841e7896-a4e3-4825-b8ae-27a91ed1aaa3",
+      "name": "N의 방안",
+      "nameEn": "N's Plot",
+      "set": "블랙볼트",
+      "setCode": "BS2025007",
+      "number": "173/086",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11B/SV11B_173.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11B/SV11B_173.png?w=512",
+      "source": "https://collectory.cc/cards/841e7896-a4e3-4825-b8ae-27a91ed1aaa3",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV11B/SV11B_173.png?w=512"
+    }
+  ],
+  "serena": [
+    {
+      "id": "kr-0e25a5ca-6463-43f1-88fe-55300028b645",
+      "name": "세레나",
+      "nameEn": "Serena",
+      "set": "백열의 아르카나",
+      "setCode": "BS2022016",
+      "number": "082/068",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_082.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_082.png?w=512",
+      "source": "https://collectory.cc/cards/0e25a5ca-6463-43f1-88fe-55300028b645",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S11a/S11a_082.png?w=512"
+    }
+  ],
+  "shauna": [
+    {
+      "id": "kr-4b693248-37cb-4e57-aee1-2e026d6c3bb6",
+      "name": "사나",
+      "nameEn": "Shauna",
+      "set": "창공스트림",
+      "setCode": "BS2021012",
+      "number": "077/067",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S7/S7R_077.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S7/S7R_077.png?w=512",
+      "source": "https://collectory.cc/cards/4b693248-37cb-4e57-aee1-2e026d6c3bb6",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S7/S7R_077.png?w=512"
+    }
+  ],
+  "tierno": [
+    {
+      "id": "kr-9ab2157c-6e70-41bb-82ce-af893d86497b",
+      "name": "티에르노",
+      "nameEn": "Tierno",
+      "set": "Y컬렉션",
+      "setCode": "BS2014501-kr",
+      "number": "059/060",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY1/K1_Y_059.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY1/K1_Y_059.jpg?w=512",
+      "source": "https://collectory.cc/cards/9ab2157c-6e70-41bb-82ce-af893d86497b",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY1/K1_Y_059.jpg?w=512"
+    }
+  ],
+  "trevor": [
+    {
+      "id": "kr-86f36d58-c905-41ed-9d62-b8ae90532d94",
+      "name": "트로바",
+      "nameEn": "Trevor",
+      "set": "한국 프로모",
+      "setCode": "XY-P",
+      "number": "047/XY-P",
+      "rarity": "PROMO",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/PROMO/XYpromo_047.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/PROMO/XYpromo_047.jpg?w=512",
+      "source": "https://collectory.cc/cards/86f36d58-c905-41ed-9d62-b8ae90532d94",
+      "officialSearchSource": "https://pokemoncard.co.kr/cards?s=%ED%8A%B8%EB%A1%9C%EB%B0%94",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/PROMO/XYpromo_047.jpg?w=512"
+    }
+  ],
+  "clemont": [
+    {
+      "id": "kr-260ee54f-99b7-45e2-bcaa-491575648c40",
+      "name": "시트론의 재치",
+      "nameEn": "Clemont's Quick Wit",
+      "set": "스칼렛&바이올렛 확장팩 「초전브레이커」",
+      "setCode": "BS2024017",
+      "number": "135/106",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_135.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_135.png?w=512",
+      "source": "https://collectory.cc/cards/260ee54f-99b7-45e2-bcaa-491575648c40",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8/SV8_135.png?w=512"
+    }
+  ],
+  "grant": [
+    {
+      "id": "kr-ce52cf6f-3110-443d-8122-e428dbf5ddca",
+      "name": "자크로",
+      "nameEn": "Grant",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "241/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_241.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_241.png?w=512",
+      "source": "https://collectory.cc/cards/ce52cf6f-3110-443d-8122-e428dbf5ddca",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_241.png?w=512"
+    }
+  ],
+  "korrina": [
+    {
+      "id": "kr-b926eeb3-7671-427e-a970-0eb43f4a2a8a",
+      "name": "코르니",
+      "nameEn": "Korrina",
+      "set": "라이징피스트",
+      "setCode": "BS2014003",
+      "number": "102/096",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY3/XY3_102.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY3/XY3_102.jpg?w=512",
+      "source": "https://collectory.cc/cards/b926eeb3-7671-427e-a970-0eb43f4a2a8a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY3/XY3_102.jpg?w=512"
+    }
+  ],
+  "diantha": [
+    {
+      "id": "kr-77b8c872-55cf-4442-a3e5-841c056987c4",
+      "name": "카르네",
+      "nameEn": "Diantha",
+      "set": "금단의 빛",
+      "setCode": "BS2018004-kr",
+      "number": "102/094",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6/SM6_102.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6/SM6_102.png?w=512",
+      "source": "https://collectory.cc/cards/77b8c872-55cf-4442-a3e5-841c056987c4",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM6/SM6_102.png?w=512"
+    }
+  ],
+  "xerosic": [
+    {
+      "id": "kr-08c15ad2-9bc2-4eaa-b7bf-d06d87e392fe",
+      "name": "크세로시키",
+      "nameEn": "Xerosic",
+      "set": "팬텀게이트",
+      "setCode": "BS2014004",
+      "number": "094/088",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY4/XY4_094.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY4/XY4_094.jpg?w=512",
+      "source": "https://collectory.cc/cards/08c15ad2-9bc2-4eaa-b7bf-d06d87e392fe",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY4/XY4_094.jpg?w=512"
+    }
+  ],
+  "lysandre": [
+    {
+      "id": "kr-d7f03371-74f9-448e-a776-9e4de49b5c6d",
+      "name": "플라드리",
+      "nameEn": "Lysandre",
+      "set": "와일드 블레이즈",
+      "setCode": "BS2014002",
+      "number": "087/080",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY2/XY2_087.jpg?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY2/XY2_087.jpg?w=512",
+      "source": "https://collectory.cc/cards/d7f03371-74f9-448e-a776-9e4de49b5c6d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/XY/XY2/XY2_087.jpg?w=512"
+    }
+  ],
+  "gladion": [
+    {
+      "id": "kr-a6a80837-1b67-431d-af03-c2cc671aa9b4",
+      "name": "글라디오",
+      "nameEn": "Gladion",
+      "set": "각성의 용사",
+      "setCode": "BS2017011",
+      "number": "055/050",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4S/SM4S_055.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4S/SM4S_055.png?w=512",
+      "source": "https://collectory.cc/cards/a6a80837-1b67-431d-af03-c2cc671aa9b4",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4S/SM4S_055.png?w=512"
+    }
+  ],
+  "hau": [
+    {
+      "id": "kr-a327f634-a934-4b30-8368-a3d7e9e62e61",
+      "name": "하우",
+      "nameEn": "Hau",
+      "set": "창공의 카리스마",
+      "setCode": "BS2018007-kr",
+      "number": "093/096",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_093.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_093.png?w=512",
+      "source": "https://collectory.cc/cards/a327f634-a934-4b30-8368-a3d7e9e62e61",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM7/SM7_093.png?w=512"
+    }
+  ],
+  "nanu": [
+    {
+      "id": "kr-64d3b74f-f945-46bd-a80a-80721f1b027d",
+      "name": "나누",
+      "nameEn": "Nanu",
+      "set": "다크오더",
+      "setCode": "BS2018013",
+      "number": "058/052",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8A/SM8a_058.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8A/SM8a_058.png?w=512",
+      "source": "https://collectory.cc/cards/64d3b74f-f945-46bd-a80a-80721f1b027d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8A/SM8a_058.png?w=512"
+    }
+  ],
+  "olivia": [
+    {
+      "id": "kr-127f6dcf-cb4d-4beb-9635-f8f1c00e48ba",
+      "name": "라이치",
+      "nameEn": "Olivia",
+      "set": "새로운 시련",
+      "setCode": "BS2017007",
+      "number": "049/049",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_047.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_047.png?w=512",
+      "source": "https://collectory.cc/cards/127f6dcf-cb4d-4beb-9635-f8f1c00e48ba",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_047.png?w=512"
+    }
+  ],
+  "sophocles": [
+    {
+      "id": "kr-780e6433-cd08-472c-86a0-3426a2e4adee",
+      "name": "마마네",
+      "nameEn": "Sophocles",
+      "set": "새로운 시련",
+      "setCode": "BS2017007",
+      "number": "057/049",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_056.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_056.png?w=512",
+      "source": "https://collectory.cc/cards/780e6433-cd08-472c-86a0-3426a2e4adee",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2+/SM2plus_056.png?w=512"
+    }
+  ],
+  "mallow": [
+    {
+      "id": "kr-d106c0d9-ef7d-4948-be79-3aa44096224a",
+      "name": "마오",
+      "nameEn": "Mallow",
+      "set": "알로라의 달빛",
+      "setCode": "BS2017005-kr",
+      "number": "055/050",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2L/SM2L_055.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2L/SM2L_055.png?w=512",
+      "source": "https://collectory.cc/cards/d106c0d9-ef7d-4948-be79-3aa44096224a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2L/SM2L_055.png?w=512"
+    }
+  ],
+  "mina": [
+    {
+      "id": "kr-3053529a-55ab-4203-8d6c-58c321430807",
+      "name": "말리화",
+      "nameEn": "",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "192/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_192.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_192.png?w=512",
+      "source": "https://collectory.cc/cards/3053529a-55ab-4203-8d6c-58c321430807",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_192.png?w=512"
+    }
+  ],
+  "lana": [
+    {
+      "id": "kr-fb57b333-2617-40a1-a395-baa70065fd0f",
+      "name": "수련의 돌봄",
+      "nameEn": "Lana's Care",
+      "set": "크림슨헤이즈",
+      "setCode": "BS2024007",
+      "number": "093/066",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5a/SV5a_093.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5a/SV5a_093.png?w=512",
+      "source": "https://collectory.cc/cards/fb57b333-2617-40a1-a395-baa70065fd0f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5a/SV5a_093.png?w=512"
+    }
+  ],
+  "acerola": [
+    {
+      "id": "kr-9bc2eb64-112d-4b4a-b36c-3447ae5c9e2c",
+      "name": "아세로라의 장난",
+      "nameEn": "",
+      "set": "메가심포니아",
+      "setCode": "BS2025010",
+      "number": "091/063",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_091.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_091.png?w=512",
+      "source": "https://collectory.cc/cards/9bc2eb64-112d-4b4a-b36c-3447ae5c9e2c",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/M1S/M1S_091.png?w=512"
+    }
+  ],
+  "ilima": [
+    {
+      "id": "kr-2bbd90cb-0065-4cae-b690-55cb1300bfb0",
+      "name": "일리마",
+      "nameEn": "Ilima",
+      "set": "썬 컬렉션",
+      "setCode": "BS2017001-kr",
+      "number": "065/060",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_065.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_065.png?w=512",
+      "source": "https://collectory.cc/cards/2bbd90cb-0065-4cae-b690-55cb1300bfb0",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_065.png?w=512"
+    }
+  ],
+  "kiawe": [
+    {
+      "id": "kr-5b2b176c-3e91-484e-a175-c698eb699fd7",
+      "name": "키아웨",
+      "nameEn": "Kiawe",
+      "set": "어둠을 밝힌 무지개",
+      "setCode": "BS2017008",
+      "number": "056/051",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_056.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_056.png?w=512",
+      "source": "https://collectory.cc/cards/5b2b176c-3e91-484e-a175-c698eb699fd7",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_056.png?w=512"
+    }
+  ],
+  "hapu": [
+    {
+      "id": "kr-f3523f8f-7fa7-47b7-94d7-a9924b7f8626",
+      "name": "하푸우",
+      "nameEn": "",
+      "set": "TAG TEAM GX 태그올스타즈",
+      "setCode": "BS2019017",
+      "number": "201/173",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_201.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_201.png?w=512",
+      "source": "https://collectory.cc/cards/f3523f8f-7fa7-47b7-94d7-a9924b7f8626",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM12a/SM12a_201.png?w=512"
+    }
+  ],
+  "hala": [
+    {
+      "id": "kr-1cbcd723-ffba-4a31-b236-30788bace740",
+      "name": "할라",
+      "nameEn": "Hala",
+      "set": "알로라의 햇빛",
+      "setCode": "BS2017004-kr",
+      "number": "055/050",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2K/SM2K_055.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2K/SM2K_055.png?w=512",
+      "source": "https://collectory.cc/cards/1cbcd723-ffba-4a31-b236-30788bace740",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM2K/SM2K_055.png?w=512"
+    }
+  ],
+  "kukui": [
+    {
+      "id": "kr-34118f53-dcd7-4729-92a7-476c4b1de84f",
+      "name": "쿠쿠이박사",
+      "nameEn": "Professor Kukui",
+      "set": "썬 컬렉션",
+      "setCode": "BS2017001-kr",
+      "number": "066/060",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_066.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_066.png?w=512",
+      "source": "https://collectory.cc/cards/34118f53-dcd7-4729-92a7-476c4b1de84f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM1S/SM1S_066.png?w=512"
+    }
+  ],
+  "guzma": [
+    {
+      "id": "kr-d600611d-4b28-4477-9aad-4a1de65be8f6",
+      "name": "구즈마",
+      "nameEn": "Guzma",
+      "set": "GX 울트라샤이니",
+      "setCode": "BS2019002",
+      "number": "151/150",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8B/SM8b_151.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8B/SM8b_151.png?w=512",
+      "source": "https://collectory.cc/cards/d600611d-4b28-4477-9aad-4a1de65be8f6",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8B/SM8b_151.png?w=512"
+    }
+  ],
+  "lusamine": [
+    {
+      "id": "kr-112666ca-d430-4701-8557-e0e71bde71f1",
+      "name": "루자미네",
+      "nameEn": "Lusamine",
+      "set": "GX 배틀부스트",
+      "setCode": "BS2017013",
+      "number": "118/114",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4+/SM4plus_118.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4+/SM4plus_118.png?w=512",
+      "source": "https://collectory.cc/cards/112666ca-d430-4701-8557-e0e71bde71f1",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM4+/SM4plus_118.png?w=512"
+    }
+  ],
+  "faba": [
+    {
+      "id": "kr-2b2741d1-2075-4ace-a998-e86568f61dc4",
+      "name": "자우보",
+      "nameEn": "Faba",
+      "set": "버스트임팩트",
+      "setCode": "BS2018010-kr",
+      "number": "103/095",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0103.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0103.png?w=512",
+      "source": "https://collectory.cc/cards/2b2741d1-2075-4ace-a998-e86568f61dc4",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM8/SM8_0103.png?w=512"
+    }
+  ],
+  "plumeria": [
+    {
+      "id": "kr-75781037-0bba-43cc-a577-cc2a87539255",
+      "name": "플루메리",
+      "nameEn": "Plumeria",
+      "set": "어둠을 밝힌 무지개",
+      "setCode": "BS2017008",
+      "number": "057/051",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_057.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_057.png?w=512",
+      "source": "https://collectory.cc/cards/75781037-0bba-43cc-a577-cc2a87539255",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SM/SM3H/SM3H_057.png?w=512"
+    }
+  ],
+  "gloria": [
+    {
+      "id": "kr-87bf0ef6-369d-4981-99d7-a9ac2a377b73",
+      "name": "우리",
+      "nameEn": "Gloria",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "273/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_273.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_273.png?w=512",
+      "source": "https://collectory.cc/cards/87bf0ef6-369d-4981-99d7-a9ac2a377b73",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_273.png?w=512"
+    }
+  ],
+  "klara": [
+    {
+      "id": "kr-be99fc90-bd57-4eee-82b1-248cf9e4ae6a",
+      "name": "도정",
+      "nameEn": "Klara",
+      "set": "쌍벽의 파이터",
+      "setCode": "BS2021003",
+      "number": "066/070",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_066.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_066.png?w=512",
+      "source": "https://collectory.cc/cards/be99fc90-bd57-4eee-82b1-248cf9e4ae6a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_066.png?w=512"
+    }
+  ],
+  "marnie": [
+    {
+      "id": "kr-9adbd784-e576-47f3-9d96-438047bee60c",
+      "name": "마리",
+      "nameEn": "Marnie",
+      "set": "샤이니스타 V",
+      "setCode": "BS2020016",
+      "number": "193/190",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_193.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_193.png?w=512",
+      "source": "https://collectory.cc/cards/9adbd784-e576-47f3-9d96-438047bee60c",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_193.png?w=512"
+    }
+  ],
+  "bede": [
+    {
+      "id": "kr-53ab4b5b-05d0-4be3-ba11-10d257ae1ad5",
+      "name": "비트",
+      "nameEn": "Bede",
+      "set": "소드",
+      "setCode": "BS2020002",
+      "number": "068/060",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S1W/S1W_068.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S1W/S1W_068.png?w=512",
+      "source": "https://collectory.cc/cards/53ab4b5b-05d0-4be3-ba11-10d257ae1ad5",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S1W/S1W_068.png?w=512"
+    }
+  ],
+  "avery": [
+    {
+      "id": "kr-a4c4bc77-893a-4151-9299-6bef40d0ae39",
+      "name": "세이버리",
+      "nameEn": "",
+      "set": "쌍벽의 파이터",
+      "setCode": "BS2021003",
+      "number": "067/070",
+      "rarity": "U",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_067.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_067.png?w=512",
+      "source": "https://collectory.cc/cards/a4c4bc77-893a-4151-9299-6bef40d0ae39",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S5a/S5a_067.png?w=512"
+    }
+  ],
+  "hop": [
+    {
+      "id": "kr-248c545e-52c4-4a6f-9ff0-f42f11d9a1e6",
+      "name": "호브",
+      "nameEn": "",
+      "set": "소드&실드 스페셜 덱 세트 「자시안·자마젠타 VS 무한다이노」",
+      "setCode": "BS2021019-kr",
+      "number": "028/028",
+      "rarity": "RRR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SJ/SJ_028.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SJ/SJ_028.png?w=512",
+      "source": "https://collectory.cc/cards/248c545e-52c4-4a6f-9ff0-f42f11d9a1e6",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/SJ/SJ_028.png?w=512"
+    }
+  ],
+  "raihan": [
+    {
+      "id": "kr-1a230126-e918-4d26-a32f-26d77680846f",
+      "name": "금랑",
+      "nameEn": "Raihan",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "256/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_256.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_256.png?w=512",
+      "source": "https://collectory.cc/cards/1a230126-e918-4d26-a32f-26d77680846f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_256.png?w=512"
+    }
+  ],
+  "piers": [
+    {
+      "id": "kr-6a69d6bc-9ccd-4841-b5a8-08e37d6bdbe5",
+      "name": "두송",
+      "nameEn": "Piers",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "257/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_257.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_257.png?w=512",
+      "source": "https://collectory.cc/cards/6a69d6bc-9ccd-4841-b5a8-08e37d6bdbe5",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_257.png?w=512"
+    }
+  ],
+  "gordie": [
+    {
+      "id": "kr-6cbafc14-2ed8-42d3-ba0d-5bd0afb6af66",
+      "name": "마쿠와",
+      "nameEn": "Gordie",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "261/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_261.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_261.png?w=512",
+      "source": "https://collectory.cc/cards/6cbafc14-2ed8-42d3-ba0d-5bd0afb6af66",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_261.png?w=512"
+    }
+  ],
+  "melony": [
+    {
+      "id": "kr-f93bfc0e-7fcf-4a08-8c29-81f8d42fa14e",
+      "name": "멜론",
+      "nameEn": "Melony",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "237/172",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_237.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_237.png?w=512",
+      "source": "https://collectory.cc/cards/f93bfc0e-7fcf-4a08-8c29-81f8d42fa14e",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_237.png?w=512"
+    }
+  ],
+  "kabu": [
+    {
+      "id": "kr-f5c09de3-204d-41ac-ba62-c05ed7211e2f",
+      "name": "순무",
+      "nameEn": "Kabu",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "268/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_268.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_268.png?w=512",
+      "source": "https://collectory.cc/cards/f5c09de3-204d-41ac-ba62-c05ed7211e2f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_268.png?w=512"
+    }
+  ],
+  "milo": [
+    {
+      "id": "kr-024583d7-2e24-464e-982c-37a1c3271755",
+      "name": "아킬",
+      "nameEn": "",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "270/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_270.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_270.png?w=512",
+      "source": "https://collectory.cc/cards/024583d7-2e24-464e-982c-37a1c3271755",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_270.png?w=512"
+    }
+  ],
+  "nessa": [
+    {
+      "id": "kr-804ff256-570b-4b20-9ca7-3fe23e869e78",
+      "name": "야청",
+      "nameEn": "Nessa",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "271/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_271.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_271.png?w=512",
+      "source": "https://collectory.cc/cards/804ff256-570b-4b20-9ca7-3fe23e869e78",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_271.png?w=512"
+    }
+  ],
+  "allister": [
+    {
+      "id": "kr-960fecfe-df73-410d-afcd-27b9d3b82c83",
+      "name": "어니언",
+      "nameEn": "Allister",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "272/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_272.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_272.png?w=512",
+      "source": "https://collectory.cc/cards/960fecfe-df73-410d-afcd-27b9d3b82c83",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_272.png?w=512"
+    }
+  ],
+  "bea": [
+    {
+      "id": "kr-59f5b68c-6b40-459a-b2a5-2f1fba5fc578",
+      "name": "채두",
+      "nameEn": "Bea",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "275/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_275.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_275.png?w=512",
+      "source": "https://collectory.cc/cards/59f5b68c-6b40-459a-b2a5-2f1fba5fc578",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_275.png?w=512"
+    }
+  ],
+  "opal": [
+    {
+      "id": "kr-8e9213f3-1f86-4f80-87df-b531b230aad9",
+      "name": "포플러",
+      "nameEn": "Opal",
+      "set": "VMAX 클라이맥스",
+      "setCode": "BS2022001",
+      "number": "277/184",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_277.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_277.png?w=512",
+      "source": "https://collectory.cc/cards/8e9213f3-1f86-4f80-87df-b531b230aad9",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S8b/S8b_277.png?w=512"
+    }
+  ],
+  "leon": [
+    {
+      "id": "kr-d689e27f-33ed-4a9f-a1a2-6ade835c75b9",
+      "name": "단델",
+      "nameEn": "Leon",
+      "set": "앙천의 볼트태클",
+      "setCode": "BS2020014",
+      "number": "109/100",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4/S4_109.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4/S4_109.png?w=512",
+      "source": "https://collectory.cc/cards/d689e27f-33ed-4a9f-a1a2-6ade835c75b9",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4/S4_109.png?w=512"
+    }
+  ],
+  "rose": [
+    {
+      "id": "kr-a718a105-31cc-4daf-aa07-8ce68b1587da",
+      "name": "로즈",
+      "nameEn": "Rose",
+      "set": "샤이니스타 V",
+      "setCode": "BS2020016",
+      "number": "192/190",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_192.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_192.png?w=512",
+      "source": "https://collectory.cc/cards/a718a105-31cc-4daf-aa07-8ce68b1587da",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S4a/S4a_192.png?w=512"
+    }
+  ],
+  "oleana": [
+    {
+      "id": "kr-55763225-2595-4385-b0d1-4df98cf0167c",
+      "name": "올리브",
+      "nameEn": "Oleana",
+      "set": "반역크래시",
+      "setCode": "BS2020005-kr",
+      "number": "106/096",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S2/S2_106.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S2/S2_106.png?w=512",
+      "source": "https://collectory.cc/cards/55763225-2595-4385-b0d1-4df98cf0167c",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S2/S2_106.png?w=512"
+    }
+  ],
+  "volo": [
+    {
+      "id": "kr-7f746830-27af-45db-9b4c-4e95a83d986a",
+      "name": "월로",
+      "nameEn": "Volo",
+      "set": "VSTAR 유니버스",
+      "setCode": "BS2023001",
+      "number": "248/172",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_248.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_248.png?w=512",
+      "source": "https://collectory.cc/cards/7f746830-27af-45db-9b4c-4e95a83d986a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/S/S12a/S12a_248.png?w=512"
+    }
+  ],
+  "urbain": [
+    {
+      "id": "kr-e2f6567a-c636-4abe-985e-cf19b0846071",
+      "name": "가이",
+      "nameEn": "Urbain",
+      "set": "스타트 덱 100 배틀컬렉션",
+      "setCode": "BS2026001",
+      "number": "695/742",
+      "rarity": "N",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/MC/MC_695.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/MC/MC_695.png?w=512",
+      "source": "https://collectory.cc/cards/e2f6567a-c636-4abe-985e-cf19b0846071",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/MEGA/MC/MC_695.png?w=512"
+    }
+  ],
+  "nemona": [
+    {
+      "id": "kr-5ca43deb-e663-4286-a583-9b294ec4979b",
+      "name": "네모",
+      "nameEn": "Nemona",
+      "set": "샤이니트레저 ex",
+      "setCode": "BS2024001",
+      "number": "351/190",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_351.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_351.png?w=512",
+      "source": "https://collectory.cc/cards/5ca43deb-e663-4286-a583-9b294ec4979b",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_351.png?w=512"
+    }
+  ],
+  "penny": [
+    {
+      "id": "kr-fe6dfc2b-5cb2-43eb-9dd7-8eb7aafae334",
+      "name": "모란",
+      "nameEn": "Penny",
+      "set": "샤이니트레저 ex",
+      "setCode": "BS2024001",
+      "number": "352/190",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_352.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_352.png?w=512",
+      "source": "https://collectory.cc/cards/fe6dfc2b-5cb2-43eb-9dd7-8eb7aafae334",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_352.png?w=512"
+    }
+  ],
+  "carmine": [
+    {
+      "id": "kr-600d4b8e-f90f-4ad2-a555-39fd03ddec95",
+      "name": "시유",
+      "nameEn": "Carmine",
+      "set": "변환의 가면",
+      "setCode": "BS2024008",
+      "number": "129/101",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV6/SV6_129.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV6/SV6_129.png?w=512",
+      "source": "https://collectory.cc/cards/600d4b8e-f90f-4ad2-a555-39fd03ddec95",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV6/SV6_129.png?w=512"
+    }
+  ],
+  "kieran": [
+    {
+      "id": "kr-108c1818-d46d-4f62-9138-84bdfd696e79",
+      "name": "카지",
+      "nameEn": "Kieran",
+      "set": "테라스탈 페스타 ex",
+      "setCode": "BS2024019",
+      "number": "230/187",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_230.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_230.png?w=512",
+      "source": "https://collectory.cc/cards/108c1818-d46d-4f62-9138-84bdfd696e79",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_230.png?w=512"
+    }
+  ],
+  "arven": [
+    {
+      "id": "kr-60dfb1cd-233e-44b4-8b29-061637cf053f",
+      "name": "페퍼",
+      "nameEn": "Arven",
+      "set": "샤이니트레저 ex",
+      "setCode": "BS2024001",
+      "number": "354/190",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_354.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_354.png?w=512",
+      "source": "https://collectory.cc/cards/60dfb1cd-233e-44b4-8b29-061637cf053f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_354.png?w=512"
+    }
+  ],
+  "kofu": [
+    {
+      "id": "kr-287e58ab-d7fe-41cb-ab1c-13e8ae0f485d",
+      "name": "곤포",
+      "nameEn": "Kofu",
+      "set": "스텔라미라클",
+      "setCode": "BS2024012",
+      "number": "123/102",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV7/SV7_123.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV7/SV7_123.png?w=512",
+      "source": "https://collectory.cc/cards/287e58ab-d7fe-41cb-ab1c-13e8ae0f485d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV7/SV7_123.png?w=512"
+    }
+  ],
+  "grusha": [
+    {
+      "id": "kr-38b4647a-625d-4eb6-a9d7-e0fe52c0988a",
+      "name": "그루샤",
+      "nameEn": "Grusha",
+      "set": "스노해저드",
+      "setCode": "BS2023011",
+      "number": "090/071",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_090.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_090.png?w=512",
+      "source": "https://collectory.cc/cards/38b4647a-625d-4eb6-a9d7-e0fe52c0988a",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_090.png?w=512"
+    }
+  ],
+  "katy": [
+    {
+      "id": "kr-0a8e6248-6e78-4b66-9469-d39e12905abf",
+      "name": "단풍",
+      "nameEn": "Katy",
+      "set": "바이올렛 ex",
+      "setCode": "BS2023007",
+      "number": "097/078",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1V/SV1V_097.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1V/SV1V_097.png?w=512",
+      "source": "https://collectory.cc/cards/0a8e6248-6e78-4b66-9469-d39e12905abf",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV1V/SV1V_097.png?w=512"
+    }
+  ],
+  "ryme": [
+    {
+      "id": "kr-f2742260-ada3-4412-83ad-319dd188a427",
+      "name": "라임",
+      "nameEn": "Ryme",
+      "set": "흑염의 지배자",
+      "setCode": "BS2023015",
+      "number": "129/108",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_129.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_129.png?w=512",
+      "source": "https://collectory.cc/cards/f2742260-ada3-4412-83ad-319dd188a427",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_129.png?w=512"
+    }
+  ],
+  "tulip": [
+    {
+      "id": "kr-a129f446-0da3-45a6-a691-be5cb7d9c847",
+      "name": "리파",
+      "nameEn": "Tulip",
+      "set": "미래의 일섬",
+      "setCode": "BS2023022",
+      "number": "091/066",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_091.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_091.png?w=512",
+      "source": "https://collectory.cc/cards/a129f446-0da3-45a6-a691-be5cb7d9c847",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4M/SV4M_091.png?w=512"
+    }
+  ],
+  "iono": [
+    {
+      "id": "kr-cd716612-b686-41c8-bb3e-d6d9887e1c47",
+      "name": "모야모",
+      "nameEn": "Iono",
+      "set": "샤이니트레저 ex",
+      "setCode": "BS2024001",
+      "number": "353/190",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_353.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_353.png?w=512",
+      "source": "https://collectory.cc/cards/cd716612-b686-41c8-bb3e-d6d9887e1c47",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4a/SV4a_353.png?w=512"
+    }
+  ],
+  "larry": [
+    {
+      "id": "kr-6ffa0a2d-d592-4af6-8b0f-2f39684d7617",
+      "name": "청목",
+      "nameEn": "Larry",
+      "set": "레이징서프",
+      "setCode": "BS2023020",
+      "number": "082/062",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3a/SV3a_082.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3a/SV3a_082.png?w=512",
+      "source": "https://collectory.cc/cards/6ffa0a2d-d592-4af6-8b0f-2f39684d7617",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3a/SV3a_082.png?w=512"
+    }
+  ],
+  "brassius": [
+    {
+      "id": "kr-9ad44ea8-ca1e-44d1-a629-7dcf1b7f1d3f",
+      "name": "콜사",
+      "nameEn": "Brassius",
+      "set": "테라스탈 페스타 ex",
+      "setCode": "BS2024019",
+      "number": "196/187",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_196.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_196.png?w=512",
+      "source": "https://collectory.cc/cards/9ad44ea8-ca1e-44d1-a629-7dcf1b7f1d3f",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_196.png?w=512"
+    }
+  ],
+  "geeta": [
+    {
+      "id": "kr-f1c5772d-70e8-45e9-83b8-fd66f6004fdf",
+      "name": "테사",
+      "nameEn": "",
+      "set": "흑염의 지배자",
+      "setCode": "BS2023015",
+      "number": "138/108",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_138.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_138.png?w=512",
+      "source": "https://collectory.cc/cards/f1c5772d-70e8-45e9-83b8-fd66f6004fdf",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV3/SV3_138.png?w=512"
+    }
+  ],
+  "mela": [
+    {
+      "id": "kr-24fe5f1b-10d5-49db-8945-4970ab29579e",
+      "name": "멜로코",
+      "nameEn": "Mela",
+      "set": "고대의 포효",
+      "setCode": "BS2023021",
+      "number": "091/066",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_091.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_091.png?w=512",
+      "source": "https://collectory.cc/cards/24fe5f1b-10d5-49db-8945-4970ab29579e",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV4K/SV4K_091.png?w=512"
+    }
+  ],
+  "eri": [
+    {
+      "id": "kr-9426dd88-a431-4edd-8acf-d327a079d90d",
+      "name": "비파",
+      "nameEn": "Eri",
+      "set": "와일드포스",
+      "setCode": "BS2024004",
+      "number": "096/071",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_096.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_096.png?w=512",
+      "source": "https://collectory.cc/cards/9426dd88-a431-4edd-8acf-d327a079d90d",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV5K/SV5K_096.png?w=512"
+    }
+  ],
+  "ortega": [
+    {
+      "id": "kr-3f8b1280-50f9-4af9-980f-af8382c2a5e2",
+      "name": "오르티가",
+      "nameEn": "Ortega",
+      "set": "테라스탈 페스타 ex",
+      "setCode": "BS2024019",
+      "number": "192/187",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_192.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_192.png?w=512",
+      "source": "https://collectory.cc/cards/3f8b1280-50f9-4af9-980f-af8382c2a5e2",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_192.png?w=512"
+    }
+  ],
+  "atticus": [
+    {
+      "id": "kr-efc5aeb6-a2cf-4b61-9144-5e058ee45341",
+      "name": "추명",
+      "nameEn": "",
+      "set": "테라스탈 페스타 ex",
+      "setCode": "BS2024019",
+      "number": "195/187",
+      "rarity": "SR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_195.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_195.png?w=512",
+      "source": "https://collectory.cc/cards/efc5aeb6-a2cf-4b61-9144-5e058ee45341",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV8a/SV8a_195.png?w=512"
+    }
+  ],
+  "giacomo": [
+    {
+      "id": "kr-b856bf84-b44b-4ec4-b48a-a253c7c924c8",
+      "name": "피나",
+      "nameEn": "Giacomo",
+      "set": "스노해저드",
+      "setCode": "BS2023011",
+      "number": "096/071",
+      "rarity": "SAR",
+      "language": "ko",
+      "edition": "KR",
+      "solo": true,
+      "image": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_096.png?w=512",
+      "imageLarge": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_096.png?w=512",
+      "source": "https://collectory.cc/cards/b856bf84-b44b-4ec4-b48a-a253c7c924c8",
+      "officialImageSource": "https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/SV2P/SV2P_096.png?w=512"
+    }
+  ]
+}

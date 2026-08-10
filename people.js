@@ -2,12 +2,14 @@ const peopleState = {
   data: null,
   generation: "all",
   category: "all",
+  status: "all",
   query: "",
   visible: 48,
 };
 
 const PEOPLE_PAGE_SIZE = 48;
 const peopleById = new Map();
+let activePerson = null;
 
 const peopleElement = (id) => document.getElementById(id);
 
@@ -40,7 +42,8 @@ function makeFilterButton(label, value, type, active = false) {
 function renderPeopleFilters() {
   const generationFilters = peopleElement("people-generation-filters");
   const categoryFilters = peopleElement("people-category-filters");
-  if (!generationFilters || !categoryFilters || !peopleState.data) return;
+  const statusFilters = peopleElement("people-status-filters");
+  if (!generationFilters || !categoryFilters || !statusFilters || !peopleState.data) return;
 
   generationFilters.replaceChildren();
   generationFilters.append(
@@ -66,6 +69,12 @@ function renderPeopleFilters() {
       makeFilterButton(category, category, "category", peopleState.category === category),
     );
   });
+
+  statusFilters.replaceChildren(
+    makeFilterButton("전체", "all", "status", peopleState.status === "all"),
+    makeFilterButton("보유", "owned", "status", peopleState.status === "owned"),
+    makeFilterButton("미보유", "missing", "status", peopleState.status === "missing"),
+  );
 }
 
 function renderGenerationSummary() {
@@ -74,12 +83,16 @@ function renderGenerationSummary() {
   summary.replaceChildren();
 
   peopleState.data.generations.forEach((generation) => {
+    const generationPeople = peopleState.data.people.filter(
+      (person) => person.generation === generation,
+    );
+    const owned = generationPeople.filter((person) => person.owned).length;
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.generationSummary = String(generation);
     button.classList.toggle("is-active", peopleState.generation === String(generation));
     button.setAttribute("aria-pressed", String(peopleState.generation === String(generation)));
-    button.innerHTML = `<span>${generation}세대</span><strong>${peopleState.data.metadata.counts.byGeneration[generation] || 0}명</strong>`;
+    button.innerHTML = `<span>${generation}세대</span><strong>${owned}/${generationPeople.length}명</strong>`;
     summary.append(button);
   });
 }
@@ -94,6 +107,8 @@ function matchesPeopleFilter(person) {
   if (peopleState.category !== "all" && person.category !== peopleState.category) {
     return false;
   }
+  if (peopleState.status === "owned" && !person.owned) return false;
+  if (peopleState.status === "missing" && person.owned) return false;
   if (!peopleState.query) return true;
   return [person.nameKo, person.nameEn].some((value) =>
     normalizePeopleSearch(value).includes(peopleState.query),
@@ -125,7 +140,7 @@ function makePeopleImage(person, large = false) {
   const image = document.createElement("img");
   image.className = large ? "people-dialog-image" : "card-image people-card-image";
   image.src = large ? person.imageLarge || person.image : person.image;
-  image.alt = `${person.nameKo} 대표 포켓몬 카드`;
+  image.alt = `${person.nameKo} 대표 한국어판 포켓몬 카드`;
   image.loading = large ? "eager" : "lazy";
   image.decoding = "async";
   image.addEventListener(
@@ -143,12 +158,86 @@ function makePeopleStatus(person, longLabel = false) {
   status.className = `people-card-status ${person.cardExists ? "is-confirmed" : "is-unconfirmed"}`;
   status.textContent = person.cardExists
     ? longLabel
-      ? "카드 확인 완료"
-      : "카드 확인"
+      ? "한국어판 단독 카드"
+      : "이미지 연결"
     : longLabel
       ? "카드 추가 확인"
-      : "미확인";
+      : "이미지 없음";
   return status;
+}
+
+function makeOwnedBadge(person) {
+  const badge = document.createElement("span");
+  badge.className = `status-badge ${person.owned ? "is-owned" : "is-missing"}`;
+  badge.textContent = person.owned ? "보유" : "미보유";
+  return badge;
+}
+
+function updateCompletionButton(button, person) {
+  const owned = Boolean(person.owned);
+  button.classList.toggle("is-complete", owned);
+  button.classList.remove("is-saving");
+  button.disabled = false;
+  button.setAttribute("aria-pressed", String(owned));
+  button.setAttribute(
+    "aria-label",
+    owned
+      ? `${person.nameKo} 카드 수집완료 취소`
+      : `${person.nameKo} 카드 수집완료로 표시`,
+  );
+  button.title = owned
+    ? "다시 누르면 미보유로 변경됩니다."
+    : "로그인한 내 인물도감에 수집완료로 저장합니다.";
+  button.textContent = owned ? "✓ 수집완료" : "수집완료";
+}
+
+function updateDialogOwnedState(person) {
+  peopleElement("people-dialog-visual")?.classList.toggle("is-missing", !person.owned);
+  const badge = peopleElement("people-dialog-owned-status");
+  if (badge) {
+    badge.className = `status-badge ${person.owned ? "is-owned" : "is-missing"}`;
+    badge.textContent = person.owned ? "보유" : "미보유";
+  }
+  const button = peopleElement("people-dialog-completion");
+  if (button) updateCompletionButton(button, person);
+}
+
+async function togglePeopleCompletion(person, button) {
+  const account = window.PokemonPeopleManager;
+  if (!account?.canEdit?.()) {
+    alert("Google 로그인 후 내 보유 상태를 저장할 수 있습니다.");
+    return;
+  }
+
+  const nextOwned = !person.owned;
+  button.disabled = true;
+  button.classList.add("is-saving");
+  button.textContent = "저장 중…";
+
+  try {
+    const saved = await account.saveOwned(person.id, nextOwned);
+    person.owned = saved.owned;
+    renderPeopleSummary();
+    renderPeople();
+    if (activePerson?.id === person.id) updateDialogOwnedState(person);
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "보유 상태를 저장하지 못했습니다.");
+    updateCompletionButton(button, person);
+  }
+}
+
+function makeCompletionButton(person) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "collection-complete-button";
+  updateCompletionButton(button, person);
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    void togglePeopleCompletion(person, button);
+  });
+  return button;
 }
 
 function makeCategoryBadge(person) {
@@ -161,8 +250,9 @@ function makeCategoryBadge(person) {
 
 function makePersonCard(person) {
   const article = document.createElement("article");
-  article.className = "pokemon-card people-card";
+  article.className = "pokemon-card people-card has-completion-action";
   article.dataset.personId = person.id;
+  article.classList.toggle("is-missing", !person.owned);
 
   const button = document.createElement("button");
   button.type = "button";
@@ -172,6 +262,10 @@ function makePersonCard(person) {
   const imageWrap = document.createElement("span");
   imageWrap.className = "card-image-wrap";
   imageWrap.append(makePeopleImage(person));
+  const missingOverlay = document.createElement("span");
+  missingOverlay.className = "missing-overlay";
+  missingOverlay.textContent = "미보유";
+  imageWrap.append(missingOverlay);
 
   const body = document.createElement("span");
   body.className = "card-body";
@@ -181,7 +275,7 @@ function makePersonCard(person) {
   const generation = document.createElement("span");
   generation.className = "number-badge";
   generation.textContent = `${person.generation}세대 · ${person.category}`;
-  top.append(generation, makePeopleStatus(person));
+  top.append(generation, makeOwnedBadge(person));
 
   const nameKo = document.createElement("strong");
   nameKo.className = "card-name-ko";
@@ -196,9 +290,9 @@ function makePersonCard(person) {
   meta.className = "card-meta";
   meta.textContent = `${person.affiliation} · ${person.region}지방`;
 
-  body.append(top, nameKo, nameEn, role, meta);
+  body.append(top, nameKo, nameEn, role, makePeopleStatus(person), meta);
   button.append(imageWrap, body);
-  article.append(button);
+  article.append(button, makeCompletionButton(person));
   button.addEventListener("click", () => openPeopleDialog(person));
   return article;
 }
@@ -207,6 +301,9 @@ function updatePeopleFilterLabel(resultCount) {
   const labels = [];
   if (peopleState.generation !== "all") labels.push(`${peopleState.generation}세대`);
   if (peopleState.category !== "all") labels.push(peopleState.category);
+  if (peopleState.status !== "all") {
+    labels.push(peopleState.status === "owned" ? "보유" : "미보유");
+  }
   if (peopleState.query) labels.push(`“${peopleState.query}”`);
   setPeopleText("people-active-filter-label", labels.length ? `· ${labels.join(" · ")}` : "");
 
@@ -249,9 +346,16 @@ function selectPeopleCategory(value) {
   renderPeople();
 }
 
+function selectPeopleStatus(value) {
+  peopleState.status = value;
+  peopleState.visible = PEOPLE_PAGE_SIZE;
+  renderPeople();
+}
+
 function resetPeopleFilters() {
   peopleState.generation = "all";
   peopleState.category = "all";
+  peopleState.status = "all";
   peopleState.query = "";
   peopleState.visible = PEOPLE_PAGE_SIZE;
   const search = peopleElement("people-search");
@@ -261,14 +365,17 @@ function resetPeopleFilters() {
 
 function renderPeopleSummary() {
   const { counts } = peopleState.data.metadata;
-  const rate = peoplePercent(counts.cardConfirmed, counts.total);
+  const owned = peopleState.data.people.filter((person) => person.owned).length;
+  const missing = counts.total - owned;
+  const rate = peoplePercent(owned, counts.total);
   setPeopleText("people-rate", `${rate}%`);
-  setPeopleText("people-confirmed", counts.cardConfirmed);
+  setPeopleText("people-owned", owned);
   setPeopleText("people-total", counts.total);
-  setPeopleText("people-unconfirmed", counts.unconfirmed);
+  setPeopleText("people-missing", missing);
   setPeopleText("stat-people-total", counts.total);
+  setPeopleText("stat-people-owned", owned);
+  setPeopleText("stat-people-missing", missing);
   setPeopleText("stat-people-confirmed", counts.cardConfirmed);
-  setPeopleText("stat-people-unconfirmed", counts.unconfirmed);
   peopleElement("people-progress-ring")?.style.setProperty("--progress", rate);
 }
 
@@ -286,7 +393,7 @@ function renderDialogCardList(person) {
     link.href = card.source;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", `${card.name} 공식 카드 데이터베이스에서 보기`);
+    link.setAttribute("aria-label", `${card.name} 카드 정보 보기`);
 
     const image = document.createElement("img");
     image.src = card.image;
@@ -295,8 +402,11 @@ function renderDialogCardList(person) {
     const name = document.createElement("strong");
     name.textContent = card.name;
     const meta = document.createElement("small");
-    meta.textContent = `${card.set} · ${card.number}`;
-    link.append(image, name, meta);
+    meta.textContent = `${card.set} · ${card.number} · 한국어판`;
+    const linkLabel = document.createElement("span");
+    linkLabel.className = "people-archive-link-label";
+    linkLabel.textContent = "카드 정보 보기 ↗";
+    link.append(image, name, meta, linkLabel);
     list.append(link);
   });
 }
@@ -306,7 +416,9 @@ function openPeopleDialog(person) {
   const visual = peopleElement("people-dialog-visual");
   if (!dialog || !visual) return;
 
+  activePerson = person;
   visual.replaceChildren(makePeopleImage(person, true));
+  visual.classList.toggle("is-missing", !person.owned);
   setPeopleText("people-dialog-generation", `${person.generation}세대`);
   const categoryHost = peopleElement("people-dialog-category");
   if (categoryHost) {
@@ -316,7 +428,9 @@ function openPeopleDialog(person) {
   const cardStatusHost = peopleElement("people-dialog-card-status");
   if (cardStatusHost) {
     cardStatusHost.className = `people-card-status ${person.cardExists ? "is-confirmed" : "is-unconfirmed"}`;
-    cardStatusHost.textContent = person.cardExists ? "카드 확인 완료" : "카드 추가 확인 필요";
+    cardStatusHost.textContent = person.cardExists
+      ? "한국어판 단독 카드"
+      : "카드 추가 확인 필요";
   }
 
   setPeopleText("people-dialog-name-ko", person.nameKo);
@@ -331,6 +445,8 @@ function openPeopleDialog(person) {
       : "대표 카드 추가 확인 필요",
   );
   renderDialogCardList(person);
+  updateDialogOwnedState(person);
+  window.PokemonPeopleManager?.open?.(person);
   dialog.showModal();
 }
 
@@ -342,6 +458,10 @@ function bindPeopleEvents() {
   peopleElement("people-category-filters")?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-category]");
     if (button) selectPeopleCategory(button.dataset.category);
+  });
+  peopleElement("people-status-filters")?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-status]");
+    if (button) selectPeopleStatus(button.dataset.status);
   });
   peopleElement("people-generation-summary")?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-generation-summary]");
@@ -363,6 +483,9 @@ function bindPeopleEvents() {
   peopleElement("people-dialog-close")?.addEventListener("click", () => {
     peopleElement("people-dialog")?.close();
   });
+  peopleElement("people-dialog-completion")?.addEventListener("click", (event) => {
+    if (activePerson) void togglePeopleCompletion(activePerson, event.currentTarget);
+  });
   peopleElement("people-dialog")?.addEventListener("click", (event) => {
     if (event.target === event.currentTarget) event.currentTarget.close();
   });
@@ -376,10 +499,13 @@ function bindPeopleEvents() {
 
 async function initPeopleArchive() {
   try {
-    const response = await fetch("./data/people.json?v=20260810-1", { cache: "no-store" });
+    const response = await fetch("./data/people.json?v=20260810-3", { cache: "no-store" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     peopleState.data = await response.json();
-    peopleState.data.people.forEach((person) => peopleById.set(person.id, person));
+    peopleState.data.people.forEach((person) => {
+      person.owned = Boolean(person.owned);
+      peopleById.set(person.id, person);
+    });
     renderPeopleSummary();
     renderPeopleFilters();
     renderGenerationSummary();

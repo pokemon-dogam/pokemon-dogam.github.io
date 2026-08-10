@@ -318,119 +318,49 @@ villain("atticus", 9, "추명", "Atticus", "팔데아", "스타단", "스타단 
 villain("ortega", 9, "오르티가", "Ortega", "팔데아", "스타단", "스타단 페어리군단 보스");
 villain("eri", 9, "비파", "Eri", "팔데아", "스타단", "스타단 격투군단 보스");
 
-const tcgRoot = path.resolve(process.argv[2] || path.join(process.cwd(), "..", "tcg-data"));
-const outputPath = path.resolve(process.argv[3] || path.join(process.cwd(), "data", "people.json"));
-const cardDirectory = path.join(tcgRoot, "cards", "en");
-const setPath = path.join(tcgRoot, "sets", "en.json");
+const cardDataPath = path.resolve(
+  process.argv[2] || path.join(process.cwd(), "data", "people-korean-cards.json"),
+);
+const outputPath = path.resolve(
+  process.argv[3] || path.join(process.cwd(), "data", "people.json"),
+);
 
-if (!fs.existsSync(cardDirectory) || !fs.existsSync(setPath)) {
+if (!fs.existsSync(cardDataPath)) {
   throw new Error(
-    `PokemonTCG/pokemon-tcg-data checkout not found at ${tcgRoot}. ` +
+    `Korean trainer card mapping not found at ${cardDataPath}. ` +
       "Pass its path as the first argument.",
   );
 }
 
-const sets = JSON.parse(fs.readFileSync(setPath, "utf8"));
-const setsById = new Map(sets.map((set) => [set.id, set]));
-const cards = [];
-
-for (const filename of fs.readdirSync(cardDirectory).sort()) {
-  if (!filename.endsWith(".json")) continue;
-  const setId = path.basename(filename, ".json");
-  const entries = JSON.parse(fs.readFileSync(path.join(cardDirectory, filename), "utf8"));
-  entries.forEach((card) => cards.push({ ...card, setId }));
-}
-
-function normalized(value) {
-  return String(value || "")
-    .normalize("NFKC")
-    .replace(/[’‘]/g, "'")
-    .trim()
-    .toLocaleLowerCase("en");
-}
-
-function cardMatchesAlias(cardName, alias) {
-  const name = normalized(cardName);
-  const target = normalized(alias);
-  if (!target) return false;
-  if (name === target) return true;
-  if (name.startsWith(`${target}'s `)) return true;
-  if (name.includes(`(${target})`)) return true;
-  return name
-    .split(/\s*&\s*/)
-    .map((part) => part.trim())
-    .includes(target);
-}
-
-const rarityScore = new Map([
-  ["Special Illustration Rare", 120],
-  ["Rare Special Illustration", 120],
-  ["Hyper Rare", 112],
-  ["Rare Secret", 110],
-  ["Ultra Rare", 108],
-  ["Rare Ultra", 108],
-  ["Illustration Rare", 102],
-  ["Rare Shiny GX", 98],
-  ["Rare Rainbow", 96],
-  ["Trainer Gallery Rare Holo", 94],
-  ["Rare Holo VMAX", 92],
-  ["Rare Holo VSTAR", 91],
-  ["Rare Holo GX", 90],
-  ["Rare Holo", 88],
-  ["Rare", 75],
-  ["Promo", 70],
-  ["Uncommon", 55],
-  ["Common", 45],
-]);
-
-function scoreCard(card) {
-  const supporterBonus = card.subtypes?.includes("Supporter") ? 20 : 0;
-  return (rarityScore.get(card.rarity) || 35) + supporterBonus;
-}
-
-function cardDate(card) {
-  return setsById.get(card.setId)?.releaseDate || "0000/00/00";
-}
+const cardsByPerson = JSON.parse(fs.readFileSync(cardDataPath, "utf8"));
+const seenCardIds = new Set();
+const jointCardPattern = /[&＆]|팟과덴트와콘|풍과란|로사와로이/u;
 
 function cardsFor(person) {
-  const matches = cards.filter(
-    (card) =>
-      card.supertype === "Trainer" &&
-      card.images?.small &&
-      person.cardAliases.some((alias) => cardMatchesAlias(card.name, alias)),
-  );
+  const matches = Array.isArray(cardsByPerson[person.id])
+    ? cardsByPerson[person.id]
+    : [];
 
-  matches.sort((a, b) => {
-    const scoreDifference = scoreCard(b) - scoreCard(a);
-    if (scoreDifference) return scoreDifference;
-    const dateDifference = cardDate(b).localeCompare(cardDate(a));
-    if (dateDifference) return dateDifference;
-    return String(a.id).localeCompare(String(b.id), "en", { numeric: true });
+  if (matches.length > 1) {
+    throw new Error(`${person.nameKo}: 대표 카드는 1장만 연결해야 합니다.`);
+  }
+
+  return matches.map((card) => {
+    if (card.language !== "ko" || card.edition !== "KR") {
+      throw new Error(`${person.nameKo}: 한국어판 카드가 아닙니다.`);
+    }
+    if (card.solo !== true || jointCardPattern.test(card.name)) {
+      throw new Error(`${person.nameKo}: 단독 인물 카드 기준을 충족하지 않습니다.`);
+    }
+    if (!card.image?.startsWith("https://cards.image.pokemonkorea.co.kr/")) {
+      throw new Error(`${person.nameKo}: 포켓몬코리아 카드 이미지 주소가 아닙니다.`);
+    }
+    if (!card.id || seenCardIds.has(card.id)) {
+      throw new Error(`${person.nameKo}: 카드 ID가 없거나 다른 인물과 중복됩니다.`);
+    }
+    seenCardIds.add(card.id);
+    return { ...card };
   });
-
-  const seenImages = new Set();
-  return matches
-    .filter((card) => {
-      if (seenImages.has(card.images.small)) return false;
-      seenImages.add(card.images.small);
-      return true;
-    })
-    .slice(0, 3)
-    .map((card) => {
-      const set = setsById.get(card.setId) || {};
-      return {
-        id: card.id,
-        name: card.name,
-        set: set.name || card.setId,
-        setCode: card.setId,
-        number: card.number || "",
-        rarity: card.rarity || "",
-        releaseDate: set.releaseDate || "",
-        image: card.images.small,
-        imageLarge: card.images.large || card.images.small,
-        source: "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/",
-      };
-    });
 }
 
 const enrichedPeople = people
@@ -470,20 +400,26 @@ const output = {
   metadata: {
     title: "인물도감",
     subtitle: "TRAINER ARCHIVE",
-    version: 1,
+    version: 2,
     updatedAt: "2026-08-10",
     scope:
       "포켓몬 본가 게임 1~9세대의 주요 주인공, 라이벌, 관장 및 관장 대응 인물, 챔피언, 악의 조직 핵심 인물. 동일 인물의 리메이크·복장 차이는 하나로 통합하고 대표 역할 하나로 집계한다.",
     cardVerification:
-      "영문 Pokémon TCG 데이터에서 인물명이 확인되는 트레이너 카드를 연결했다. 미확인은 카드가 없다는 뜻이 아니라 일본·한국 한정 카드와 카드 일러스트 속 등장 여부의 추가 검수가 필요하다는 뜻이다.",
+      "한국어판 포켓몬 카드 중 해당 인물 한 명이 중심으로 등장하는 카드만 대표 이미지로 연결했다. 합동·단체 카드는 제외했으며, 미확인은 조건을 충족하는 한국어판 단독 카드를 아직 확인하지 못했다는 뜻이다.",
+    cardPolicy: {
+      language: "ko",
+      edition: "KR",
+      composition: "single-trainer",
+      representativeCardsPerPerson: 1,
+    },
     sources: [
       {
-        label: "Pokémon 공식 TCG 카드 데이터베이스",
-        url: "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/",
+        label: "포켓몬 카드 게임 공식 카드검색",
+        url: "https://pokemoncard.co.kr/cards",
       },
       {
-        label: "PokemonTCG/pokemon-tcg-data",
-        url: "https://github.com/PokemonTCG/pokemon-tcg-data",
+        label: "Collectory 한국어판 카드 색인",
+        url: "https://collectory.cc/cards?region=kr",
       },
       {
         label: "Bulbapedia · Gym Leader",
