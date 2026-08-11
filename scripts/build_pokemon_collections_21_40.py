@@ -5,392 +5,263 @@ from __future__ import annotations
 import json
 import re
 import sys
-import time
-from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
-from urllib.parse import quote, urljoin, urlsplit, urlunsplit, parse_qsl, urlencode
-
-import requests
-from bs4 import BeautifulSoup
-
-BASE_URL = "https://collectory.cc"
-OUTPUT = Path("data/pokemon-collections-21-40.json")
-USER_AGENT = (
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-)
+from typing import Any
 
 POKEMON = [
-    (21, "깨비참", "Spearow"),
-    (22, "깨비드릴조", "Fearow"),
-    (23, "아보", "Ekans"),
-    (24, "아보크", "Arbok"),
-    (25, "피카츄", "Pikachu"),
-    (26, "라이츄", "Raichu"),
-    (27, "모래두지", "Sandshrew"),
-    (28, "고지", "Sandslash"),
-    (29, "니드런♀", "Nidoran♀"),
-    (30, "니드리나", "Nidorina"),
-    (31, "니드퀸", "Nidoqueen"),
-    (32, "니드런♂", "Nidoran♂"),
-    (33, "니드리노", "Nidorino"),
-    (34, "니드킹", "Nidoking"),
-    (35, "삐삐", "Clefairy"),
-    (36, "픽시", "Clefable"),
-    (37, "식스테일", "Vulpix"),
-    (38, "나인테일", "Ninetales"),
-    (39, "푸린", "Jigglypuff"),
-    (40, "푸크린", "Wigglytuff"),
+    (21, "깨비참"), (22, "깨비드릴조"), (23, "아보"), (24, "아보크"),
+    (25, "피카츄"), (26, "라이츄"), (27, "모래두지"), (28, "고지"),
+    (29, "니드런♀"), (30, "니드리나"), (31, "니드퀸"), (32, "니드런♂"),
+    (33, "니드리노"), (34, "니드킹"), (35, "삐삐"), (36, "픽시"),
+    (37, "식스테일"), (38, "나인테일"), (39, "푸린"), (40, "푸크린"),
 ]
 
-KNOWN_RARITIES = {
-    "C", "U", "R", "H", "HR", "SR", "SSR", "SAR", "AR", "RR", "RRR",
-    "UR", "CHR", "CSR", "S", "M", "CM", "N", "K", "TR", "PR", "PROMO",
-    "Mirror", "—", "P",
-}
-
-KOREAN_FORM_PREFIXES = {
-    "Alolan": "알로라",
-    "Galarian": "가라르",
-    "Hisuian": "히스이",
-    "Paldean": "팔데아",
-}
-
-MONTHS = {
-    "january": 1, "february": 2, "march": 3, "april": 4,
-    "may": 5, "june": 6, "july": 7, "august": 8,
-    "september": 9, "october": 10, "november": 11, "december": 12,
-}
-
-session = requests.Session()
-session.headers.update({
-    "User-Agent": USER_AGENT,
-    "Accept-Language": "ko-KR,ko;q=0.9,en;q=0.7",
-})
+# kinbo-ptcg/ptcg-kr-db가 스텔라미라클까지 공식 홈페이지 데이터를 보존하고 있다.
+# 그 이후 카드는 이 사이트가 이미 관리하는 최신 시리즈/AR/프로모 DB로 보완한다.
+SOURCE_CUTOFF_YEAR = 2024
 
 
-def with_lang(url: str) -> str:
-    parts = urlsplit(url)
-    query = dict(parse_qsl(parts.query, keep_blank_values=True))
-    query["lang"] = "ko"
-    return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def get(url: str, *, tries: int = 4) -> requests.Response:
-    last_error = None
-    for attempt in range(tries):
-        try:
-            response = session.get(url, timeout=30)
-            if response.status_code == 200 and response.text.strip():
-                return response
-            last_error = RuntimeError(f"HTTP {response.status_code} for {url}")
-        except requests.RequestException as error:
-            last_error = error
-        time.sleep(1.0 + attempt * 1.5)
-    raise RuntimeError(f"Failed to fetch {url}: {last_error}")
+def normalize_image(url: str) -> str:
+    return str(url or "").split("?", 1)[0].strip()
 
 
-def clean_text(value: str) -> str:
-    return re.sub(r"\s+", " ", value or "").strip()
+def extract_year(value: str) -> int:
+    match = re.search(r"(?:19|20)\d{2}", str(value or ""))
+    return int(match.group(0)) if match else 9999
 
 
-def gallery_url(name_ko: str) -> str:
-    return f"{BASE_URL}/pokemon/{quote(name_ko, safe='')}?region=kr&sort=set&lang=ko"
+def natural_code_key(code: str) -> tuple:
+    parts = re.split(r"(\d+)", str(code or "").lower())
+    return tuple(int(part) if part.isdigit() else part for part in parts)
 
 
-def expected_count(text: str) -> int | None:
-    patterns = [
-        r"전\s*세트\s*(\d+)\s*장",
-        r"(\d+)\s*cards\s+across\s+all\s+sets",
-        r"전체\s*🇰🇷\s*(\d+)",
-        r"🇰🇷\s*(\d+)",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, text, re.I)
-        if match:
-            return int(match.group(1))
+def version_sort_key(version: dict[str, Any], sequence: int) -> tuple:
+    year = extract_year(version.get("cardPageURL", ""))
+    if year == 9999:
+        year = extract_year(version.get("prodName", ""))
+    return (
+        year,
+        natural_code_key(version.get("prodCode", "")),
+        natural_code_key(version.get("number", "")),
+        sequence,
+    )
+
+
+def card_number(version: dict[str, Any]) -> str:
+    number = str(version.get("number") or "").strip()
+    prod_number = str(version.get("prodNumber") or "").strip()
+    prod_code = str(version.get("prodCode") or "").strip()
+    if not number:
+        return "—"
+    if prod_number and prod_number.isdigit():
+        return f"{number}/{prod_number.zfill(len(prod_number))}"
+    if "-P" in prod_code.upper() or prod_code.upper().endswith("P"):
+        return f"{number}/{prod_code.upper()}"
+    return number
+
+
+def baseline_group(source_root: Path, dex_number: int, species: str) -> list[dict[str, Any]]:
+    source = source_root / "card_data" / "pokemon" / "gen1" / f"{dex_number:04d}_{species}.json"
+    if not source.exists():
+        raise FileNotFoundError(f"Korean card DB is missing {source}")
+
+    card_defs = load_json(source)
+    rows: list[tuple[tuple, dict[str, Any]]] = []
+    sequence = 0
+    for card in card_defs:
+        name = str(card.get("name") or species).strip()
+        for version in card.get("version_infos") or []:
+            image = normalize_image(version.get("cardImgURL", ""))
+            if not image:
+                continue
+            number = card_number(version)
+            rarity = str(version.get("rarity") or "—").strip()
+            prod_code = str(version.get("prodCode") or "—").strip()
+            payload = {
+                "name": name,
+                "meta": f"{number} · {rarity} · {prod_code}",
+                "image": image,
+                "owned": False,
+                "source": str(version.get("cardPageURL") or "https://pokemoncard.co.kr/cards"),
+                "releaseYear": extract_year(version.get("cardPageURL", "")),
+            }
+            rows.append((version_sort_key(version, sequence), payload))
+            sequence += 1
+
+    rows.sort(key=lambda item: item[0])
+    return [row for _, row in rows]
+
+
+def target_for_name(name: str) -> tuple[int, str] | None:
+    value = str(name or "").replace(" ", "")
+    if not value:
+        return None
+    # 긴 이름을 우선해 니드런/니드리나 같은 부분문자열 충돌을 피한다.
+    for dex_number, species in sorted(POKEMON, key=lambda item: len(item[1]), reverse=True):
+        if species.replace(" ", "") in value:
+            return dex_number, species
     return None
 
 
-def card_links(soup: BeautifulSoup) -> list[str]:
-    seen: set[str] = set()
-    urls: list[str] = []
-    uuid_pattern = re.compile(
-        r"^/cards/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-        re.I,
-    )
-    for anchor in soup.find_all("a", href=True):
-        href = anchor.get("href", "")
-        if not uuid_pattern.match(href):
-            continue
-        url = urljoin(BASE_URL, href)
-        if url in seen:
-            continue
-        seen.add(url)
-        urls.append(url)
-    return urls
-
-
-def first_card_number(strings: list[str]) -> str:
-    number_pattern = re.compile(
-        r"^(?:\d{1,3}/(?:\d{1,3}|[A-Z]{1,5}(?:-[A-Z])?)|\d{1,3})$",
-        re.I,
-    )
-    for value in strings:
-        candidate = value.strip()
-        if number_pattern.fullmatch(candidate):
-            return candidate
-    joined = " ".join(strings)
-    match = re.search(r"\b(\d{1,3}/(?:\d{1,3}|[A-Z]{1,5}(?:-[A-Z])?))\b", joined, re.I)
+def parse_series_number(code: str) -> tuple[str, str]:
+    value = str(code or "")
+    match = re.search(r"_([^/\s]+)/([^\s]+)", value)
     if match:
-        return match.group(1)
-    raise ValueError("card number not found")
+        return match.group(1), match.group(2)
+    return value, ""
 
 
-def rarity_after_number(strings: list[str], number: str) -> str:
-    try:
-        start = strings.index(number)
-    except ValueError:
-        start = 0
-    for value in strings[start + 1 : start + 10]:
-        candidate = value.strip()
-        if candidate in KNOWN_RARITIES:
-            return candidate
-        match = re.search(r"\b(PROMO|SAR|SSR|SR|UR|AR|HR|CSR|CHR|RRR|RR|TR|Mirror|[CU RHSMNKP])\b", candidate)
-        if match:
-            return match.group(1).strip()
-    return "—"
+def ar_rarity_map(ar_path: Path) -> dict[str, str]:
+    result: dict[str, str] = {}
+    if not ar_path.exists():
+        return result
+    for group in load_json(ar_path):
+        for card in group.get("cards") or []:
+            image = normalize_image(card.get("image", ""))
+            if image:
+                result[image] = "AR"
+    return result
 
 
-def extract_set(soup: BeautifulSoup, text: str) -> tuple[str, str]:
-    set_anchor = None
-    for anchor in soup.find_all("a", href=True):
-        href = anchor.get("href", "")
-        if href.startswith("/sets/"):
-            set_anchor = anchor
-            break
-    set_name = clean_text(set_anchor.get_text(" ", strip=True)) if set_anchor else "한국 프로모"
-    set_code = ""
-    if set_anchor is not None:
-        parent_text = clean_text(set_anchor.parent.get_text(" ", strip=True))
-        match = re.search(r"/\s*([A-Za-z0-9+_.-]+)\b", parent_text)
-        if match:
-            set_code = match.group(1)
-    if not set_code:
-        match = re.search(r"\b(?:Set|세트)\s*.*?\s/\s*([A-Za-z0-9+_.-]+)\b", text, re.I)
-        if match:
-            set_code = match.group(1)
-    return set_name or "한국 프로모", set_code
+def supplement_from_series(
+    series_path: Path,
+    ar_path: Path,
+) -> dict[int, list[dict[str, Any]]]:
+    result = {dex: [] for dex, _ in POKEMON}
+    if not series_path.exists():
+        return result
+    rarity_by_image = ar_rarity_map(ar_path)
 
-
-def extract_release(text: str) -> tuple[int, int, int] | None:
-    english = re.search(
-        r"(?:Release|발매)\s*([A-Za-z]+)\s+(\d{4})",
-        text,
-        re.I,
-    )
-    if english:
-        month = MONTHS.get(english.group(1).lower())
-        if month:
-            return int(english.group(2)), month, 1
-
-    korean = re.search(
-        r"(?:발매|출시)\s*(\d{4})\s*[년.\-/]\s*(\d{1,2})",
-        text,
-    )
-    if korean:
-        return int(korean.group(1)), int(korean.group(2)), 1
-    return None
-
-
-def coarse_year(set_code: str, set_name: str) -> int:
-    match = re.search(r"(20\d{2})", set_code)
-    if match:
-        return int(match.group(1))
-    token = f"{set_code} {set_name}".upper()
-    if "DP" in token:
-        return 2009
-    if "BW" in token:
-        return 2011
-    if "XY" in token:
-        return 2014
-    if "SUN" in token or "MOON" in token or re.search(r"\bSM", token):
-        return 2017
-    if "SWORD" in token or "SHIELD" in token:
-        return 2020
-    if "SCARLET" in token or "VIOLET" in token:
-        return 2023
-    if "MEGA" in token:
-        return 2025
-    return 2098
-
-
-def card_image(soup: BeautifulSoup, species_ko: str, species_en: str) -> str:
-    for attrs in (
-        {"property": "og:image"},
-        {"name": "twitter:image"},
-    ):
-        meta = soup.find("meta", attrs=attrs)
-        if meta and meta.get("content"):
-            url = meta["content"].strip()
-            if "collectory.cc" in url:
-                return url
-
-    candidates = []
-    for image in soup.find_all("img"):
-        src = image.get("src") or image.get("data-src") or ""
-        alt = clean_text(image.get("alt", ""))
-        if "cdn.collectory.cc" not in src:
+    for group in load_json(series_path):
+        release = str(group.get("release") or "")
+        year = extract_year(release)
+        if year <= SOURCE_CUTOFF_YEAR:
             continue
-        score = 0
-        if species_ko in alt or species_en.lower() in alt.lower():
-            score += 10
-        if "/cards/" in src:
-            score += 5
-        candidates.append((score, src))
-    if candidates:
-        candidates.sort(reverse=True)
-        return candidates[0][1]
-    raise ValueError("card image not found")
+        set_code = str(group.get("code") or "—").strip()
+        for card in group.get("cards") or []:
+            display_name = str(card.get("name") or card.get("pokemonName") or "").strip()
+            match = target_for_name(display_name or card.get("pokemonName", ""))
+            if not match:
+                continue
+            dex_number, species = match
+            image = normalize_image(card.get("image", ""))
+            if not image:
+                continue
+            number, denominator = parse_series_number(card.get("code", ""))
+            number_label = f"{number}/{denominator}" if denominator else number
+            rarity = rarity_by_image.get(image, "—")
+            result[dex_number].append({
+                "name": display_name or species,
+                "meta": f"{number_label} · {rarity} · {set_code}",
+                "image": image,
+                "owned": False,
+                "source": "https://pokemoncard.co.kr/cards",
+                "releaseYear": year,
+                "release": release,
+                "setOrder": int(card.get("order") or 0),
+            })
+    return result
 
 
-def normalize_name(raw: str, species_ko: str, species_en: str) -> str:
-    name = clean_text(raw).replace("🇰🇷", "").strip()
-    if not name:
-        return species_ko
-
-    for english_prefix, korean_prefix in KOREAN_FORM_PREFIXES.items():
-        prefix = f"{english_prefix} {species_en}"
-        if name.lower().startswith(prefix.lower()):
-            return korean_prefix + " " + species_ko + name[len(prefix):]
-
-    if name.lower().startswith(species_en.lower()):
-        return species_ko + name[len(species_en):]
-    return name
-
-
-@dataclass
-class ParsedCard:
-    source_index: int
-    name: str
-    number: str
-    rarity: str
-    set_name: str
-    set_code: str
-    image: str
-    source: str
-    release: tuple[int, int, int] | None
-
-    def sort_key(self):
-        release = self.release
-        if release:
-            return (*release, self.source_index)
-        return (coarse_year(self.set_code, self.set_name), 12, 31, self.source_index)
-
-    def payload(self, account_index: int):
-        set_label = self.set_code or self.set_name
-        return {
-            "name": self.name,
-            "meta": f"{self.number} · {self.rarity} · {set_label}",
-            "image": self.image,
+def supplement_from_promos(promo_path: Path) -> dict[int, list[dict[str, Any]]]:
+    result = {dex: [] for dex, _ in POKEMON}
+    if not promo_path.exists():
+        return result
+    payload = load_json(promo_path)
+    for card in payload.get("cards") or []:
+        name = str(card.get("name") or "").strip()
+        match = target_for_name(name)
+        if not match:
+            continue
+        dex_number, species = match
+        image = normalize_image(card.get("image", ""))
+        if not image:
+            continue
+        year = int(card.get("year") or 9999)
+        # 오래된 프로모는 baseline에 포함되어 있으므로 최신 DB 보완분만 우선 추가한다.
+        if year <= SOURCE_CUTOFF_YEAR:
+            continue
+        number = str(card.get("cardNumber") or "PROMO").strip()
+        era = str(card.get("era") or "PROMO").strip()
+        result[dex_number].append({
+            "name": name or species,
+            "meta": f"{number} · PROMO · {era}",
+            "image": image,
             "owned": False,
-            "accountIndex": account_index,
-            "source": self.source,
-        }
+            "source": str(card.get("source") or "https://pokemoncard.co.kr/cards"),
+            "releaseYear": year,
+            "release": f"{year}-12-31",
+            "setOrder": 9999,
+        })
+    return result
 
 
-def parse_card(url: str, source_index: int, species_ko: str, species_en: str) -> ParsedCard:
-    response = get(with_lang(url))
-    soup = BeautifulSoup(response.text, "html.parser")
-    strings = [clean_text(value) for value in soup.stripped_strings if clean_text(value)]
-    text = " ".join(strings)
+def dedupe_and_sort(cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    unique: list[dict[str, Any]] = []
+    for card in cards:
+        image = normalize_image(card.get("image", ""))
+        key = image or f"{card.get('name')}::{card.get('meta')}"
+        if key in seen:
+            continue
+        seen.add(key)
+        card["image"] = image
+        unique.append(card)
 
-    heading = soup.find("h1")
-    raw_name = heading.get_text(" ", strip=True) if heading else species_ko
-    name = normalize_name(raw_name, species_ko, species_en)
-    number = first_card_number(strings)
-    rarity = rarity_after_number(strings, number)
-    set_name, set_code = extract_set(soup, text)
-    image = card_image(soup, species_ko, species_en)
-    release = extract_release(text)
-
-    return ParsedCard(
-        source_index=source_index,
-        name=name,
-        number=number,
-        rarity=rarity,
-        set_name=set_name,
-        set_code=set_code,
-        image=image,
-        source=url,
-        release=release,
-    )
-
-
-def build_group(dex_number: int, species_ko: str, species_en: str) -> dict:
-    url = gallery_url(species_ko)
-    response = get(url)
-    soup = BeautifulSoup(response.text, "html.parser")
-    text = clean_text(soup.get_text(" ", strip=True))
-    expected = expected_count(text)
-    links = card_links(soup)
-
-    if expected is None:
-        raise RuntimeError(f"#{dex_number:03d} {species_ko}: expected count not found")
-    if len(links) != expected:
-        raise RuntimeError(
-            f"#{dex_number:03d} {species_ko}: gallery says {expected}, parsed {len(links)} card links"
-        )
-
-    cards: list[ParsedCard] = []
-    failures = []
-    for index, card_url in enumerate(links):
-        try:
-            cards.append(parse_card(card_url, index, species_ko, species_en))
-        except Exception as error:
-            failures.append({"url": card_url, "error": str(error)})
-        time.sleep(0.08)
-
-    if failures:
-        print(json.dumps({"pokemon": species_ko, "failures": failures}, ensure_ascii=False, indent=2))
-        raise RuntimeError(f"#{dex_number:03d} {species_ko}: {len(failures)} card pages failed")
-    if len(cards) != expected:
-        raise RuntimeError(f"#{dex_number:03d} {species_ko}: expected {expected}, built {len(cards)}")
-
-    # Stable ownership identifiers are based on the source gallery index. Display order is Korean release order.
-    ordered = sorted(cards, key=lambda card: card.sort_key())
-    payload = [card.payload(card.source_index) for card in ordered]
-
-    # No duplicate account identifier within a Pokémon group.
-    indexes = [card["accountIndex"] for card in payload]
-    if len(indexes) != len(set(indexes)):
-        raise RuntimeError(f"#{dex_number:03d} {species_ko}: duplicate accountIndex")
-
-    print(f"#{dex_number:03d} {species_ko}: {len(payload)} cards")
-    return {
-        "name": species_ko,
-        "dexNumber": dex_number,
-        "cards": payload,
-    }
+    unique.sort(key=lambda card: (
+        int(card.get("releaseYear") or 9999),
+        str(card.get("release") or ""),
+        int(card.get("setOrder") or 0),
+        natural_code_key(card.get("meta", "")),
+    ))
+    for index, card in enumerate(unique):
+        card["accountIndex"] = index
+        card.pop("releaseYear", None)
+        card.pop("release", None)
+        card.pop("setOrder", None)
+    return unique
 
 
 def main() -> int:
-    output = Path(sys.argv[1]) if len(sys.argv) > 1 else OUTPUT
+    if len(sys.argv) < 2:
+        raise SystemExit(
+            "usage: build_pokemon_collections_21_40.py <ptcg-kr-db-root> [output]"
+        )
+    source_root = Path(sys.argv[1])
+    output = Path(sys.argv[2]) if len(sys.argv) >= 3 else Path("data/pokemon-collections-21-40.json")
+
+    modern = supplement_from_series(Path("data/series.json"), Path("data/ar.json"))
+    promos = supplement_from_promos(Path("data/promo-packs.json"))
     groups = []
-    total_cards = 0
+    total = 0
 
-    for dex_number, species_ko, species_en in POKEMON:
-        group = build_group(dex_number, species_ko, species_en)
-        groups.append(group)
-        total_cards += len(group["cards"])
+    for dex_number, species in POKEMON:
+        base = baseline_group(source_root, dex_number, species)
+        cards = dedupe_and_sort(base + modern[dex_number] + promos[dex_number])
+        if not cards:
+            raise RuntimeError(f"#{dex_number:03d} {species}: no cards")
+        groups.append({
+            "name": species,
+            "dexNumber": dex_number,
+            "cards": cards,
+        })
+        total += len(cards)
+        print(
+            f"#{dex_number:03d} {species}: {len(cards)} cards "
+            f"(baseline {len(base)}, modern {len(modern[dex_number])}, promo {len(promos[dex_number])})"
+        )
 
-    if [group["dexNumber"] for group in groups] != list(range(21, 41)):
-        raise RuntimeError("Pokédex range is not exactly 021–040")
-
+    assert [group["dexNumber"] for group in groups] == list(range(21, 41))
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(groups, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    print(json.dumps({"groups": len(groups), "cards": total_cards, "output": str(output)}, ensure_ascii=False))
+    output.write_text(
+        json.dumps(groups, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps({"groups": len(groups), "cards": total, "output": str(output)}, ensure_ascii=False))
     return 0
 
 
