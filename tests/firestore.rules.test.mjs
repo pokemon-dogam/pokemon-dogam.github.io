@@ -54,6 +54,13 @@ function publicProfileFields() {
   };
 }
 
+function publicDirectoryFields() {
+  return {
+    publicId: PUBLIC_ID,
+    updatedAt: serverTimestamp(),
+  };
+}
+
 function projection(collectionId = "national") {
   return {
     schemaVersion: 1,
@@ -337,6 +344,21 @@ test("private profile changes cannot leave the public mirror stale", async () =>
   );
 });
 
+test("a profile without a PUBLIC collection cannot enter the public directory", async () => {
+  await assertFails(
+    setDoc(
+      doc(alice, "publicCollectorDirectory", PUBLIC_ID),
+      publicDirectoryFields(),
+    ),
+  );
+  await assertFails(
+    setDoc(
+      doc(guest, "publicCollectorDirectory", PUBLIC_ID),
+      publicDirectoryFields(),
+    ),
+  );
+});
+
 test("public projection is readable but private source and extra fields stay blocked", async () => {
   await savePrivateSetting();
   const settingRef = doc(
@@ -405,6 +427,34 @@ test("public projection is readable but private source and extra fields stay blo
   assert.equal(publicList.size, 1);
 });
 
+test("a PUBLIC collector can enter the list without exposing UID or email", async () => {
+  const directoryRef = doc(alice, "publicCollectorDirectory", PUBLIC_ID);
+  await assertSucceeds(setDoc(directoryRef, publicDirectoryFields()));
+
+  const publicList = await assertSucceeds(
+    getDocs(collection(guest, "publicCollectorDirectory")),
+  );
+  assert.equal(publicList.size, 1);
+  assert.deepEqual(
+    Object.keys(publicList.docs[0].data()).sort(),
+    ["publicId", "updatedAt"],
+  );
+  assert.equal(publicList.docs[0].data().publicId, PUBLIC_ID);
+
+  await assertFails(
+    setDoc(directoryRef, {
+      ...publicDirectoryFields(),
+      ownerUid: ALICE_UID,
+    }),
+  );
+  await assertFails(
+    setDoc(
+      doc(bob, "publicCollectorDirectory", PUBLIC_ID),
+      publicDirectoryFields(),
+    ),
+  );
+});
+
 test("private transition atomically revokes the old public link", async () => {
   const settingRef = doc(
     alice,
@@ -436,6 +486,7 @@ test("private transition atomically revokes the old public link", async () => {
     updatedAt: serverTimestamp(),
   });
   batch.delete(publicRef);
+  batch.delete(doc(alice, "publicCollectorDirectory", PUBLIC_ID));
   await assertSucceeds(batch.commit());
   const revoked = await assertSucceeds(
     getDoc(
@@ -449,6 +500,10 @@ test("private transition atomically revokes the old public link", async () => {
     ),
   );
   assert.equal(revoked.exists(), false);
+  assert.equal(
+    (await getDocs(collection(guest, "publicCollectorDirectory"))).size,
+    0,
+  );
 });
 
 test("unlisted token supports exact get, blocks list, and is revoked by private", async () => {

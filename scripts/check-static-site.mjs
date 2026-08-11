@@ -39,6 +39,7 @@ const required = [
   "ar.html",
   "people.html",
   "collector-settings.html",
+  "collectors.html",
   "collector.html",
   "firestore.rules",
 ];

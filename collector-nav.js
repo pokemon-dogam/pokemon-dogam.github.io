@@ -3,20 +3,59 @@
 (function () {
   const registry = window.CollectorCollectionRegistry;
 
-  function addSettingsNavigation() {
-    const nav = document.querySelector(".collection-nav");
-    if (!nav || nav.querySelector('[href*="collector-settings.html"]')) return;
+  function navigationLink(href, icon, title, subtitle) {
     const link = document.createElement("a");
     link.className = "collection-link";
-    link.href = "./collector-settings.html";
+    link.href = href;
     link.innerHTML = `
-      <span class="collection-icon" aria-hidden="true">CS</span>
-      <span><strong>도감 관리</strong><small>PROFILE · SHARING</small></span>
+      <span class="collection-icon" aria-hidden="true">${icon}</span>
+      <span><strong>${title}</strong><small>${subtitle}</small></span>
     `;
-    nav.append(link);
+    return link;
+  }
+
+  function arrangeCollectorNavigation() {
+    const nav = document.querySelector(".collection-nav");
+    if (!nav) return;
+
+    const dashboard = nav.querySelector(".collection-link");
+    if (!dashboard) return;
+    const settings =
+      nav.querySelector('[href*="collector-settings.html"]') ||
+      navigationLink(
+        "./collector-settings.html",
+        "CS",
+        "도감 관리",
+        "PROFILE · SHARING",
+      );
+    const directory =
+      nav.querySelector('[href*="collectors.html"]') ||
+      navigationLink(
+        "./collectors.html",
+        "PB",
+        "공개 컬렉터",
+        "PUBLIC BOARD",
+      );
+
+    dashboard.after(settings);
+    settings.after(directory);
+
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+    for (const [link, page] of [
+      [settings, "collector-settings.html"],
+      [directory, "collectors.html"],
+    ]) {
+      const active = currentPage === page;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    }
   }
 
   function addHeroActions() {
+    if (["collector-settings", "collector-directory"].includes(document.body.dataset.page)) {
+      return;
+    }
     const heroContent = document.querySelector(".hero .hero-content");
     if (!heroContent || heroContent.querySelector(".collector-page-actions")) return;
     const collectionId = registry?.collectionIdForPage?.() || "";
@@ -92,6 +131,6 @@
   }
 
   window.addEventListener("pokemon-dex:public-sync-error", showPublicSyncWarning);
-  addSettingsNavigation();
+  arrangeCollectorNavigation();
   addHeroActions();
 })();

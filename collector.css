@@ -5,6 +5,18 @@
   --collector-amber: #d58a17;
 }
 
+.collector-signin-gate[hidden],
+.collector-profile-summary[hidden],
+.collector-profile-form[hidden],
+.collector-setting-share[hidden],
+.collector-public-collections[hidden],
+.collector-public-grid[hidden],
+.collector-public-state[hidden],
+.collector-directory-grid[hidden],
+.collector-directory-state[hidden] {
+  display: none !important;
+}
+
 .collector-settings-main,
 .collector-public-main {
   min-width: 0;
@@ -836,6 +848,275 @@
   margin-top: 22px;
 }
 
+.collector-directory-main {
+  min-width: 0;
+}
+
+.collector-directory-hero {
+  min-height: 270px;
+}
+
+.collector-directory-badge {
+  position: relative;
+  z-index: 1;
+  min-width: 230px;
+  padding: 21px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.collector-directory-badge strong,
+.collector-directory-badge small {
+  display: block;
+}
+
+.collector-directory-badge strong {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.collector-directory-badge small {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.collector-directory-panel {
+  margin-top: 22px;
+}
+
+.collector-directory-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.collector-directory-search {
+  position: relative;
+  flex: 1;
+}
+
+.collector-directory-search::before {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #8992a4;
+  border-radius: 50%;
+  content: "";
+  transform: translateY(-58%);
+}
+
+.collector-directory-search::after {
+  position: absolute;
+  top: calc(50% + 6px);
+  left: 28px;
+  width: 7px;
+  height: 2px;
+  border-radius: 2px;
+  background: #8992a4;
+  content: "";
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.collector-directory-search input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px 0 46px;
+  border: 1px solid #d8dde7;
+  border-radius: 13px;
+  background: #fff;
+  color: #17233f;
+  font: inherit;
+}
+
+.collector-directory-search input:focus {
+  outline: 3px solid rgba(70, 102, 181, 0.13);
+  border-color: #7188bc;
+}
+
+.collector-directory-count {
+  flex: 0 0 auto;
+  min-width: 116px;
+  color: #737c8d;
+  font-size: 12px;
+  text-align: right;
+}
+
+.collector-directory-count strong {
+  color: #17233f;
+  font-size: 18px;
+}
+
+.collector-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.collector-directory-card {
+  display: flex;
+  min-width: 0;
+  min-height: 270px;
+  flex-direction: column;
+  padding: 22px;
+  border: 1px solid #dfe4ed;
+  border-radius: 19px;
+  background: linear-gradient(145deg, #fff, #f8f9fc);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.collector-directory-card:hover {
+  transform: translateY(-2px);
+  border-color: #b7c4de;
+  box-shadow: 0 15px 30px rgba(29, 43, 72, 0.1);
+}
+
+.collector-directory-card-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.collector-directory-avatar {
+  display: grid;
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #2a3c63, #17233f);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.collector-directory-card-title {
+  min-width: 0;
+}
+
+.collector-directory-card-title strong,
+.collector-directory-card-title small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collector-directory-card-title strong {
+  color: #17233f;
+  font-size: 18px;
+}
+
+.collector-directory-card-title small {
+  margin-top: 4px;
+  color: #8790a1;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+}
+
+.collector-directory-bio {
+  min-height: 43px;
+  margin: 17px 0 0;
+  color: #626c7e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.collector-directory-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+}
+
+.collector-directory-tags span {
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: #eef2f8;
+  color: #52617c;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.collector-directory-summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e9ecf2;
+}
+
+.collector-directory-summary span,
+.collector-directory-summary strong {
+  display: block;
+}
+
+.collector-directory-summary span {
+  color: #8790a0;
+  font-size: 10px;
+}
+
+.collector-directory-summary strong {
+  margin-top: 4px;
+  color: #273758;
+  font-size: 15px;
+}
+
+.collector-directory-rate {
+  color: #4a63a0;
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.collector-directory-state {
+  margin-top: 20px;
+  padding: 48px 24px;
+  border: 1px solid #e0e5ed;
+  border-radius: 18px;
+  background: #fff;
+  color: #697386;
+  text-align: center;
+}
+
+.collector-directory-state strong {
+  display: block;
+  color: #273248;
+  font-size: 17px;
+}
+
+.collector-directory-state p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.collector-directory-state a {
+  display: inline-flex;
+  margin-top: 16px;
+  color: #3d5e9d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.collector-directory-state--error {
+  border-color: #ebcbd0;
+  background: #fff8f9;
+}
+
 @media (max-width: 900px) {
   .collector-setting-card {
     grid-template-columns: minmax(0, 1fr) minmax(170px, 0.8fr);
@@ -846,6 +1127,10 @@
   }
 
   .collector-public-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collector-directory-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -868,6 +1153,22 @@
     width: 100%;
     min-width: 0;
     margin-top: 22px;
+  }
+
+  .collector-directory-badge {
+    width: 100%;
+    min-width: 0;
+    margin-top: 22px;
+  }
+
+  .collector-directory-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .collector-directory-count {
+    min-width: 0;
+    text-align: left;
   }
 
   .collector-signin-gate,
@@ -951,6 +1252,10 @@
   }
 
   .collector-public-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .collector-directory-grid {
     grid-template-columns: 1fr;
   }
 

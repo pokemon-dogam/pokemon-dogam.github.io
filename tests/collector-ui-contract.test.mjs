@@ -63,7 +63,7 @@ test("every existing collection page loads the public adapter before its manager
 });
 
 test("new pages have unique element IDs and mobile/read-only CSS contracts", async () => {
-  for (const page of ["collector-settings.html", "collector.html"]) {
+  for (const page of ["collector-settings.html", "collectors.html", "collector.html"]) {
     const html = await source(page);
     const ids = [...html.matchAll(/\sid=["']([^"']+)["']/g)].map((match) => match[1]);
     assert.equal(new Set(ids).size, ids.length, `${page}: duplicate id`);
@@ -80,6 +80,55 @@ test("new pages have unique element IDs and mobile/read-only CSS contracts", asy
   const css = await source("collector.css");
   assert.match(css, /@media \(max-width: 680px\)/);
   assert.match(css, /collector-public-readonly \.collector-private-detail/);
+});
+
+test("collector settings restores the existing login before showing its sign-in gate", async () => {
+  const settingsPage = await source("collector-settings.html");
+  const settingsClient = await source("collector-settings.js");
+  const css = await source("collector.css");
+  assert.match(
+    settingsPage,
+    /id="collector-signin-gate"[^>]*hidden/,
+    "the sign-in gate must stay hidden until auth restoration finishes",
+  );
+  assert.match(css, /collector-signin-gate\[hidden\]/);
+  assert.match(settingsClient, /auth[.]authStateReady/);
+  assert.match(settingsClient, /현재 세션 확인/);
+  assert.equal(settingsClient.includes('prompt: "select_account"'), false);
+});
+
+test("collector navigation stays directly below the dashboard and includes the public board", async () => {
+  const navigation = await source("collector-nav.js");
+  assert.match(navigation, /dashboard[.]after\(settings\)/);
+  assert.match(navigation, /settings[.]after\(directory\)/);
+  assert.match(navigation, /공개 컬렉터/);
+  for (const [page] of Object.values(collectionPages)) {
+    assert.match(await source(page), /collector-nav[.]js\?v=20260811-1/);
+  }
+  const settingsPage = await source("collector-settings.html");
+  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-1/);
+  for (const page of [settingsPage, await source("collectors.html")]) {
+    const nav = page.slice(page.indexOf('<nav class="collection-nav">'));
+    assert.ok(nav.indexOf('href="./collector-settings.html"') > nav.indexOf('href="./"'));
+    assert.ok(nav.indexOf('href="./collectors.html"') > nav.indexOf('href="./collector-settings.html"'));
+    assert.ok(nav.indexOf('href="./national.html"') > nav.indexOf('href="./collectors.html"'));
+  }
+});
+
+test("public collector board reads only directory and existing public projections", async () => {
+  const boardPage = await source("collectors.html");
+  const boardClient = await source("collector-directory.js");
+  const settingsClient = await source("collector-settings.js");
+  assert.match(boardPage, /id="collector-directory-grid"/);
+  assert.match(boardPage, /PRIVATE·UNLISTED/);
+  assert.match(boardClient, /publicCollectorDirectory/);
+  assert.match(boardClient, /publicProfiles/);
+  assert.match(boardClient, /"collections"/);
+  assert.equal(boardClient.includes('"users"'), false);
+  assert.equal(boardClient.includes("ownerUid"), false);
+  assert.equal(boardClient.includes("email"), false);
+  assert.match(settingsClient, /syncDirectoryInBatch/);
+  assert.match(settingsClient, /visibility === "public"/);
 });
 
 test("public projection adapters discard private card and people details", async () => {
