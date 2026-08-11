@@ -8,8 +8,8 @@
     "test:syntax": "node scripts/check-static-site.mjs",
     "test:registry": "node --test tests/collector-registry.test.mjs",
     "test:ui": "node --test tests/collector-ui-contract.test.mjs",
-    "test:rules:lint": "eslint firestore.rules storage.rules",
-    "test:rules": "firebase emulators:exec --only firestore,storage --project demo-pokemon-dogam \"node --test --test-concurrency=1 tests/firestore.rules.test.mjs tests/storage.rules.test.mjs\""
+    "test:rules:lint": "eslint firestore.rules",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-pokemon-dogam \"node --test tests/firestore.rules.test.mjs\""
   },
   "devDependencies": {
     "@firebase/eslint-plugin-security-rules": "0.0.2",

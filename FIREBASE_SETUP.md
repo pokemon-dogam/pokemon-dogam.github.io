@@ -27,7 +27,6 @@ window.POKEMON_DEX_FIREBASE = {
     apiKey: "Firebase 웹 앱 값",
     authDomain: "Firebase 웹 앱 값",
     projectId: "Firebase 웹 앱 값",
-    storageBucket: "Firebase 웹 앱 값",
     messagingSenderId: "Firebase 웹 앱 값",
     appId: "Firebase 웹 앱 값",
   },
@@ -76,36 +75,15 @@ sharedCollections/{shareId}
 공개 projection은 보유 key와 합계만 포함하며 이메일, UID, 실제 카드 정보,
 메모, 수량, 교환 상태와 사용자 직접 등록 프로모는 포함하지 않습니다.
 
-## 3. Storage 사전 확인 — 자동 진행 금지
+## 3. Spark 무료 요금제 유지
 
-`firebase-config.js`에 `storageBucket`이 있어도 Storage가 실제로 활성화되었거나
-현재 Rules를 안전하게 교체할 수 있다는 뜻은 아닙니다. 배포 전에 반드시
-Firebase Console에서 다음을 사람이 확인해야 합니다.
+컬렉터 프로필은 닉네임, 한 줄 소개와 닉네임 첫 글자 아이콘만 사용합니다.
+프로필 사진 파일·이미지 URL을 저장하지 않으며 Firebase Storage SDK, bucket,
+Storage Rules도 사용하거나 배포하지 않습니다.
 
-1. Storage가 이미 활성화되어 있는지 확인
-2. 활성화 과정에서 Billing 변경 또는 유료 플랜이 요구되는지 확인
-3. 현재 배포된 Storage Rules와 이 저장소의 `storage.rules` 비교
-4. 기존에 다른 Storage 파일·경로를 사용 중인지 확인
-5. Storage Rules의 Firestore 교차 서비스 접근 권한 활성화가 가능한지 확인
-
-Billing 변경, 새 bucket 생성 또는 기존 Storage Rules 병합이 필요하면 먼저
-작업을 중단하고 소유자와 범위를 합의합니다.
-
-프로필 사진은 브라우저에서 정사각형 512×512 WebP로 만든 파일만 다음 두
-교체 슬롯 중 하나에 저장합니다.
-
-```text
-publicProfiles/{publicId}/avatar-a.webp
-publicProfiles/{publicId}/avatar-b.webp
-```
-
-새 파일 업로드와 프로필 반영이 성공한 뒤 이전 슬롯을 삭제하므로 정상
-상태에서는 현재 사진 한 장만 남고, 새 업로드가 실패해도 이전 사진이 먼저
-삭제되지 않습니다. 공개 URL에는 Firebase UID가 들어가지 않습니다. 쓰기·삭제는
-Storage Rules가 비공개 `collectorPublicIdOwners/{publicId}` 문서를 확인해 해당
-publicId 소유자에게만 허용합니다. 이 `firestore.get()` 교차 서비스 검사는
-Storage 작업마다 Firestore 읽기 1건을 사용할 수 있으며, Rules 최초 배포 때
-서비스 간 권한 활성화 안내가 나타날 수 있습니다. 이를 임의로 승인하지 않습니다.
+운영 프로젝트는 Spark 무료 요금제를 유지합니다. Authentication과 Firestore의
+무료 할당량 안에서 서비스하며, 할당량을 넘겼을 때 유료 요금제로 자동 전환하는
+코드나 배포 절차는 두지 않습니다.
 
 ## 4. 로컬 Rules 검증
 
@@ -116,25 +94,25 @@ npm install
 npm test
 ```
 
-Firebase Emulator는 최초 실행 시 공식 Firestore·Storage emulator 바이너리를
+Firebase Emulator는 최초 실행 시 공식 Firestore emulator 바이너리를
 다운로드할 수 있으므로 네트워크가 허용된 개발 환경 또는 CI에서 실행합니다.
 
 ## 5. Rules 배포 순서
 
 다음 조건이 모두 충족되기 전에는 운영 Rules 또는 `main`을 변경하지 않습니다.
 
-- Firestore·Storage emulator 권한 테스트 통과
+- Firestore emulator 권한 테스트 통과
 - 기존 owner, 일반 사용자, 신규 empty 사용자의 도감 회귀 테스트 통과
 - 기존 `shared-readonly-view.js` 공유 테스트 통과
-- 데스크톱·모바일 로그인/사진 crop/공개 URL 테스트 통과
-- Console에서 Storage 활성화·비용·현재 Rules 확인 완료
-- Storage Rules의 Firestore 교차 서비스 권한과 추가 읽기 비용 확인 완료
+- 데스크톱·모바일 로그인/프로필/공개 URL 테스트 통과
+- Console에서 Spark 요금제와 현재 Firestore Rules 확인 완료
+- 코드·설정·Rules에 Firebase Storage 의존성이 없는지 확인 완료
 
 확인 뒤 Firebase CLI가 올바른 프로젝트를 가리키는지 먼저 점검하고 배포합니다.
 
 ```bash
 firebase use
-firebase deploy --only firestore:rules,storage
+firebase deploy --only firestore:rules
 ```
 
 이 명령은 GitHub Pages HTML/JavaScript를 배포하지 않습니다. 정적 사이트는

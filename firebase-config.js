@@ -8,7 +8,6 @@ window.POKEMON_DEX_FIREBASE = {
     apiKey: "AIzaSyD1tyzDNvsMdispw1ZBc20MCvsztAq06Kc",
     authDomain: "pokemon-dex-40e92.firebaseapp.com",
     projectId: "pokemon-dex-40e92",
-    storageBucket: "pokemon-dex-40e92.firebasestorage.app",
     messagingSenderId: "817332021463",
     appId: "1:817332021463:web:90f97ca404d5b82d7c2892",
   },

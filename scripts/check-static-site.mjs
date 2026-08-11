@@ -41,7 +41,6 @@ const required = [
   "collector-settings.html",
   "collector.html",
   "firestore.rules",
-  "storage.rules",
 ];
 for (const file of required) {
   if (!existsSync(join(rootPath, file))) failures.push(`missing required file ${file}`);

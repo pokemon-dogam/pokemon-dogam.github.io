@@ -71,9 +71,7 @@ test("new pages have unique element IDs and mobile/read-only CSS contracts", asy
   const settings = await source("collector-settings.html");
   for (const id of [
     "collector-nickname",
-    "collector-avatar-file",
-    "collector-crop-canvas",
-    "collector-crop-zoom",
+    "collector-profile-avatar-fallback",
     "collector-settings-grid",
     "collector-settings-save",
   ]) {
@@ -82,7 +80,6 @@ test("new pages have unique element IDs and mobile/read-only CSS contracts", asy
   const css = await source("collector.css");
   assert.match(css, /@media \(max-width: 680px\)/);
   assert.match(css, /collector-public-readonly \.collector-private-detail/);
-  assert.match(css, /touch-action: none/);
 });
 
 test("public projection adapters discard private card and people details", async () => {
@@ -187,21 +184,20 @@ test("the public profile client has no private user-document read route", async 
   assert.match(client, /publicProfiles/);
 });
 
-test("public avatar URLs use publicId and never embed the Firebase UID", async () => {
+test("the free profile path has no Firebase Storage or image URL dependency", async () => {
   const settingsClient = await source("collector-settings.js");
+  const settingsPage = await source("collector-settings.html");
+  const publicPage = await source("collector.html");
   const firestoreRules = await source("firestore.rules");
-  const storageRules = await source("storage.rules");
-  assert.match(
-    settingsClient,
-    /publicProfiles\/\$\{profile\.publicId\}\/avatar-\$\{nextSlot\}[.]webp/,
-  );
-  assert.equal(
-    settingsClient.includes("users/${currentUser.uid}/profile/avatar"),
-    false,
-  );
-  assert.match(firestoreRules, /o\/publicProfiles%2F/);
-  assert.match(storageRules, /collectorPublicIdOwners/);
-  assert.match(storageRules, /firestore[.]get/);
+  const firebaseConfig = await source("firebase.json");
+  assert.equal(settingsClient.includes("firebase-storage.js"), false);
+  assert.equal(settingsClient.includes("avatarUrl"), false);
+  assert.equal(settingsPage.includes('type="file"'), false);
+  assert.equal(publicPage.includes("collector-public-avatar\""), false);
+  assert.equal(firestoreRules.includes("avatarUrl"), false);
+  assert.equal(firestoreRules.includes("profileImageUrl"), false);
+  assert.equal(JSON.parse(firebaseConfig).storage, undefined);
+  assert.match(settingsPage, /닉네임 첫 글자/);
 });
 
 test("nickname creation and rename use server-backed Firestore transactions", async () => {

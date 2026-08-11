@@ -6,7 +6,6 @@
   const registry = window.CollectorCollectionRegistry;
   const elements = {
     profile: document.querySelector("#collector-public-profile"),
-    avatar: document.querySelector("#collector-public-avatar"),
     avatarFallback: document.querySelector("#collector-public-avatar-fallback"),
     name: document.querySelector("#collector-public-name"),
     bio: document.querySelector("#collector-public-bio"),
@@ -55,28 +54,12 @@
     }, 1800);
   }
 
-  function avatarUrl(profile) {
-    if (!profile.avatarUrl) return "";
-    const separator = profile.avatarUrl.includes("?") ? "&" : "?";
-    return `${profile.avatarUrl}${separator}v=${profile.avatarVersion || 0}`;
-  }
-
   function renderProfile(profile) {
-    const imageUrl = avatarUrl(profile);
     elements.name.textContent = profile.nickname || "컬렉터";
     elements.bio.textContent = profile.bio || "Pokémon Collection";
-    elements.avatar.alt = `${profile.nickname || "컬렉터"}의 프로필 사진`;
-    if (imageUrl) {
-      elements.avatar.src = imageUrl;
-      elements.avatar.hidden = false;
-      elements.avatarFallback.hidden = true;
-    } else {
-      elements.avatar.hidden = true;
-      elements.avatarFallback.hidden = false;
-      elements.avatarFallback.textContent = (profile.nickname || "C")
-        .slice(0, 1)
-        .toUpperCase();
-    }
+    elements.avatarFallback.textContent = (profile.nickname || "C")
+      .slice(0, 1)
+      .toUpperCase();
     document.title = `${profile.nickname || "Collector"}의 Pokémon Collection | MY POKÉMON DEX`;
     elements.profile.hidden = false;
   }

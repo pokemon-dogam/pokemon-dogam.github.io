@@ -82,28 +82,6 @@ service cloud.firestore {
         && nicknameNormalized == nickname.lower().replace(' +', '');
     }
 
-    function validAvatar() {
-      let path = request.resource.data.avatarStoragePath;
-      let url = request.resource.data.avatarUrl;
-      let publicId = request.resource.data.publicId;
-      let urlPrefix =
-        '^https://firebasestorage[.]googleapis[.]com/v0/b/pokemon-dex-40e92[.]firebasestorage[.]app/o/publicProfiles%2F'
-          + publicId
-          + '%2F';
-      return (
-          path == ""
-          && url == ""
-        )
-        || (
-          path == "publicProfiles/" + publicId + "/avatar-a.webp"
-          && url.matches(urlPrefix + 'avatar-a[.]webp[?].+$')
-        )
-        || (
-          path == "publicProfiles/" + publicId + "/avatar-b.webp"
-          && url.matches(urlPrefix + 'avatar-b[.]webp[?].+$')
-        );
-    }
-
     function publicIdOwnerAfter(publicId) {
       return getAfter(
         /databases/$(database)/documents/collectorPublicIdOwners/$(publicId)
@@ -153,9 +131,6 @@ service cloud.firestore {
           "nicknameNormalized",
           "publicId",
           "bio",
-          "avatarUrl",
-          "avatarStoragePath",
-          "avatarVersion",
           "profileCompleted",
           "createdAt",
           "updatedAt"
@@ -165,9 +140,6 @@ service cloud.firestore {
           "nicknameNormalized",
           "publicId",
           "bio",
-          "avatarUrl",
-          "avatarStoragePath",
-          "avatarVersion",
           "profileCompleted",
           "createdAt",
           "updatedAt"
@@ -179,12 +151,6 @@ service cloud.firestore {
         && validPublicId(request.resource.data.publicId)
         && request.resource.data.bio is string
         && request.resource.data.bio.size() <= 80
-        && request.resource.data.avatarUrl is string
-        && request.resource.data.avatarUrl.size() <= 1000
-        && request.resource.data.avatarStoragePath is string
-        && validAvatar()
-        && request.resource.data.avatarVersion is int
-        && request.resource.data.avatarVersion >= 0
         && request.resource.data.profileCompleted == true
         && request.resource.data.updatedAt == request.time
         && getAfter(
@@ -195,8 +161,6 @@ service cloud.firestore {
         ).data.ownerUid == userId
         && publicMirror.data.nickname == request.resource.data.nickname
         && publicMirror.data.bio == request.resource.data.bio
-        && publicMirror.data.avatarUrl == request.resource.data.avatarUrl
-        && publicMirror.data.avatarVersion == request.resource.data.avatarVersion
         && publicMirror.data.profileCompleted
           == request.resource.data.profileCompleted;
     }
@@ -209,21 +173,15 @@ service cloud.firestore {
       return request.resource.data.keys().hasAll([
           "nickname",
           "bio",
-          "avatarUrl",
-          "avatarVersion",
           "profileCompleted"
         ])
         && request.resource.data.keys().hasOnly([
           "nickname",
           "bio",
-          "avatarUrl",
-          "avatarVersion",
           "profileCompleted"
         ])
         && request.resource.data.nickname == profile.data.nickname
         && request.resource.data.bio == profile.data.bio
-        && request.resource.data.avatarUrl == profile.data.avatarUrl
-        && request.resource.data.avatarVersion == profile.data.avatarVersion
         && request.resource.data.profileCompleted == true
         && request.resource.data.profileCompleted
           == profile.data.profileCompleted;
@@ -718,7 +676,7 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // 공개 프로필에는 닉네임·소개·사용자 업로드 사진만 복제합니다.
+    // 공개 프로필에는 닉네임과 소개만 복제합니다.
     match /publicProfiles/{publicId} {
       allow get: if resource.data.profileCompleted == true;
       allow list: if false;

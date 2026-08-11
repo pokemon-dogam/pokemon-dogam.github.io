@@ -5,13 +5,13 @@
 - 시작 `main` SHA: `752b4132d3678ce12b6ba94196461ce7f1381a64`
 - 작업 브랜치: `feature/collector-profile-sharing`
 - 원칙: 기존 도감 문서·필드·공유 방식은 그대로 두고 신규 경로만 추가
-- 운영 상태: 기능 브랜치 로컬 구현이며 Firebase Rules·Storage·GitHub Pages 미배포
+- 운영 상태: 기능 브랜치 구현이며 Firebase Rules·GitHub Pages 미배포
 
 ## 기능 범위
 
 - 기존 사용자에게 한 번만 표시되는 컬렉터 프로필 안내와 `나중에` 상태
 - 중복 방지 컬렉터 닉네임, 안정적인 랜덤 `publicId`, 한 줄 소개
-- 브라우저 정사각형 crop·이동·확대 후 512×512 WebP 프로필 사진 업로드
+- 닉네임 첫 글자를 사용한 파일 없는 프로필 아이콘
 - 7개 도감의 대시보드 표시와 공개 범위를 서로 독립적으로 설정
 - `private`, `unlisted`, `public` 도감별 공개
 - 공개 프로필과 기존 도감 UI를 재사용한 읽기 전용 상세 화면
@@ -44,7 +44,7 @@ projection만 후속 갱신하며, 프로필·공개 설정 변경을 Sheets 카
 
 | 경로 | 주요 필드 | 읽기/쓰기 |
 |---|---|---|
-| `users/{uid}/profile/main` | `nickname`, `nicknameNormalized`, `publicId`, `bio`, avatar 경로·URL·version, 생성·수정 시각 | 본인만 읽기·쓰기 |
+| `users/{uid}/profile/main` | `nickname`, `nicknameNormalized`, `publicId`, `bio`, 생성·수정 시각 | 본인만 읽기·쓰기 |
 | `users/{uid}/settings/collector` | onboarding `나중에` 상태 | 본인만 읽기·쓰기 |
 | `users/{uid}/collectionSettings/{collectionId}` | `dashboardVisible`, `visibility`, `displayOrder`, `shareId` | 본인만 읽기·쓰기 |
 | `collectorNicknameOwners/{normalized}` | 닉네임 소유 UID | 해당 소유자만 exact get |
@@ -60,7 +60,7 @@ projection만 후속 갱신하며, 프로필·공개 설정 변경을 Sheets 카
 | 경로 | 공개 내용 | 제한 |
 |---|---|---|
 | `collectorNicknames/{normalized}` | `claimed: true`만 포함 | exact get만 허용, list 차단 |
-| `publicProfiles/{publicId}` | 닉네임, 소개, 사용자 업로드 사진 URL/version | 공개 exact get, 최상위 list 차단 |
+| `publicProfiles/{publicId}` | 닉네임과 소개 | 공개 exact get, 최상위 list 차단 |
 | `publicProfiles/{publicId}/collections/{collectionId}` | 안전한 공개 projection | 공개 get/list, 소유자만 쓰기 |
 | `sharedCollections/{shareId}` | 안전한 공개 projection | 추측 곤란한 exact get만, list 차단 |
 
@@ -126,22 +126,16 @@ Firestore Rules는 설정 write에서 `existsAfter()`로 이 상태를 함께 �
 변경 자체가 거부됩니다. 공개·링크 projection의 직접 삭제도 해당 설정이 더는
 그 공개 범위를 요구하지 않을 때만 허용합니다.
 
-## 프로필 사진
+## 무료 요금제용 프로필 아이콘
 
-- 입력: 휴대폰 사진첩 또는 PC 이미지 파일, 최대 25MB
-- 브라우저 처리: EXIF 방향을 고려해 decode → 이동·확대 → 정사각형 crop →
-  512×512 canvas → WebP 품질 0.86
-- 업로드: 압축 결과만 Storage에 저장하며 원본은 업로드하지 않음
-- 저장 경로: `publicProfiles/{publicId}/avatar-a.webp` 또는 `avatar-b.webp`
-- 교체: 빈 슬롯에 새 파일 업로드 → Firestore 비공개/공개 프로필 동시 반영 →
-  이전 슬롯 삭제
-- 실패: 새 업로드나 프로필 반영 실패 시 이전 프로필 경로를 유지하고 새 파일을 정리
+- 프로필 사진 선택·crop·업로드 UI를 제공하지 않음
+- 비공개·공개 프로필에 파일 경로나 이미지 URL 필드를 저장하지 않음
+- 화면의 원형 아이콘은 저장된 닉네임 첫 글자를 브라우저에서 표시
+- Firestore Rules의 `keys().hasOnly(...)`가 이미지 URL 등 추가 프로필 필드를 거부
+- Firebase Storage SDK, bucket 배포 설정, Storage Rules와 Storage 테스트를 사용하지 않음
 
-공개 이미지 URL에 UID가 들어가지 않도록 Storage 경로에는 안정적인 `publicId`만
-사용합니다. Storage Rules는 비공개 `collectorPublicIdOwners/{publicId}` 문서를
-`firestore.get()`으로 확인해 소유자만 쓰고 지울 수 있게 하며, 허용 파일명,
-2MB 이하, `image/webp`만 허용합니다. Firestore Rules도 공개 avatar URL이 이
-프로젝트의 동일 `publicId` Storage 경로 형식과 일치하도록 제한합니다.
+따라서 컬렉터 프로필·도감 공유 기능은 Authentication과 Firestore만으로 동작하며,
+Storage 활성화나 유료 요금제 전환이 필요하지 않습니다.
 
 ## 대시보드와 비용
 
@@ -156,9 +150,9 @@ Firestore Rules는 설정 write에서 `existsAfter()`로 이 상태를 함께 �
 공개 프로필은 프로필 1건과 공개한 도감 최대 7건만 읽습니다. 공개 도감 갱신은
 원본 변경 때 프로필·설정·원본 3건을 확인한 뒤 projection 1건을 씁니다.
 
-프로필 사진 업로드·교체·삭제의 Storage Rules 평가는 소유권 확인을 위해
-Firestore 문서 1건을 읽습니다. 배포 시 Storage Rules의 Firestore 교차 서비스
-접근 권한 활성화 안내가 나타날 수 있으므로 비용·IAM 변경 여부를 먼저 확인합니다.
+운영 프로젝트는 Spark 무료 요금제를 유지합니다. 서비스는 Authentication과
+Firestore 무료 할당량 안에서 동작하며, 할당량을 넘겼을 때 유료 요금제로 자동
+전환하는 코드나 배포 단계는 두지 않습니다.
 
 ## 검증과 운영 반영 조건
 
@@ -169,35 +163,22 @@ Firestore 문서 1건을 읽습니다. 배포 시 Storage Rules의 Firestore 교
 - 기존 6개 대시보드 기본값과 인물도감 opt-in
 - 도감 간 동일 카드 보유 상태 독립성
 - 공개 adapter가 비공개 필드를 버리고 `users/*`를 읽지 않는지
-- Firestore·Storage Rules 문법
-- Emulator용 닉네임 경쟁, 프로필 변경, 공개/회수, 타 사용자 쓰기, Storage 소유권 테스트
+- Firestore Rules 문법
+- Emulator용 닉네임 경쟁, 프로필 변경, 공개/회수와 타 사용자 쓰기 테스트
 
 운영 반영 전에는 네트워크가 허용된 환경에서 Firebase Emulator 전체 테스트와
 실제 Chrome/Safari의 PC·모바일 수동 검수를 완료해야 합니다. 또한 Firebase
-Console에서 Storage 활성화 상태, 비용 요구 여부와 현재 배포 Rules를 확인해야
-합니다. Storage Rules가 Firestore 소유권 문서를 읽기 위한 교차 서비스 권한도
-소유자 승인 없이 활성화하지 않습니다. 하나라도 미완료이면 `main` merge와
+Console에서 Spark 요금제와 현재 Firestore Rules를 확인하고, 코드·배포 설정에
+Storage 의존성이 없는지 재검증해야 합니다. 하나라도 미완료이면 `main` merge와
 Firebase 배포를 진행하지 않습니다.
 
-## 2026-08-10 로컬 검증 결과
+## 검증 기록
 
-통과:
+로컬에서는 JavaScript·HTML 정적 검사, 카탈로그·projection 회귀, 공개 UI 계약,
+Firestore Rules lint와 `git diff --check`를 실행합니다. PR의 `Verify` workflow는
+같은 검사와 Firestore Emulator 권한 테스트까지 `npm test`로 실행합니다. 최신
+자동 검증 결과는 PR check를 기준으로 판단합니다.
 
-- JavaScript 27개와 HTML 12개의 문법·로컬 자산 경로 검사
-- 카탈로그·projection 회귀 테스트 7개
-- 공개 UI·스크립트 로드 순서·공유 계약 테스트 9개
-- Firestore·Storage Rules 정적 lint
-- `npm ls --depth=0`, `git diff --check`
-
-작성했으나 현재 실행 환경 제약으로 미완료:
-
-- Firestore Rules emulator 테스트 12개
-- Storage Rules emulator 테스트 5개
-- 실제 Chrome/Safari 데스크톱·모바일 상호작용 검수
-- 기존 owner·일반 사용자·신규 사용자 계정으로 운영 Firebase 런타임 검수
-- Firebase Console의 Storage 활성화·Billing·현재 Rules·교차 서비스 권한 확인
-
-공식 emulator 바이너리 다운로드에 필요한 네트워크 승인이 현재 실행 환경에서
-차단되었고, 로컬 브라우저 프로세스도 sandbox 제약으로 실행되지 않았습니다.
-따라서 이 브랜치는 구현·정적 검증 단계이며 아직 `main` merge 또는 운영 배포
-가능 상태로 판정하지 않습니다.
+자동 검사가 통과해도 실제 Chrome/Safari의 데스크톱·모바일 상호작용과 기존
+owner·일반 사용자·신규 사용자 계정의 운영 Firebase 런타임 검수 전에는 `main`
+merge 또는 운영 배포 가능 상태로 판정하지 않습니다.

@@ -42,9 +42,6 @@ function profileFields() {
     nicknameNormalized: "alice84",
     publicId: PUBLIC_ID,
     bio: "Korean card collector",
-    avatarUrl: "",
-    avatarStoragePath: "",
-    avatarVersion: 0,
     profileCompleted: true,
   };
 }
@@ -53,8 +50,6 @@ function publicProfileFields() {
   return {
     nickname: "Alice 84",
     bio: "Korean card collector",
-    avatarUrl: "",
-    avatarVersion: 0,
     profileCompleted: true,
   };
 }
@@ -197,9 +192,6 @@ test("a concurrent user cannot overwrite an existing nickname claim", async () =
     nicknameNormalized: "alice84",
     publicId: "bob12345test",
     bio: "",
-    avatarUrl: "",
-    avatarStoragePath: "",
-    avatarVersion: 0,
     profileCompleted: true,
     createdAt,
     updatedAt: serverTimestamp(),
@@ -207,8 +199,6 @@ test("a concurrent user cannot overwrite an existing nickname claim", async () =
   batch.set(doc(bob, "publicProfiles", "bob12345test"), {
     nickname: "Alice84",
     bio: "",
-    avatarUrl: "",
-    avatarVersion: 0,
     profileCompleted: true,
   });
   await assertFails(batch.commit());
@@ -233,9 +223,6 @@ test("direct profile writes cannot bypass normalized nickname spacing", async ()
     nicknameNormalized: "bob84",
     publicId: "bob12345test",
     bio: "",
-    avatarUrl: "",
-    avatarStoragePath: "",
-    avatarVersion: 0,
     profileCompleted: true,
     createdAt,
     updatedAt: serverTimestamp(),
@@ -243,8 +230,6 @@ test("direct profile writes cannot bypass normalized nickname spacing", async ()
   batch.set(doc(bob, "publicProfiles", "bob12345test"), {
     nickname: "Bob  84",
     bio: "",
-    avatarUrl: "",
-    avatarVersion: 0,
     profileCompleted: true,
   });
   await assertFails(batch.commit());
@@ -313,33 +298,31 @@ test("nickname rename releases the old claim and keeps the publicId stable", asy
   );
 });
 
-test("an avatar mirror may expose publicId but never the Firebase UID", async () => {
+test("profile schemas reject removed file and image URL fields", async () => {
   const privateRef = doc(alice, "users", ALICE_UID, "profile", "main");
   const publicRef = doc(alice, "publicProfiles", PUBLIC_ID);
   const privateProfile = (await getDoc(privateRef)).data();
   const publicProfile = (await getDoc(publicRef)).data();
-  const avatarUrl =
-    `https://firebasestorage.googleapis.com/v0/b/` +
-    `pokemon-dex-40e92.firebasestorage.app/o/` +
-    `publicProfiles%2F${PUBLIC_ID}%2Favatar-a.webp?alt=media&token=test`;
-  const batch = writeBatch(alice);
-  batch.set(privateRef, {
+
+  const privateExtraField = writeBatch(alice);
+  privateExtraField.set(privateRef, {
     ...privateProfile,
-    avatarUrl,
-    avatarStoragePath: `publicProfiles/${PUBLIC_ID}/avatar-a.webp`,
-    avatarVersion: 1,
+    profileImageUrl: "https://example.com/tracker.webp",
     updatedAt: serverTimestamp(),
   });
-  batch.set(publicRef, {
-    ...publicProfile,
-    avatarUrl,
-    avatarVersion: 1,
-  });
-  await assertSucceeds(batch.commit());
+  privateExtraField.set(publicRef, publicProfile);
+  await assertFails(privateExtraField.commit());
 
-  const publicSnapshot = await getDoc(doc(guest, "publicProfiles", PUBLIC_ID));
-  assert.equal(publicSnapshot.data().avatarUrl.includes(ALICE_UID), false);
-  assert.equal(publicSnapshot.data().avatarUrl.includes(PUBLIC_ID), true);
+  const publicExtraField = writeBatch(alice);
+  publicExtraField.set(privateRef, {
+    ...privateProfile,
+    updatedAt: serverTimestamp(),
+  });
+  publicExtraField.set(publicRef, {
+    ...publicProfile,
+    profileImageUrl: "https://example.com/tracker.webp",
+  });
+  await assertFails(publicExtraField.commit());
 });
 
 test("private profile changes cannot leave the public mirror stale", async () => {
@@ -352,25 +335,6 @@ test("private profile changes cannot leave the public mirror stale", async () =>
       updatedAt: serverTimestamp(),
     }),
   );
-});
-
-test("a profile cannot publish an arbitrary external avatar URL", async () => {
-  const privateRef = doc(alice, "users", ALICE_UID, "profile", "main");
-  const publicRef = doc(alice, "publicProfiles", PUBLIC_ID);
-  const privateProfile = (await getDoc(privateRef)).data();
-  const publicProfile = (await getDoc(publicRef)).data();
-  const batch = writeBatch(alice);
-  batch.set(privateRef, {
-    ...privateProfile,
-    avatarUrl: "https://example.com/tracker.webp",
-    avatarStoragePath: `publicProfiles/${PUBLIC_ID}/avatar-a.webp`,
-    updatedAt: serverTimestamp(),
-  });
-  batch.set(publicRef, {
-    ...publicProfile,
-    avatarUrl: "https://example.com/tracker.webp",
-  });
-  await assertFails(batch.commit());
 });
 
 test("public projection is readable but private source and extra fields stay blocked", async () => {

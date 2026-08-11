@@ -12,7 +12,7 @@ export default [
     rules: {
       '@firebase/security-rules/no-open-writes': 'error',
       '@firebase/security-rules/no-redundant-matches': 'error',
-      // Collector avatars are intentionally public; writes remain owner-only.
+      // Exact public profile and projection reads are intentional; writes stay owner-only.
       '@firebase/security-rules/no-open-reads': 'off',
     },
   },
