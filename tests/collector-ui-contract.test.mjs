@@ -182,6 +182,9 @@ test("the public profile client has no private user-document read route", async 
   assert.equal(client.includes("ownerUid"), false);
   assert.equal(client.includes("email"), false);
   assert.match(client, /publicProfiles/);
+  assert.match(client, /code === "permission-denied"/);
+  assert.match(client, /showError\(publicProfileErrorMessage\(error\)\)/);
+  assert.equal(client.includes("showError(error.message"), false);
 });
 
 test("the free profile path has no Firebase Storage or image URL dependency", async () => {
