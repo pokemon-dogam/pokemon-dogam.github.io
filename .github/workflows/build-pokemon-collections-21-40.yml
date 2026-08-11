@@ -1,0 +1,75 @@
+name: Build Pokémon collections 21-40
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/build-pokemon-collections-21-40.yml"
+      - "scripts/build_pokemon_collections_21_40.py"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install parser dependencies
+        run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Build Korean Pokémon collection data 021-040
+        run: python scripts/build_pokemon_collections_21_40.py data/pokemon-collections-21-40.json
+      - name: Validate generated data
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/pokemon-collections-21-40.json")
+          groups = json.loads(path.read_text(encoding="utf-8"))
+          assert len(groups) == 20
+          assert [group["dexNumber"] for group in groups] == list(range(21, 41))
+          assert all(group["cards"] for group in groups)
+          assert all(card.get("image", "").startswith("https://cdn.collectory.cc/") for group in groups for card in group["cards"])
+          assert all(len({card["accountIndex"] for card in group["cards"]}) == len(group["cards"]) for group in groups)
+          print("groups", len(groups))
+          print("cards", sum(len(group["cards"]) for group in groups))
+          for group in groups:
+              print(f"#{group['dexNumber']:03d} {group['name']}: {len(group['cards'])}")
+          PY
+      - name: Publish generated data
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          FILE_PATH="data/pokemon-collections-21-40.json"
+          ENDPOINT="repos/${GITHUB_REPOSITORY}/contents/${FILE_PATH}"
+          EXISTING_SHA="$(gh api --method GET "${ENDPOINT}" -f ref="${TARGET_BRANCH}" --jq .sha 2>/dev/null || true)"
+          LOCAL_SHA="$(git hash-object "${FILE_PATH}")"
+          if [ "${EXISTING_SHA}" = "${LOCAL_SHA}" ]; then
+            echo "${FILE_PATH} is already current."
+            exit 0
+          fi
+          python - "${TARGET_BRANCH}" "${EXISTING_SHA}" "${FILE_PATH}" /tmp/pokemon-collections.json <<'PY'
+          import base64
+          import json
+          import sys
+          from pathlib import Path
+
+          branch, existing_sha, file_path, payload_path = sys.argv[1:5]
+          payload = {
+              "message": "Add Pokémon collections 021-040",
+              "branch": branch,
+              "content": base64.b64encode(Path(file_path).read_bytes()).decode("ascii"),
+          }
+          if existing_sha:
+              payload["sha"] = existing_sha
+          Path(payload_path).write_text(json.dumps(payload), encoding="utf-8")
+          PY
+          gh api --method PUT "${ENDPOINT}" --input /tmp/pokemon-collections.json
