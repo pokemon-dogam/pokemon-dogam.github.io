@@ -96,6 +96,7 @@ let packUser = null;
 let packUserDocumentRef = null;
 let packBaseMode = "empty";
 let packSharedViewActive = false;
+let packCollectorPublicViewActive = false;
 let packSaveQueue = Promise.resolve();
 let activePack = null;
 
@@ -274,7 +275,8 @@ function updatePackAuthControls(user, message = "") {
 
   const headerChip = document.querySelector(".header-chip");
   const shared = window.PokemonDexSharedReadonly;
-  packSharedViewActive = Boolean(shared?.updateControl?.(user));
+  packSharedViewActive = packCollectorPublicViewActive
+    || Boolean(shared?.updateControl?.(user));
   if (headerChip) {
     headerChip.textContent = packSharedViewActive
       ? "READ ONLY"
@@ -287,6 +289,14 @@ function updatePackAuthControls(user, message = "") {
   const userEmail = safeText(user?.email, 200).toLowerCase();
   panel.classList.toggle("is-account", Boolean(user));
   panel.classList.toggle("is-owner", Boolean(user && userEmail === ownerEmail));
+
+  if (packCollectorPublicViewActive) {
+    label.textContent = window.CollectorPublicView?.authLabel?.("공개 팩도감 · 읽기 전용")
+      || "공개 팩도감 · 읽기 전용";
+    login.hidden = true;
+    logout.hidden = true;
+    return;
+  }
 
   if (user) {
     const account = user.displayName || user.email || "로그인 사용자";
@@ -315,6 +325,28 @@ async function applyPackUserState(user) {
   packUserDocumentRef = null;
   packBaseMode = "empty";
   packSharedViewActive = false;
+
+  if (window.CollectorPublicView?.requested) {
+    packCollectorPublicViewActive = true;
+    packSharedViewActive = true;
+    try {
+      const context = await window.CollectorPublicView.loadProjection(
+        packFirebase.db,
+        packFirebase.firestoreModule,
+        "pack",
+      );
+      applyPackDocument(
+        window.CollectorPublicView.projectionPackDocument(context.projection),
+        [],
+      );
+    } catch (error) {
+      applyPackDocument({}, []);
+      window.CollectorPublicView.showAccessError(error);
+      console.warn("공개 팩도감을 불러오지 못했습니다.", error);
+    }
+    updatePackAuthControls(user);
+    return;
+  }
 
   if (!user) {
     applyPackDocument({}, []);
@@ -497,6 +529,16 @@ async function writePackDocument(fields) {
     },
     { merge: true }
   );
+  try {
+    await window.CollectorPublicSync?.syncCollectionWithRetry?.({
+      db: packFirebase.db,
+      firestoreModule: packFirebase.firestoreModule,
+      user: packUser,
+      collectionId: "pack"
+    });
+  } catch (error) {
+    console.warn("팩도감 공개 projection 갱신 실패", error);
+  }
 }
 
 function currentOwnedCodes(regularOverride = null, legacyOverride = null) {

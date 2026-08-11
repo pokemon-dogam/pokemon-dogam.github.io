@@ -10,6 +10,7 @@
     "series",
     "pokemon",
     "ar",
+    "people",
   ];
   const CATEGORY_META = {
     national: {
@@ -54,6 +55,13 @@
       href: "./ar.html",
       unit: "장",
     },
+    people: {
+      number: "07",
+      title: "인물도감",
+      description: "트레이너·주요 인물 아카이브",
+      href: "./people.html",
+      unit: "명",
+    },
   };
   const DOCUMENT_IDS = {
     national: CONFIG.userDocument || "nationalDex",
@@ -62,6 +70,7 @@
     series: "seriesDex",
     pokemon: "pokemonCollectionsDex",
     ar: "arDex",
+    people: CONFIG.userDocument || "nationalDex",
   };
 
   const elements = {
@@ -90,6 +99,16 @@
   let sharedViewActive = false;
   let catalogs = null;
   let documents = Object.fromEntries(CATEGORY_ORDER.map((key) => [key, null]));
+  let collectionSettings = Object.fromEntries(
+    CATEGORY_ORDER.map((key) => [
+      key,
+      window.CollectorCollectionRegistry?.defaultSetting?.(key) || {
+        dashboardVisible: key !== "people",
+      },
+    ]),
+  );
+  let collectorProfile = null;
+  let collectorPrompt = { exists: false, createdAt: null, dismissed: false };
   let documentReadFailed = false;
   let unsubscribeDocuments = [];
 
@@ -211,6 +230,7 @@
     pokemonData,
     arData,
     packData,
+    peopleData,
   ) {
     const nationalItems = pokedex.records.map((record) => ({
       key: String(record.number),
@@ -308,6 +328,22 @@
       };
     });
 
+    const peopleItems = (peopleData.people || []).map((person) => ({
+      key: String(person.id),
+      name: person.nameKo,
+      group: `${person.generation}세대`,
+      baselineOwned: false,
+    }));
+    const peopleGroups = [...new Set(
+      (peopleData.people || []).map((person) => person.generation),
+    )].map((generation) => ({
+      key: `generation-${generation}`,
+      name: `${generation}세대 인물도감`,
+      itemKeys: peopleItems
+        .filter((item) => item.group === `${generation}세대`)
+        .map((item) => item.key),
+    }));
+
     return {
       national: createCategory("national", nationalItems, nationalGroups),
       pack: createCategory("pack", packItems, packGroups),
@@ -315,19 +351,21 @@
       series: createCategory("series", seriesItems, seriesGroups),
       pokemon: createCategory("pokemon", pokemonItems, pokemonGroups),
       ar: createCategory("ar", arItems, arGroups),
+      people: createCategory("people", peopleItems, peopleGroups),
     };
   }
 
   async function loadCatalogs() {
-    const [pokedex, artists, series, pokemon, ar, packs] = await Promise.all([
+    const [pokedex, artists, series, pokemon, ar, packs, people] = await Promise.all([
       fetchJson("./data/pokedex.json"),
       fetchJson("./data/artists.json"),
       fetchJson("./data/series.json"),
       fetchJson("./data/pokemon-collections.json"),
       fetchJson("./data/ar.json"),
       fetchPacks(),
+      fetchJson("./data/people.json"),
     ]);
-    return buildCatalogs(pokedex, artists, series, pokemon, ar, packs);
+    return buildCatalogs(pokedex, artists, series, pokemon, ar, packs, people);
   }
 
   function createAuthUi() {
@@ -497,6 +535,16 @@
 
   async function loadUserDocuments() {
     documents = Object.fromEntries(CATEGORY_ORDER.map((key) => [key, null]));
+    collectionSettings = Object.fromEntries(
+      CATEGORY_ORDER.map((key) => [
+        key,
+        window.CollectorCollectionRegistry?.defaultSetting?.(key) || {
+          dashboardVisible: key !== "people",
+        },
+      ]),
+    );
+    collectorProfile = null;
+    collectorPrompt = { exists: false, createdAt: null, dismissed: false };
     documentReadFailed = false;
     if (!currentUser || !firebase) return;
 
@@ -520,25 +568,89 @@
       return;
     }
 
+    const readsByDocument = new Map();
     const reads = CATEGORY_ORDER.map(async (category) => {
+      const documentId = DOCUMENT_IDS[category];
+      if (!readsByDocument.has(documentId)) {
+        const reference = firebase.firestoreModule.doc(
+          firebase.db,
+          "users",
+          currentUser.uid,
+          CONFIG.userCollection || "collections",
+          documentId,
+        );
+        readsByDocument.set(
+          documentId,
+          firebase.firestoreModule.getDoc(reference)
+            .then((snapshot) => (
+              snapshot.exists() ? snapshot.data() || {} : null
+            ))
+            .catch((error) => {
+              documentReadFailed = true;
+              console.warn(`${documentId} 문서를 읽지 못했습니다.`, error);
+              return null;
+            }),
+        );
+      }
+      return [category, await readsByDocument.get(documentId)];
+    });
+
+    const settingReads = CATEGORY_ORDER.map(async (category) => {
       const reference = firebase.firestoreModule.doc(
         firebase.db,
         "users",
         currentUser.uid,
-        CONFIG.userCollection || "collections",
-        DOCUMENT_IDS[category],
+        "collectionSettings",
+        category,
       );
       try {
         const snapshot = await firebase.firestoreModule.getDoc(reference);
-        return [category, snapshot.exists() ? snapshot.data() || {} : null];
+        const source = snapshot.exists() ? snapshot.data() || {} : null;
+        return [
+          category,
+          window.CollectorCollectionRegistry?.normalizeSetting?.(category, source)
+            || collectionSettings[category],
+        ];
       } catch (error) {
-        documentReadFailed = true;
-        console.warn(`${DOCUMENT_IDS[category]} 문서를 읽지 못했습니다.`, error);
-        return [category, null];
+        console.warn(`${category} 대시보드 설정을 읽지 못했습니다.`, error);
+        return [category, collectionSettings[category]];
       }
     });
+    const profileRef = firebase.firestoreModule.doc(
+      firebase.db,
+      "users",
+      currentUser.uid,
+      "profile",
+      "main",
+    );
+    const promptRef = firebase.firestoreModule.doc(
+      firebase.db,
+      "users",
+      currentUser.uid,
+      "settings",
+      "collector",
+    );
+    const [documentEntries, settingEntries, profileSnapshot, promptSnapshot] =
+      await Promise.all([
+        Promise.all(reads),
+        Promise.all(settingReads),
+        firebase.firestoreModule.getDoc(profileRef).catch(() => null),
+        firebase.firestoreModule.getDoc(promptRef).catch(() => null),
+      ]);
 
-    documents = Object.fromEntries(await Promise.all(reads));
+    documents = Object.fromEntries(documentEntries);
+    collectionSettings = Object.fromEntries(settingEntries);
+    collectorProfile = profileSnapshot?.exists()
+      ? profileSnapshot.data() || null
+      : null;
+    collectorPrompt = promptSnapshot?.exists()
+      ? {
+          exists: true,
+          createdAt: promptSnapshot.data()?.createdAt || null,
+          dismissed: Boolean(promptSnapshot.data()?.profilePromptDismissedAt),
+        }
+      : { exists: false, createdAt: null, dismissed: false };
+    updateCollectorShortcut();
   }
 
   function subscribeToDocuments() {
@@ -546,26 +658,63 @@
     unsubscribeDocuments = [];
     if (!currentUser || !firebase || sharedViewActive) return;
 
+    const categoriesByDocument = new Map();
     for (const category of CATEGORY_ORDER) {
+      const documentId = DOCUMENT_IDS[category];
+      if (!categoriesByDocument.has(documentId)) {
+        categoriesByDocument.set(documentId, []);
+      }
+      categoriesByDocument.get(documentId).push(category);
+    }
+
+    for (const [documentId, categories] of categoriesByDocument) {
       const reference = firebase.firestoreModule.doc(
         firebase.db,
         "users",
         currentUser.uid,
         CONFIG.userCollection || "collections",
-        DOCUMENT_IDS[category],
+        documentId,
       );
       const unsubscribe = firebase.firestoreModule.onSnapshot(
         reference,
         (snapshot) => {
-          documents[category] = snapshot.exists() ? snapshot.data() || {} : null;
+          const data = snapshot.exists() ? snapshot.data() || {} : null;
+          categories.forEach((category) => {
+            documents[category] = data;
+          });
           if (catalogs) renderDashboard();
         },
         (error) => {
           documentReadFailed = true;
-          console.warn(`${DOCUMENT_IDS[category]} 실시간 업데이트 실패`, error);
+          console.warn(`${documentId} 실시간 업데이트 실패`, error);
         },
       );
       unsubscribeDocuments.push(unsubscribe);
+    }
+
+    for (const category of CATEGORY_ORDER) {
+      const settingReference = firebase.firestoreModule.doc(
+        firebase.db,
+        "users",
+        currentUser.uid,
+        "collectionSettings",
+        category,
+      );
+      const unsubscribeSetting = firebase.firestoreModule.onSnapshot(
+        settingReference,
+        (snapshot) => {
+          collectionSettings[category] =
+            window.CollectorCollectionRegistry?.normalizeSetting?.(
+              category,
+              snapshot.exists() ? snapshot.data() || {} : null,
+            ) || collectionSettings[category];
+          if (catalogs) renderDashboard();
+        },
+        (error) => {
+          console.warn(`${category} 대시보드 설정 실시간 업데이트 실패`, error);
+        },
+      );
+      unsubscribeDocuments.push(unsubscribeSetting);
     }
   }
 
@@ -602,6 +751,19 @@
       return;
     }
 
+    if (category === "people") {
+      const peopleOwned =
+        document.peopleOwned &&
+        typeof document.peopleOwned === "object" &&
+        !Array.isArray(document.peopleOwned)
+          ? document.peopleOwned
+          : {};
+      catalog.items.forEach((item) => {
+        item.owned = peopleOwned[item.key] === true;
+      });
+      return;
+    }
+
     const overrides =
       document.overrides &&
       typeof document.overrides === "object" &&
@@ -624,7 +786,17 @@
     let overallOwned = 0;
     let overallTotal = 0;
 
-    for (const category of CATEGORY_ORDER) {
+    const visibleCategories = CATEGORY_ORDER
+      .filter(
+        (category) => collectionSettings[category]?.dashboardVisible !== false,
+      )
+      .sort(
+        (a, b) =>
+          (collectionSettings[a]?.displayOrder ?? CATEGORY_ORDER.indexOf(a))
+            - (collectionSettings[b]?.displayOrder ?? CATEGORY_ORDER.indexOf(b)),
+      );
+
+    for (const category of visibleCategories) {
       applyOwnership(category);
       const catalog = catalogs[category];
       const owned = catalog.items.filter((item) => item.owned).length;
@@ -669,6 +841,7 @@
       completedGroups: allGroups.filter(
         (group) => group.total > 0 && group.owned === group.total,
       ).length,
+      visibleCategories,
     };
   }
 
@@ -721,8 +894,15 @@
 
   function renderCollections(metrics) {
     const fragment = document.createDocumentFragment();
-    for (const category of CATEGORY_ORDER) {
+    for (const category of metrics.visibleCategories) {
       fragment.append(createCollectionCard(metrics.categories[category]));
+    }
+    if (!metrics.visibleCategories.length) {
+      const empty = document.createElement("div");
+      empty.className = "dashboard-list-empty";
+      empty.innerHTML =
+        '대시보드에 표시할 도감이 없습니다. <a href="./collector-settings.html">대시보드 편집</a>에서 선택해 주세요.';
+      fragment.append(empty);
     }
     elements.collectionGrid.replaceChildren(fragment);
     elements.collectionGrid.setAttribute("aria-busy", "false");
@@ -803,7 +983,9 @@
     if (!currentUser) return [];
     const entries = [];
 
-    for (const category of CATEGORY_ORDER) {
+    for (const category of CATEGORY_ORDER.filter(
+      (key) => collectionSettings[key]?.dashboardVisible !== false,
+    )) {
       const document = documents[category] || {};
       const catalog = catalogs[category];
 
@@ -819,6 +1001,10 @@
         }
         continue;
       }
+
+      // peopleOwned에는 항목별 수정 시각이 없고 nationalDex.updatedAt을 함께
+      // 사용하므로, 전국도감 변경을 인물도감 변경으로 잘못 표시하지 않습니다.
+      if (category === "people") continue;
 
       const overrides =
         document.overrides &&
@@ -865,6 +1051,90 @@
       return item;
     });
     elements.recentList.replaceChildren(...items);
+  }
+
+  function updateCollectorShortcut() {
+    const shortcut = document.querySelector("#collector-profile-shortcut");
+    if (!shortcut) return;
+    if (collectorProfile?.profileCompleted && collectorProfile.publicId) {
+      shortcut.href = `./collector.html?id=${encodeURIComponent(collectorProfile.publicId)}`;
+      shortcut.textContent = "내 공개 프로필";
+    } else {
+      shortcut.href = "./collector-settings.html#collector-profile-title";
+      shortcut.textContent = "컬렉터 프로필";
+    }
+  }
+
+  function closeOnboarding(dialog) {
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+  }
+
+  async function dismissCollectorOnboarding(dialog) {
+    closeOnboarding(dialog);
+    if (!firebase || !currentUser) return;
+    const reference = firebase.firestoreModule.doc(
+      firebase.db,
+      "users",
+      currentUser.uid,
+      "settings",
+      "collector",
+    );
+    try {
+      await firebase.firestoreModule.setDoc(reference, {
+        schemaVersion: 1,
+        profilePromptDismissedAt: firebase.firestoreModule.serverTimestamp(),
+        createdAt: collectorPrompt.exists
+          ? collectorPrompt.createdAt
+          : firebase.firestoreModule.serverTimestamp(),
+        updatedAt: firebase.firestoreModule.serverTimestamp(),
+      });
+      collectorPrompt.dismissed = true;
+    } catch (error) {
+      console.warn("컬렉터 프로필 안내 상태를 저장하지 못했습니다.", error);
+    }
+  }
+
+  function maybePromptCollectorProfile() {
+    if (
+      !currentUser ||
+      sharedViewActive ||
+      collectorProfile?.profileCompleted ||
+      collectorPrompt.dismissed ||
+      document.querySelector("#collector-onboarding-dialog")
+    ) {
+      return;
+    }
+
+    const dialog = document.createElement("dialog");
+    dialog.id = "collector-onboarding-dialog";
+    dialog.className = "collector-onboarding-dialog";
+    dialog.innerHTML = `
+      <div class="collector-onboarding-shell">
+        <span class="collector-onboarding-icon" aria-hidden="true">CP</span>
+        <h2>컬렉터 프로필 만들기</h2>
+        <p>Google 실명 대신 사용할 컬렉터 닉네임을 정하고, 원하는 도감만 다른 사람에게 공유할 수 있습니다.</p>
+        <ul class="collector-onboarding-points">
+          <li>기존 도감과 보유 기록은 그대로 유지됩니다.</li>
+          <li>모든 도감의 공개 범위는 기본 PRIVATE입니다.</li>
+          <li>지금 만들지 않아도 기존 기능을 계속 사용할 수 있습니다.</li>
+        </ul>
+        <div class="collector-onboarding-actions">
+          <button class="manager-button" type="button" data-onboarding-later>나중에</button>
+          <a class="primary-button" href="./collector-settings.html#collector-profile-title">프로필 만들기</a>
+        </div>
+      </div>
+    `;
+    dialog.querySelector("[data-onboarding-later]").addEventListener("click", () => {
+      void dismissCollectorOnboarding(dialog);
+    });
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      void dismissCollectorOnboarding(dialog);
+    });
+    document.body.append(dialog);
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
   }
 
   function renderAccountNote() {
@@ -921,6 +1191,7 @@
       await loadUserDocuments();
       renderDashboard();
       subscribeToDocuments();
+      maybePromptCollectorProfile();
     } catch (error) {
       console.error("통합 대시보드 초기화 실패", error);
       elements.error.hidden = false;

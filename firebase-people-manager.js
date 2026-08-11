@@ -13,6 +13,7 @@
   let remoteOverrides = {};
   let remoteOwned = {};
   let sharedViewActive = false;
+  let collectorPublicViewActive = false;
   let currentPerson = null;
   let peopleOwnedSaveQueue = Promise.resolve();
   let resolveReady;
@@ -277,7 +278,9 @@
         import(`https://www.gstatic.com/firebasejs/${SDK_VERSION}/firebase-auth.js`),
         import(`https://www.gstatic.com/firebasejs/${SDK_VERSION}/firebase-firestore.js`),
       ]);
-      const app = appModule.initializeApp(CONFIG.config);
+      const app = appModule.getApps().length
+        ? appModule.getApp()
+        : appModule.initializeApp(CONFIG.config);
       const auth = authModule.getAuth(app);
       const db = firestoreModule.getFirestore(app);
       auth.useDeviceLanguage();
@@ -291,7 +294,31 @@
       }
 
       currentUser = await firstAuthUser(auth, authModule);
-      if (currentUser) await loadAccountDocument(currentUser);
+      if (window.CollectorPublicView?.requested) {
+        collectorPublicViewActive = true;
+        sharedViewActive = true;
+        accountProfile = { baseMode: "empty", email: "" };
+        userDocumentRef = null;
+        try {
+          const context = await window.CollectorPublicView.loadProjection(
+            db,
+            firestoreModule,
+            "people",
+          );
+          const data = window.CollectorPublicView.projectionPeopleDocument(
+            context.projection,
+          );
+          remoteOverrides = {};
+          remoteOwned = sanitizeOwned(data.peopleOwned);
+        } catch (error) {
+          remoteOverrides = {};
+          remoteOwned = {};
+          window.CollectorPublicView.showAccessError(error);
+          console.warn("공개 인물도감을 불러오지 못했습니다.", error);
+        }
+      } else if (currentUser) {
+        await loadAccountDocument(currentUser);
+      }
       resolveReady();
       updateAuthUi();
       updateAccountAccess();
@@ -327,7 +354,8 @@
     const logout = panel.querySelector("#firebase-logout");
     const headerChip = document.querySelector(".header-chip");
     const shared = window.PokemonDexSharedReadonly;
-    sharedViewActive = Boolean(shared?.updateControl?.(currentUser));
+    sharedViewActive = collectorPublicViewActive
+      || Boolean(shared?.updateControl?.(currentUser));
     panel.classList.toggle("is-account", Boolean(currentUser));
     panel.classList.toggle("is-owner", isOwnerAccount(currentUser));
 
@@ -345,6 +373,11 @@
     } else if (error || document.documentElement.classList.contains("firebase-error")) {
       status.textContent = "Firebase 연결 오류 · 공개 도감";
       login.hidden = false;
+      logout.hidden = true;
+    } else if (collectorPublicViewActive) {
+      status.textContent = window.CollectorPublicView?.authLabel?.("공개 인물도감 · 읽기 전용")
+        || "공개 인물도감 · 읽기 전용";
+      login.hidden = true;
       logout.hidden = true;
     } else if (!currentUser) {
       status.textContent = "방문자 · 공개 인물도감";
@@ -497,6 +530,16 @@
         { merge: true },
       );
       remoteOwned = nextOwned;
+      try {
+        await window.CollectorPublicSync?.syncCollectionWithRetry?.({
+          db: firebase.db,
+          firestoreModule: firebase.firestoreModule,
+          user: currentUser,
+          collectionId: "people",
+        });
+      } catch (error) {
+        console.warn("인물도감 공개 projection 갱신 실패", error);
+      }
       return { owned: Boolean(remoteOwned[personId]) };
     };
     const queued = peopleOwnedSaveQueue.then(operation, operation);

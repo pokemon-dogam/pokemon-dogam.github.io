@@ -13,6 +13,7 @@
   let accountProfile = null;
   let remoteOverrides = {};
   let sharedViewActive = false;
+  let collectorPublicViewActive = false;
   let currentNumber = null;
   let tradeMode = false;
   let snapshotStarted = false;
@@ -358,7 +359,11 @@
 
   function applyOverrides(data) {
     const records = data.records || [];
-    const baseMode = currentUser ? accountProfile?.baseMode || "empty" : "public";
+    const baseMode = collectorPublicViewActive
+      ? "empty"
+      : currentUser
+        ? accountProfile?.baseMode || "empty"
+        : "public";
 
     for (const record of records) {
       record.originalImageUrl = record.imageUrl;
@@ -575,7 +580,9 @@
         import(`https://www.gstatic.com/firebasejs/${SDK_VERSION}/firebase-firestore.js`),
       ]);
 
-      const app = appModule.initializeApp(CONFIG.config);
+      const app = appModule.getApps().length
+        ? appModule.getApp()
+        : appModule.initializeApp(CONFIG.config);
       const auth = authModule.getAuth(app);
       const db = firestoreModule.getFirestore(app);
       auth.useDeviceLanguage();
@@ -590,7 +597,26 @@
       }
 
       currentUser = await firstAuthUser(auth, authModule);
-      if (currentUser) {
+      if (window.CollectorPublicView?.requested) {
+        collectorPublicViewActive = true;
+        sharedViewActive = true;
+        accountProfile = { baseMode: "empty", email: "" };
+        userDocumentRef = null;
+        try {
+          const context = await window.CollectorPublicView.loadProjection(
+            db,
+            firestoreModule,
+            "national",
+          );
+          remoteOverrides = window.CollectorPublicView.projectionOverrides(
+            context.projection,
+          );
+        } catch (error) {
+          remoteOverrides = {};
+          window.CollectorPublicView.showAccessError(error);
+          console.warn("공개 전국도감을 불러오지 못했습니다.", error);
+        }
+      } else if (currentUser) {
         await loadAccountDocument(currentUser);
         subscribeToAccountDocument();
       }
@@ -644,7 +670,8 @@
     const logout = panel.querySelector("#firebase-logout");
     const headerChip = document.querySelector(".header-chip");
     const shared = window.PokemonDexSharedReadonly;
-    sharedViewActive = Boolean(shared?.updateControl?.(currentUser));
+    sharedViewActive = collectorPublicViewActive
+      || Boolean(shared?.updateControl?.(currentUser));
     panel.classList.toggle("is-account", Boolean(currentUser));
     panel.classList.toggle("is-owner", isOwnerAccount(currentUser));
     if (headerChip) {
@@ -665,6 +692,14 @@
     if (error || document.documentElement.classList.contains("firebase-error")) {
       status.textContent = "Firebase 연결 오류 · 공개 도감";
       login.hidden = false;
+      logout.hidden = true;
+      return;
+    }
+
+    if (collectorPublicViewActive) {
+      status.textContent = window.CollectorPublicView?.authLabel?.("공개 전국도감 · 읽기 전용")
+        || "공개 전국도감 · 읽기 전용";
+      login.hidden = true;
       logout.hidden = true;
       return;
     }
@@ -750,7 +785,11 @@
     wrap.className = "collection-manager-actions";
     wrap.append(
       makeButton("미보유 목록", "manager-button", showMissing),
-      makeButton("교환 가능", "manager-button", showTradeable),
+      makeButton(
+        "교환 가능",
+        "manager-button collector-private-control",
+        showTradeable,
+      ),
       makeButton("내 도감 백업", "manager-button account-only-control", exportData),
       makeButton("기존 기록 이전", "manager-button account-only-control", migrateLocalData),
     );
@@ -770,6 +809,12 @@
     if (!configured()) {
       notice.innerHTML =
         "<strong>Firebase 연결 대기</strong><span>설정값을 연결하면 Google 계정별 개인 도감이 활성화됩니다.</span>";
+      return;
+    }
+
+    if (collectorPublicViewActive) {
+      notice.innerHTML =
+        "<strong>컬렉터 공개 도감 · 읽기 전용</strong><span>보유·미보유 상태만 표시하며 수량, 교환 상태와 개인 메모는 공개하지 않습니다.</span>";
       return;
     }
 
@@ -806,7 +851,7 @@
 
     for (const [label, id] of rows) {
       const row = document.createElement("div");
-      row.className = "collection-detail-row";
+      row.className = "collection-detail-row collector-private-detail";
       row.innerHTML = `<dt>${label}</dt><dd id="${id}">—</dd>`;
       details.append(row);
     }
@@ -942,6 +987,16 @@
           { merge: true },
         );
         remoteOverrides = nextOverrides;
+        try {
+          await window.CollectorPublicSync?.syncCollectionWithRetry?.({
+            db: firebase.db,
+            firestoreModule: firebase.firestoreModule,
+            user: currentUser,
+            collectionId: "national",
+          });
+        } catch (error) {
+          console.warn("공개 전국도감 projection 갱신 실패", error);
+        }
         return nextOverrides;
       } catch (error) {
         pendingLocalSnapshot = "";

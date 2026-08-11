@@ -51,3 +51,36 @@ node scripts/build_people_data.mjs
 사용자의 프로모팩 보유 ID와 직접 등록한 항목은 기존 `packDex` 문서의
 `ownedPromoPackIds`, `customPromoPacks`에 저장됩니다. 예전 `ownedCodes`에
 저장된 프로모 코드는 자동으로 인식합니다.
+
+## 컬렉터 프로필과 공유
+
+`feature/collector-profile-sharing` 브랜치는 기존 도감 문서를 옮기거나
+변경하지 않고 다음 기능을 별도 데이터로 추가합니다.
+
+- 컬렉터 닉네임, 한 줄 소개와 닉네임 첫 글자 프로필 아이콘
+- 전국·팩·작가·시리즈·포켓몬·AR·인물도감별 대시보드 표시 설정
+- 도감별 `private` / `unlisted` / `public` 공개 범위
+- 공개 컬렉터 프로필과 보유·미보유 상태만 담은 읽기 전용 도감
+- 기존 `shared-readonly-view.js` 및 `sharedDexViews` 공유 방식 유지
+
+공개 화면은 `users/{uid}/collections/*` 원본을 직접 읽지 않습니다.
+이메일, Firebase UID, 메모, 수량, 교환 상태와 직접 등록한 프로모 정보가
+빠진 최소 projection만 `publicProfiles` 또는 `sharedCollections`에서 읽습니다.
+프로필 사진 업로드와 Firebase Storage는 사용하지 않습니다.
+
+구조와 배포 전 확인사항은
+[컬렉터 프로필·공유 설계](./docs/collector-profile-sharing.md)와
+[Firebase 연결 절차](./FIREBASE_SETUP.md)를 참고하세요.
+
+## 로컬 검증
+
+Node.js와 Java가 준비된 환경에서 다음 명령을 실행합니다.
+
+```bash
+npm install
+npm test
+```
+
+`npm test`는 JavaScript/HTML 정적 검사, 카탈로그 수·projection 회귀 검사,
+공개 UI 계약 검사, Firestore Rules 문법 검사와 Firebase Emulator
+권한 테스트를 순서대로 실행합니다.
