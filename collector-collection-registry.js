@@ -250,8 +250,17 @@
     if (!promoIdsPromise) {
       promoIdsPromise = fetchJson("./data/promo-packs.json")
         .then((payload) => {
-          const values = Array.isArray(payload) ? payload : payload.packs || [];
-          return new Set(values.map((item) => cleanString(item.id)).filter(Boolean));
+          const values = Array.isArray(payload)
+            ? payload
+            : [
+                ...(Array.isArray(payload?.packs) ? payload.packs : []),
+                ...(Array.isArray(payload?.cards) ? payload.cards : []),
+              ];
+          return new Set(
+            values
+              .map((item) => cleanString(item.id).toLowerCase())
+              .filter(Boolean),
+          );
         })
         .catch((error) => {
           promoIdsPromise = null;
@@ -301,7 +310,7 @@
       const promoCandidates = [
         ...(Array.isArray(source.ownedPromoPackIds) ? source.ownedPromoPackIds : []),
         ...sourceCodes,
-      ].map((value) => cleanString(value));
+      ].map((value) => cleanString(value).toLowerCase());
       return {
         catalog,
         ownedKeys: catalog.items

@@ -113,13 +113,16 @@ test("legacy national projection matches the current baseline without private fi
   assert.equal(JSON.stringify(projection).includes("quantity"), false);
 });
 
-test("pack projection keeps the 36 official promos and excludes custom promo details", async () => {
+test("pack projection keeps every official promo item and excludes custom promo details", async () => {
   const promoPayload = JSON.parse(
     await readFile(new URL("../data/promo-packs.json", import.meta.url), "utf8"),
   );
   const promos = Array.isArray(promoPayload)
     ? promoPayload
-    : promoPayload.packs || [];
+    : [
+        ...(promoPayload.packs || []),
+        ...(promoPayload.cards || []),
+      ];
   const projection = await registry.buildProjection(
     "pack",
     {
@@ -131,8 +134,9 @@ test("pack projection keeps the 36 official promos and excludes custom promo det
     },
     "abc123def456",
   );
-  assert.equal(promos.length, 36);
-  assert.equal(projection.promoOwnedCount, 36);
+  assert.equal(promos.length, 222);
+  assert.equal(projection.promoOwnedCount, 222);
+  assert.equal(projection.promoOwnedKeys.includes("promo-card-s-p-008"), true);
   assert.equal(projection.promoOwnedKeys.includes("private-custom"), false);
   assert.equal(JSON.stringify(projection).includes("private"), false);
 });

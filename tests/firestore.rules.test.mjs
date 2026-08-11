@@ -23,9 +23,11 @@ let environment;
 let alice;
 let bob;
 let guest;
+let owner;
 
 const ALICE_UID = "alice-user";
 const BOB_UID = "bob-user";
+const OWNER_UID = "owner-user";
 const PUBLIC_ID = "alice123test";
 const SHARE_ID = "AbCdEfGhIjKlMnOpQrStUvWxYz012345";
 const NEXT_SHARE_ID = "ZyXwVuTsRqPoNmLkJiHgFeDcBa543210";
@@ -121,6 +123,7 @@ before(async () => {
   });
   alice = userDb(ALICE_UID, "alice@example.com");
   bob = userDb(BOB_UID, "bob@example.com");
+  owner = userDb(OWNER_UID, "onesmemory@gmail.com");
   guest = environment.unauthenticatedContext().firestore();
 });
 
@@ -149,6 +152,46 @@ test("existing collection documents remain owner-only and retain baseMode", asyn
       overrides: {},
     }),
   );
+  await assertFails(
+    setDoc(
+      reference,
+      {
+        baseMode: "legacy",
+        email: "alice@example.com",
+      },
+      { merge: true },
+    ),
+  );
+});
+
+test("owner Sheets sync can repair a legacy document without baseMode", async () => {
+  const reference = doc(owner, "users", OWNER_UID, "collections", "packDex");
+  await environment.withSecurityRulesDisabled(async (context) => {
+    await setDoc(
+      doc(context.firestore(), "users", OWNER_UID, "collections", "packDex"),
+      {
+        ownedCodes: ["sv1S"],
+        updatedAt: "legacy-document",
+      },
+    );
+  });
+
+  await assertSucceeds(
+    setDoc(
+      reference,
+      {
+        baseMode: "legacy",
+        email: "onesmemory@gmail.com",
+        displayName: "Owner",
+        ownedCodes: ["sv1S", "m1S"],
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true },
+    ),
+  );
+  const repaired = await getDoc(reference);
+  assert.equal(repaired.data().baseMode, "legacy");
+  assert.deepEqual(repaired.data().ownedCodes, ["sv1S", "m1S"]);
 });
 
 test("profile creation atomically claims nickname and publicId without exposing UID", async () => {

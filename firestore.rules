@@ -35,6 +35,17 @@ service cloud.firestore {
         : "empty";
     }
 
+    function validCollectionBaseModeUpdate() {
+      return (
+          resource.data.keys().hasAny(["baseMode"])
+          && request.resource.data.baseMode == resource.data.baseMode
+        )
+        || (
+          isOwnerAccount()
+          && request.resource.data.baseMode == "legacy"
+        );
+    }
+
     function supportedCollection(collectionId) {
       return collectionId == "nationalDex"
         || collectionId == "packDex"
@@ -814,9 +825,10 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email;
 
       // 최초 생성된 시작 모드는 이후 변경할 수 없습니다.
+      // 소유자의 구형 문서에 baseMode가 없으면 legacy로만 복구할 수 있습니다.
       allow update: if ownsDocument(userId)
         && supportedCollection(collectionId)
-        && request.resource.data.baseMode == resource.data.baseMode
+        && validCollectionBaseModeUpdate()
         && request.resource.data.email == request.auth.token.email;
 
       allow delete: if ownsDocument(userId)
