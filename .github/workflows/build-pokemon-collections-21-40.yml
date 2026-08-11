@@ -6,6 +6,9 @@ on:
     paths:
       - ".github/workflows/build-pokemon-collections-21-40.yml"
       - "scripts/build_pokemon_collections_21_40.py"
+      - "data/series.json"
+      - "data/ar.json"
+      - "data/promo-packs.json"
 
 permissions:
   contents: write
@@ -13,7 +16,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,10 +24,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install parser dependencies
-        run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Fetch Korean Pokémon Card archive
+        run: git clone --depth=1 https://github.com/kinbo-ptcg/ptcg-kr-db.git /tmp/ptcg-kr-db
       - name: Build Korean Pokémon collection data 021-040
-        run: python scripts/build_pokemon_collections_21_40.py data/pokemon-collections-21-40.json
+        run: python scripts/build_pokemon_collections_21_40.py /tmp/ptcg-kr-db data/pokemon-collections-21-40.json
       - name: Validate generated data
         run: |
           python - <<'PY'
@@ -36,7 +39,7 @@ jobs:
           assert len(groups) == 20
           assert [group["dexNumber"] for group in groups] == list(range(21, 41))
           assert all(group["cards"] for group in groups)
-          assert all(card.get("image", "").startswith("https://cdn.collectory.cc/") for group in groups for card in group["cards"])
+          assert all(card.get("image", "").startswith("https://") for group in groups for card in group["cards"])
           assert all(len({card["accountIndex"] for card in group["cards"]}) == len(group["cards"]) for group in groups)
           print("groups", len(groups))
           print("cards", sum(len(group["cards"]) for group in groups))
