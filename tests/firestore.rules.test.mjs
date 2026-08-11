@@ -28,6 +28,7 @@ const ALICE_UID = "alice-user";
 const BOB_UID = "bob-user";
 const PUBLIC_ID = "alice123test";
 const SHARE_ID = "AbCdEfGhIjKlMnOpQrStUvWxYz012345";
+const NEXT_SHARE_ID = "ZyXwVuTsRqPoNmLkJiHgFeDcBa543210";
 
 function userDb(uid, email) {
   return environment
@@ -254,6 +255,27 @@ test("nickname rename releases the old claim and keeps the publicId stable", asy
   const publicRef = doc(alice, "publicProfiles", PUBLIC_ID);
   const privateProfile = (await getDoc(privateRef)).data();
   const publicProfile = (await getDoc(publicRef)).data();
+
+  const incompleteRename = writeBatch(alice);
+  incompleteRename.set(doc(alice, "collectorNicknames", "aliceheld"), {
+    claimed: true,
+  });
+  incompleteRename.set(doc(alice, "collectorNicknameOwners", "aliceheld"), {
+    ownerUid: ALICE_UID,
+    createdAt: serverTimestamp(),
+  });
+  incompleteRename.set(privateRef, {
+    ...privateProfile,
+    nickname: "Alice Held",
+    nicknameNormalized: "aliceheld",
+    updatedAt: serverTimestamp(),
+  });
+  incompleteRename.set(publicRef, {
+    ...publicProfile,
+    nickname: "Alice Held",
+  });
+  await assertFails(incompleteRename.commit());
+
   const batch = writeBatch(alice);
   const createdAt = serverTimestamp();
 
@@ -496,6 +518,23 @@ test("unlisted token supports exact get, blocks list, and is revoked by private"
     setDoc(doc(bob, "sharedCollections", SHARE_ID), projection()),
   );
   await assertFails(deleteDoc(sharedRef));
+
+  const incompleteRotation = writeBatch(alice);
+  incompleteRotation.set(settingRef, {
+    ...(await getDoc(settingRef)).data(),
+    shareId: NEXT_SHARE_ID,
+    updatedAt: serverTimestamp(),
+  });
+  incompleteRotation.set(doc(alice, "collectorShareOwners", NEXT_SHARE_ID), {
+    ownerUid: ALICE_UID,
+    collectionId: "national",
+    createdAt: serverTimestamp(),
+  });
+  incompleteRotation.set(
+    doc(alice, "sharedCollections", NEXT_SHARE_ID),
+    projection(),
+  );
+  await assertFails(incompleteRotation.commit());
 
   const incompleteRevocation = writeBatch(alice);
   incompleteRevocation.set(settingRef, {
