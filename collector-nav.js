@@ -45,9 +45,13 @@
       navigationLink(
         "./collectors.html",
         "PB",
-        "공개 컬렉터",
+        "도감 갤러리",
         "PUBLIC BOARD",
       );
+
+    // 이전 메뉴명: 공개 컬렉터
+    const directoryTitle = directory.querySelector("strong");
+    if (directoryTitle) directoryTitle.textContent = "도감 갤러리";
 
     settings?.remove();
     dashboard.after(directory);
