@@ -2,10 +2,9 @@
 
 const $ = (id) => document.getElementById(id);
 const mode = document.body.dataset.catalog;
-const DATA_URL =
-  mode === "series"
-    ? "./data/series.json"
-    : "./data/pokemon-collections.json";
+const SERIES_DATA_URL = "./data/series.json";
+const POKEMON_DATA_URL = "./data/pokemon-collections.json";
+const POKEMON_SEQUENCE_DATA_URL = "./data/pokemon-collections-21-40.json";
 
 const SERIES_NAMES = Object.freeze({
   sv1S: "스칼렛 ex",
@@ -467,11 +466,31 @@ function loadGroup(value) {
   render();
 }
 
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`${url}: ${response.status}`);
+  return response.json();
+}
+
+async function loadCatalogGroups() {
+  if (mode === "series") return fetchJson(SERIES_DATA_URL);
+
+  const [baseGroups, sequenceGroups] = await Promise.all([
+    fetchJson(POKEMON_DATA_URL),
+    fetchJson(POKEMON_SEQUENCE_DATA_URL),
+  ]);
+  const sequenceNames = new Set(sequenceGroups.map((group) => group.name));
+  const originalFirstTwenty = baseGroups.slice(0, 20);
+  const existingSelections = baseGroups
+    .slice(20)
+    .filter((group) => !sequenceNames.has(group.name));
+
+  return [...originalFirstTwenty, ...sequenceGroups, ...existingSelections];
+}
+
 async function init() {
   try {
-    const response = await fetch(DATA_URL, { cache: "no-store" });
-    if (!response.ok) throw new Error(response.status);
-    groups = await response.json();
+    groups = await loadCatalogGroups();
 
     const account = window.PokemonDexPageAccount;
     if (account) {
