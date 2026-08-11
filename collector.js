@@ -17,6 +17,10 @@
     error: document.querySelector("#collector-public-error"),
   };
   const publicId = new URLSearchParams(window.location.search).get("id") || "";
+  const MISSING_PROFILE_MESSAGE =
+    "공개가 중단되었거나 존재하지 않는 컬렉터 프로필입니다.";
+  const LOAD_ERROR_MESSAGE =
+    "공개 컬렉터 프로필을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.";
 
   function configured() {
     const config = CONFIG.config || {};
@@ -151,6 +155,18 @@
     if (paragraph && message) paragraph.textContent = message;
   }
 
+  function publicProfileErrorMessage(error) {
+    const code = String(error?.code || "").replace(/^firestore\//, "");
+    if (
+      code === "permission-denied" ||
+      code === "not-found" ||
+      error?.message === MISSING_PROFILE_MESSAGE
+    ) {
+      return MISSING_PROFILE_MESSAGE;
+    }
+    return LOAD_ERROR_MESSAGE;
+  }
+
   async function initialize() {
     if (!/^[a-z0-9]{12}$/.test(publicId)) {
       showError("컬렉터 프로필 링크 형식이 올바르지 않습니다.");
@@ -184,7 +200,7 @@
         ),
       ]);
       if (!profileSnapshot.exists() || !profileSnapshot.data()?.profileCompleted) {
-        throw new Error("공개가 중단되었거나 존재하지 않는 컬렉터 프로필입니다.");
+        throw new Error(MISSING_PROFILE_MESSAGE);
       }
       const profile = profileSnapshot.data() || {};
       const projections = collectionSnapshots.docs
@@ -195,7 +211,7 @@
       elements.loading.hidden = true;
     } catch (error) {
       console.error("공개 컬렉터 프로필 초기화 실패", error);
-      showError(error.message || "공개 컬렉터 프로필을 불러오지 못했습니다.");
+      showError(publicProfileErrorMessage(error));
     }
   }
 
