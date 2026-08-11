@@ -4,6 +4,23 @@
   const registry = window.CollectorCollectionRegistry;
   const PROFILE_SETTINGS_HREF = "./collector-settings.html";
   const CARD_COLUMNS_STORAGE_KEY = "pokemonDexCardColumnsV1";
+  const COMPACT_CARD_COLUMNS_STORAGE_KEY = "pokemonDexCompactCardColumnsV1";
+  const COMPACT_CARD_LAYOUT_QUERY = "(max-width: 920px)";
+  const compactCardLayoutMedia = typeof window.matchMedia === "function"
+    ? window.matchMedia(COMPACT_CARD_LAYOUT_QUERY)
+    : null;
+  const CARD_LAYOUT_MODES = {
+    desktop: {
+      defaultColumns: "4",
+      alternateColumns: "3",
+      storageKey: CARD_COLUMNS_STORAGE_KEY,
+    },
+    compact: {
+      defaultColumns: "2",
+      alternateColumns: "4",
+      storageKey: COMPACT_CARD_COLUMNS_STORAGE_KEY,
+    },
+  };
 
   function navigationLink(href, icon, title, subtitle) {
     const link = document.createElement("a");
@@ -119,35 +136,58 @@
     });
   }
 
-  function storedCardColumns() {
+  function activeCardLayoutMode() {
+    return compactCardLayoutMedia?.matches
+      ? CARD_LAYOUT_MODES.compact
+      : CARD_LAYOUT_MODES.desktop;
+  }
+
+  function storedCardColumns(mode) {
     try {
-      return window.localStorage.getItem(CARD_COLUMNS_STORAGE_KEY) === "3"
-        ? "3"
-        : "4";
+      const stored = window.localStorage.getItem(mode.storageKey);
+      return [mode.defaultColumns, mode.alternateColumns].includes(stored)
+        ? stored
+        : mode.defaultColumns;
     } catch (error) {
-      return "4";
+      return mode.defaultColumns;
     }
   }
 
-  function saveCardColumns(columns) {
+  function saveCardColumns(columns, mode) {
     try {
-      window.localStorage.setItem(CARD_COLUMNS_STORAGE_KEY, columns);
+      window.localStorage.setItem(mode.storageKey, columns);
     } catch (error) {
       // 저장소 접근이 제한되어도 현재 화면의 열 전환은 계속 제공합니다.
     }
   }
 
-  function updateCardLayout(columns, button) {
-    const normalized = columns === "3" ? "3" : "4";
+  function updateCardLayout(columns, button, mode) {
+    const normalized = columns === mode.alternateColumns
+      ? mode.alternateColumns
+      : mode.defaultColumns;
+    const compact = mode === CARD_LAYOUT_MODES.compact;
+    const alternateActive = normalized === mode.alternateColumns;
     document.documentElement.dataset.cardColumns = normalized;
     button.dataset.columns = normalized;
-    button.setAttribute("aria-pressed", String(normalized === "3"));
-    button.textContent = normalized === "3"
-      ? "▦ 4열 기본 보기"
-      : "▦ 3열 크게 보기";
-    button.title = normalized === "3"
-      ? "카드를 한 줄에 4개씩 표시합니다."
-      : "카드를 한 줄에 3개씩 크게 표시합니다.";
+    button.dataset.layoutMode = compact ? "compact" : "desktop";
+    button.setAttribute("aria-pressed", String(alternateActive));
+
+    if (compact) {
+      button.textContent = normalized === "4"
+        ? "▦ 2열 기본 보기"
+        : "▦ 4열로 보기";
+      button.title = normalized === "4"
+        ? "카드를 한 줄에 2개씩 크게 표시합니다."
+        : "카드를 한 줄에 4개씩 표시합니다.";
+    } else {
+      button.textContent = normalized === "3"
+        ? "▦ 4열 기본 보기"
+        : "▦ 3열 크게 보기";
+      button.title = normalized === "3"
+        ? "카드를 한 줄에 4개씩 표시합니다."
+        : "카드를 한 줄에 3개씩 크게 표시합니다.";
+    }
+    button.setAttribute("aria-label", button.title);
   }
 
   function addCardLayoutToggle() {
@@ -169,12 +209,26 @@
     actions.append(button);
     resultsBar.append(actions);
 
-    updateCardLayout(storedCardColumns(), button);
+    const restoreLayout = () => {
+      const mode = activeCardLayoutMode();
+      updateCardLayout(storedCardColumns(mode), button, mode);
+    };
+
+    restoreLayout();
     button.addEventListener("click", () => {
-      const next = button.dataset.columns === "3" ? "4" : "3";
-      updateCardLayout(next, button);
-      saveCardColumns(next);
+      const mode = activeCardLayoutMode();
+      const next = button.dataset.columns === mode.alternateColumns
+        ? mode.defaultColumns
+        : mode.alternateColumns;
+      updateCardLayout(next, button, mode);
+      saveCardColumns(next, mode);
     });
+
+    if (typeof compactCardLayoutMedia?.addEventListener === "function") {
+      compactCardLayoutMedia.addEventListener("change", restoreLayout);
+    } else if (typeof compactCardLayoutMedia?.addListener === "function") {
+      compactCardLayoutMedia.addListener(restoreLayout);
+    }
   }
 
   function addHeroActions() {

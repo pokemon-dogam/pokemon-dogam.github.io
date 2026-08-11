@@ -99,8 +99,177 @@
 }
 
 @media (max-width: 920px) {
+  .card-grid,
+  .pack-grid,
+  .promo-pack-grid,
+  html[data-card-columns="2"] .card-grid,
+  html[data-card-columns="2"] .pack-grid,
+  html[data-card-columns="2"] .promo-pack-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-card-columns="4"] .card-grid,
+  html[data-card-columns="4"] .pack-grid,
+  html[data-card-columns="4"] .promo-pack-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .card-layout-toggle {
-    display: none;
+    min-height: 36px;
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 560px) {
+  html[data-card-columns="4"] .card-grid,
+  html[data-card-columns="4"] .pack-grid,
+  html[data-card-columns="4"] .promo-pack-grid {
+    gap: 6px;
+  }
+
+  html[data-card-columns="4"] .pokemon-card-button,
+  html[data-card-columns="4"] .pack-card,
+  html[data-card-columns="4"] .promo-collection-card {
+    border-radius: 10px;
+  }
+
+  html[data-card-columns="4"] .card-image-wrap {
+    padding: 4px;
+  }
+
+  html[data-card-columns="4"] .card-body,
+  html[data-card-columns="4"] .catalog-card .card-body {
+    min-height: 92px;
+    padding: 7px;
+  }
+
+  html[data-card-columns="4"] .pokemon-card.has-completion-action .card-body,
+  html[data-card-columns="4"] .pack-card.has-completion-action .pack-card-body {
+    padding-bottom: 43px;
+  }
+
+  html[data-card-columns="4"] .card-topline,
+  html[data-card-columns="4"] .pack-card-top {
+    display: grid;
+    justify-content: stretch;
+    gap: 3px;
+  }
+
+  html[data-card-columns="4"] .number-badge,
+  html[data-card-columns="4"] .pack-code,
+  html[data-card-columns="4"] .card-meta {
+    overflow: hidden;
+    font-size: 0.5rem;
+    text-overflow: ellipsis;
+  }
+
+  html[data-card-columns="4"] .status-badge,
+  html[data-card-columns="4"] .pack-status {
+    width: max-content;
+    max-width: 100%;
+    padding: 3px 4px;
+    overflow: hidden;
+    font-size: 0.5rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html[data-card-columns="4"] .card-name-ko,
+  html[data-card-columns="4"] .pack-name {
+    margin-top: 6px;
+    font-size: 0.68rem;
+  }
+
+  html[data-card-columns="4"] .card-name-en {
+    font-size: 0.5rem;
+  }
+
+  html[data-card-columns="4"] .pack-art {
+    height: clamp(90px, 24vw, 135px);
+  }
+
+  html[data-card-columns="4"] .pack-image {
+    width: min(101px, calc(100% - 8px));
+    height: auto;
+    aspect-ratio: 126 / 161;
+  }
+
+  html[data-card-columns="4"] .pack-card-body {
+    padding: 7px;
+  }
+
+  html[data-card-columns="4"] .collection-complete-button {
+    right: 4px;
+    bottom: 4px;
+    left: 4px;
+    min-height: 31px;
+    padding: 4px 2px;
+    border-radius: 7px;
+    font-size: 0.52rem;
+  }
+
+  html[data-card-columns="4"] .promo-card-art {
+    min-height: clamp(94px, 25vw, 145px);
+  }
+
+  html[data-card-columns="4"] .promo-pack-photo {
+    height: clamp(94px, 25vw, 145px);
+    padding: 5px;
+  }
+
+  html[data-card-columns="4"] .promo-artwork {
+    width: min(120px, calc(100% - 8px));
+    height: auto;
+    aspect-ratio: 132 / 170;
+  }
+
+  html[data-card-columns="4"] .promo-badge {
+    top: 4px;
+    right: 4px;
+    max-width: calc(100% - 8px);
+    padding: 3px 4px;
+    overflow: hidden;
+    font-size: 0.46rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html[data-card-columns="4"] .promo-card-body {
+    min-height: 196px;
+    padding: 7px;
+  }
+
+  html[data-card-columns="4"] .promo-card-top {
+    display: grid;
+    gap: 4px;
+  }
+
+  html[data-card-columns="4"] .promo-card-meta,
+  html[data-card-columns="4"] .promo-custom-badge,
+  html[data-card-columns="4"] .promo-type-label,
+  html[data-card-columns="4"] .promo-card-body > p,
+  html[data-card-columns="4"] .promo-note,
+  html[data-card-columns="4"] .promo-card-actions a {
+    font-size: 0.5rem;
+  }
+
+  html[data-card-columns="4"] .promo-card-body h3 {
+    margin: 6px 0;
+    font-size: 0.66rem;
+  }
+
+  html[data-card-columns="4"] .promo-card-actions {
+    display: grid;
+    gap: 5px;
+    padding-top: 8px;
+  }
+
+  html[data-card-columns="4"] .promo-collection-action {
+    width: 100%;
+    min-height: 30px;
+    margin-left: 0;
+    padding: 4px 2px;
+    font-size: 0.5rem;
   }
 }
 
