@@ -84,6 +84,15 @@ function groupName(group) {
   return group.title || group.name || group.code;
 }
 
+function pokemonGroupLabel(group) {
+  const name = groupName(group);
+  if (mode === "series") return name;
+  const number = Number(group?.dexNumber);
+  return Number.isFinite(number)
+    ? `#${String(number).padStart(4, "0")} ${name}`
+    : name;
+}
+
 function badge(owned) {
   const element = document.createElement("span");
   element.className = `status-badge ${owned ? "is-owned" : "is-missing"}`;
@@ -181,7 +190,7 @@ function updateSelected() {
     "selected-name",
     mode === "series"
       ? `${groupName(selected)} · ${selected.code}`
-      : groupName(selected),
+      : pokemonGroupLabel(selected),
   );
   setText(
     "selected-progress",
@@ -513,7 +522,7 @@ async function init() {
       option.textContent =
         mode === "series"
           ? `${groupName(group)} · ${group.code} · ${group.total}장`
-          : `${groupName(group)} · ${group.total}장`;
+          : `${pokemonGroupLabel(group)} · ${group.total}장`;
       select.append(option);
     });
 
