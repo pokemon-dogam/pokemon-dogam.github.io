@@ -1,0 +1,127 @@
+name: Add Pokédex labels to Pokémon collections
+
+on:
+  push:
+    paths:
+      - ".github/workflows/add-pokedex-labels-pokemon-collections.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Add dex numbers and labels
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          base_path = Path("data/pokemon-collections.json")
+          pokedex_path = Path("data/pokedex.json")
+          catalog_path = Path("catalog.js")
+          page_path = Path("pokemon-collections.html")
+
+          base_groups = json.loads(base_path.read_text(encoding="utf-8"))
+          pokedex = json.loads(pokedex_path.read_text(encoding="utf-8"))
+          dex_by_name = {
+              record["nameKo"]: record["number"]
+              for record in pokedex["records"]
+              if record.get("nameKo") and record.get("number")
+          }
+
+          missing = []
+          for group in base_groups:
+              name = group.get("name") or group.get("title")
+              number = dex_by_name.get(name)
+              if number is None:
+                  missing.append(name)
+                  continue
+              group["dexNumber"] = number
+
+          if missing:
+              raise SystemExit(f"Pokédex number not found for: {missing}")
+
+          base_path.write_text(
+              json.dumps(base_groups, ensure_ascii=False, separators=(",", ":")),
+              encoding="utf-8",
+          )
+
+          catalog = catalog_path.read_text(encoding="utf-8")
+          helper = '''
+          function pokemonGroupLabel(group) {
+            const name = groupName(group);
+            if (mode === "series") return name;
+            const number = Number(group?.dexNumber);
+            return Number.isFinite(number)
+              ? `#${String(number).padStart(4, "0")} ${name}`
+              : name;
+          }
+          '''.strip()
+
+          if "function pokemonGroupLabel(group)" not in catalog:
+              marker = "\nfunction badge(owned) {"
+              if marker not in catalog:
+                  raise SystemExit("catalog.js badge marker not found")
+              catalog = catalog.replace(
+                  marker,
+                  f"\n{helper}\n\nfunction badge(owned) {{",
+                  1,
+              )
+
+          old_selected = '''    mode === "series"
+                ? `${groupName(selected)} · ${selected.code}`
+                : groupName(selected),'''
+          new_selected = '''    mode === "series"
+                ? `${groupName(selected)} · ${selected.code}`
+                : pokemonGroupLabel(selected),'''
+          if old_selected in catalog:
+              catalog = catalog.replace(old_selected, new_selected, 1)
+          elif new_selected not in catalog:
+              raise SystemExit("selected-name block not found")
+
+          old_option = ''': `${groupName(group)} · ${group.total}장`;'''
+          new_option = ''': `${pokemonGroupLabel(group)} · ${group.total}장`;'''
+          if old_option in catalog:
+              catalog = catalog.replace(old_option, new_option, 1)
+          elif new_option not in catalog:
+              raise SystemExit("Pokémon option label block not found")
+
+          catalog_path.write_text(catalog, encoding="utf-8")
+
+          page = page_path.read_text(encoding="utf-8")
+          page = page.replace(
+              "./catalog.js?v=20260812-1",
+              "./catalog.js?v=20260812-2",
+          )
+          if "./catalog.js?v=20260812-2" not in page:
+              raise SystemExit("catalog.js cache version was not updated")
+          page_path.write_text(page, encoding="utf-8")
+
+          assert all(isinstance(group.get("dexNumber"), int) for group in base_groups)
+          assert "padStart(4, \"0\")" in catalog
+          assert "pokemonGroupLabel(selected)" in catalog
+          assert "pokemonGroupLabel(group)" in catalog
+          print(f"Enriched {len(base_groups)} existing Pokémon groups with National Pokédex numbers")
+          PY
+
+      - name: Validate JavaScript
+        run: node --check catalog.js
+
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- data/pokemon-collections.json catalog.js pokemon-collections.html; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/pokemon-collections.json catalog.js pokemon-collections.html
+          git commit -m "Show National Pokédex numbers in Pokémon selector"
+          git push origin main
