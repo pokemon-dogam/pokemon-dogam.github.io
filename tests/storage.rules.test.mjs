@@ -13,7 +13,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { readFile } from "node:fs/promises";
 import test, { after, before } from "node:test";
 
-const projectId = "demo-pokemon-dogam-storage";
+const projectId = "demo-pokemon-dogam";
 const rules = await readFile(new URL("../storage.rules", import.meta.url), "utf8");
 const firestoreRules = await readFile(
   new URL("../firestore.rules", import.meta.url),
