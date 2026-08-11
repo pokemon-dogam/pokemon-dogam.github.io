@@ -194,10 +194,10 @@ test("profile management leaves the sidebar and public collectors stays below da
   assert.equal(navigation.includes('"도감 관리"'), false);
   assert.match(navigation, /공개 컬렉터/);
   for (const [page] of Object.values(collectionPages)) {
-    assert.match(await source(page), /collector-nav[.]js\?v=20260811-3/);
+    assert.match(await source(page), /collector-nav[.]js\?v=20260812-1/);
   }
   const settingsPage = await source("collector-settings.html");
-  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-3/);
+  assert.match(settingsPage, /collector-nav[.]js\?v=20260812-1/);
   assert.match(settingsPage, /<title>내 프로필 관리/);
   assert.match(settingsPage, /<h1 id="page-title">내 프로필 관리<\/h1>/);
   for (const page of [settingsPage, await source("collectors.html")]) {
@@ -257,7 +257,7 @@ test("desktop uses four or three columns while compact screens use two or four",
   for (const [page] of Object.values(collectionPages)) {
     const html = await source(page);
     assert.match(html, /collector[.]css\?v=20260811-3/);
-    assert.match(html, /collector-nav[.]js\?v=20260811-3/);
+    assert.match(html, /collector-nav[.]js\?v=20260812-1/);
   }
 });
 
