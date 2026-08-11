@@ -2,6 +2,8 @@
 
 (function () {
   const registry = window.CollectorCollectionRegistry;
+  const PROFILE_SETTINGS_HREF = "./collector-settings.html";
+  const CARD_COLUMNS_STORAGE_KEY = "pokemonDexCardColumnsV1";
 
   function navigationLink(href, icon, title, subtitle) {
     const link = document.createElement("a");
@@ -20,14 +22,7 @@
 
     const dashboard = nav.querySelector(".collection-link");
     if (!dashboard) return;
-    const settings =
-      nav.querySelector('[href*="collector-settings.html"]') ||
-      navigationLink(
-        "./collector-settings.html",
-        "CS",
-        "도감 관리",
-        "PROFILE · SHARING",
-      );
+    const settings = nav.querySelector('[href*="collector-settings.html"]');
     const directory =
       nav.querySelector('[href*="collectors.html"]') ||
       navigationLink(
@@ -37,19 +32,149 @@
         "PUBLIC BOARD",
       );
 
-    dashboard.after(settings);
-    settings.after(directory);
+    settings?.remove();
+    dashboard.after(directory);
 
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    for (const [link, page] of [
-      [settings, "collector-settings.html"],
-      [directory, "collectors.html"],
-    ]) {
-      const active = currentPage === page;
-      link.classList.toggle("is-active", active);
-      if (active) link.setAttribute("aria-current", "page");
-      else link.removeAttribute("aria-current");
+    const active = currentPage === "collectors.html";
+    directory.classList.toggle("is-active", active);
+    if (active) directory.setAttribute("aria-current", "page");
+    else directory.removeAttribute("aria-current");
+  }
+
+  function decorateAccountProfileEntry(panel) {
+    if (!panel) return;
+    let status = panel.querySelector("#firebase-auth-status");
+    if (!status) return;
+
+    if (status.tagName !== "A") {
+      const link = document.createElement("a");
+      link.id = status.id;
+      link.className = status.className;
+      link.textContent = status.textContent;
+      status.replaceWith(link);
+      status = link;
     }
+
+    const publicCollectionView = Boolean(window.CollectorPublicView?.requested);
+    const profileEnabled =
+      panel.classList.contains("is-account") &&
+      !panel.classList.contains("is-shared-readonly") &&
+      !publicCollectionView;
+    status.classList.toggle("firebase-profile-link", profileEnabled);
+
+    if (!profileEnabled) {
+      status.removeAttribute("href");
+      status.removeAttribute("title");
+      status.removeAttribute("aria-label");
+      status.removeAttribute("aria-current");
+      return;
+    }
+
+    status.href = PROFILE_SETTINGS_HREF;
+    status.title = "내 프로필 관리";
+    status.setAttribute("aria-label", `${status.textContent} · 내 프로필 관리 열기`);
+    if (window.location.pathname.endsWith("/collector-settings.html")) {
+      status.setAttribute("aria-current", "page");
+    } else {
+      status.removeAttribute("aria-current");
+    }
+  }
+
+  function watchAccountProfileEntry() {
+    const watchPanel = (panel) => {
+      decorateAccountProfileEntry(panel);
+      const stateObserver = new MutationObserver(() => {
+        decorateAccountProfileEntry(panel);
+      });
+      stateObserver.observe(panel, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    };
+
+    const existing = document.querySelector("#firebase-auth-panel");
+    if (existing) {
+      watchPanel(existing);
+      return;
+    }
+
+    const panelObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          const panel = node.matches?.("#firebase-auth-panel")
+            ? node
+            : node.querySelector?.("#firebase-auth-panel");
+          if (!panel) continue;
+          panelObserver.disconnect();
+          watchPanel(panel);
+          return;
+        }
+      }
+    });
+    panelObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  function storedCardColumns() {
+    try {
+      return window.localStorage.getItem(CARD_COLUMNS_STORAGE_KEY) === "3"
+        ? "3"
+        : "4";
+    } catch (error) {
+      return "4";
+    }
+  }
+
+  function saveCardColumns(columns) {
+    try {
+      window.localStorage.setItem(CARD_COLUMNS_STORAGE_KEY, columns);
+    } catch (error) {
+      // 저장소 접근이 제한되어도 현재 화면의 열 전환은 계속 제공합니다.
+    }
+  }
+
+  function updateCardLayout(columns, button) {
+    const normalized = columns === "3" ? "3" : "4";
+    document.documentElement.dataset.cardColumns = normalized;
+    button.dataset.columns = normalized;
+    button.setAttribute("aria-pressed", String(normalized === "3"));
+    button.textContent = normalized === "3"
+      ? "▦ 4열 기본 보기"
+      : "▦ 3열 크게 보기";
+    button.title = normalized === "3"
+      ? "카드를 한 줄에 4개씩 표시합니다."
+      : "카드를 한 줄에 3개씩 크게 표시합니다.";
+  }
+
+  function addCardLayoutToggle() {
+    if (!registry?.collectionIdForPage?.()) return;
+    const resultsBar = document.querySelector(
+      ".catalog-panel .results-bar:not(.promo-results-bar)",
+    );
+    if (!resultsBar || resultsBar.querySelector(".card-layout-toggle")) return;
+
+    const actions = document.createElement("div");
+    actions.className = "results-bar-actions";
+    for (const child of [...resultsBar.children]) {
+      if (child.matches("button")) actions.append(child);
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "card-layout-toggle";
+    actions.append(button);
+    resultsBar.append(actions);
+
+    updateCardLayout(storedCardColumns(), button);
+    button.addEventListener("click", () => {
+      const next = button.dataset.columns === "3" ? "4" : "3";
+      updateCardLayout(next, button);
+      saveCardColumns(next);
+    });
   }
 
   function addHeroActions() {
@@ -116,7 +241,7 @@
       warning.setAttribute("role", "status");
       warning.innerHTML = `
         <div><strong>개인 도감은 저장했지만 공개 화면 갱신이 지연되고 있습니다.</strong><span></span></div>
-        <a href="./collector-settings.html">도감 관리에서 다시 확인</a>
+        <a href="./collector-settings.html">내 프로필 관리에서 다시 확인</a>
       `;
       main.prepend(warning);
     }
@@ -132,5 +257,7 @@
 
   window.addEventListener("pokemon-dex:public-sync-error", showPublicSyncWarning);
   arrangeCollectorNavigation();
+  watchAccountProfileEntry();
+  addCardLayoutToggle();
   addHeroActions();
 })();
