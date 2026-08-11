@@ -47,6 +47,96 @@ function publicViewContext(search, hash = "") {
   return { context, addedClasses, bodyAttributes };
 }
 
+function navigationLayoutContext(moduleSource, compact) {
+  class FakeElement {
+    constructor(tagName = "div") {
+      this.tagName = tagName.toUpperCase();
+      this.attributes = new Map();
+      this.children = [];
+      this.className = "";
+      this.dataset = {};
+      this.listeners = new Map();
+      this.textContent = "";
+      this.title = "";
+    }
+
+    addEventListener(type, listener) {
+      this.listeners.set(type, listener);
+    }
+
+    append(...children) {
+      this.children.push(...children);
+    }
+
+    matches(selector) {
+      return selector === "button" && this.tagName === "BUTTON";
+    }
+
+    querySelector(selector) {
+      const className = selector.startsWith(".") ? selector.slice(1) : "";
+      for (const child of this.children) {
+        if (className && child.className.split(/\s+/).includes(className)) return child;
+        const nested = child.querySelector?.(selector);
+        if (nested) return nested;
+      }
+      return null;
+    }
+
+    setAttribute(name, value) {
+      this.attributes.set(name, value);
+    }
+
+    trigger(type) {
+      this.listeners.get(type)?.();
+    }
+  }
+
+  const mediaListeners = [];
+  const media = {
+    matches: compact,
+    addEventListener: (type, listener) => {
+      if (type === "change") mediaListeners.push(listener);
+    },
+  };
+  const stored = new Map();
+  const resultsBar = new FakeElement("div");
+  const documentElement = new FakeElement("html");
+  const context = {
+    console,
+    Element: FakeElement,
+    MutationObserver: class MutationObserver {
+      observe() {}
+    },
+    document: {
+      body: Object.assign(new FakeElement("body"), { dataset: {} }),
+      createElement: (tagName) => new FakeElement(tagName),
+      documentElement,
+      querySelector: (selector) => selector.includes(".catalog-panel .results-bar")
+        ? resultsBar
+        : null,
+    },
+  };
+  context.window = {
+    CollectorCollectionRegistry: { collectionIdForPage: () => "national" },
+    addEventListener: () => {},
+    localStorage: {
+      getItem: (key) => stored.get(key) ?? null,
+      setItem: (key, value) => stored.set(key, value),
+    },
+    location: { pathname: "/national.html" },
+    matchMedia: () => media,
+  };
+  vm.createContext(context);
+  vm.runInContext(moduleSource, context);
+  return {
+    button: resultsBar.querySelector(".card-layout-toggle"),
+    documentElement,
+    media,
+    mediaListeners,
+    stored,
+  };
+}
+
 test("every existing collection page loads the public adapter before its manager", async () => {
   for (const [collectionId, [page, manager]] of Object.entries(collectionPages)) {
     const html = await source(page);
@@ -104,10 +194,10 @@ test("profile management leaves the sidebar and public collectors stays below da
   assert.equal(navigation.includes('"도감 관리"'), false);
   assert.match(navigation, /공개 컬렉터/);
   for (const [page] of Object.values(collectionPages)) {
-    assert.match(await source(page), /collector-nav[.]js\?v=20260811-2/);
+    assert.match(await source(page), /collector-nav[.]js\?v=20260811-3/);
   }
   const settingsPage = await source("collector-settings.html");
-  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-2/);
+  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-3/);
   assert.match(settingsPage, /<title>내 프로필 관리/);
   assert.match(settingsPage, /<h1 id="page-title">내 프로필 관리<\/h1>/);
   for (const page of [settingsPage, await source("collectors.html")]) {
@@ -130,7 +220,7 @@ test("the signed-in account name opens profile management", async () => {
   assert.match(css, /#firebase-auth-status[.]firebase-profile-link/);
 });
 
-test("every collection defaults to four desktop columns and can switch to three", async () => {
+test("desktop uses four or three columns while compact screens use two or four", async () => {
   const navigation = await source("collector-nav.js");
   const commonCss = await source("styles.css");
   const collectorCss = await source("collector.css");
@@ -142,14 +232,59 @@ test("every collection defaults to four desktop columns and can switch to three"
   for (const grid of ["card-grid", "pack-grid", "promo-pack-grid"]) {
     assert.match(collectorCss, new RegExp(`data-card-columns="4"[^}]*[.]${grid}`));
     assert.match(collectorCss, new RegExp(`data-card-columns="3"[^}]*[.]${grid}`));
+    assert.match(collectorCss, new RegExp(`data-card-columns="2"[^}]*[.]${grid}`));
   }
   assert.match(navigation, /pokemonDexCardColumnsV1/);
+  assert.match(navigation, /pokemonDexCompactCardColumnsV1/);
+  assert.match(navigation, /COMPACT_CARD_LAYOUT_QUERY = "\(max-width: 920px\)"/);
+  assert.match(navigation, /defaultColumns: "2"/);
+  assert.match(navigation, /alternateColumns: "4"/);
   assert.match(navigation, /3열 크게 보기/);
   assert.match(navigation, /4열 기본 보기/);
+  assert.match(navigation, /4열로 보기/);
+  assert.match(navigation, /2열 기본 보기/);
+  assert.match(navigation, /compactCardLayoutMedia[.]addEventListener\("change", restoreLayout\)/);
   assert.match(navigation, /localStorage[.]setItem/);
+  const compactMediaCss = collectorCss.slice(
+    collectorCss.indexOf("@media (max-width: 920px)"),
+    collectorCss.indexOf("@media (max-width: 560px)"),
+  );
+  assert.equal(compactMediaCss.includes("display: none"), false);
+  assert.match(
+    collectorCss,
+    /@media \(max-width: 560px\)[\s\S]*?data-card-columns="4"[\s\S]*?[.]pack-image[\s\S]*?calc\(100% - 8px\)/,
+  );
   for (const [page] of Object.values(collectionPages)) {
-    assert.match(await source(page), /collector[.]css\?v=20260811-2/);
+    const html = await source(page);
+    assert.match(html, /collector[.]css\?v=20260811-3/);
+    assert.match(html, /collector-nav[.]js\?v=20260811-3/);
   }
+});
+
+test("compact and desktop column choices restore independently across viewport changes", async () => {
+  const layout = navigationLayoutContext(await source("collector-nav.js"), true);
+
+  assert.equal(layout.documentElement.dataset.cardColumns, "2");
+  assert.match(layout.button.textContent, /4열로 보기/);
+
+  layout.button.trigger("click");
+  assert.equal(layout.documentElement.dataset.cardColumns, "4");
+  assert.equal(layout.stored.get("pokemonDexCompactCardColumnsV1"), "4");
+  assert.match(layout.button.textContent, /2열 기본 보기/);
+
+  layout.media.matches = false;
+  layout.mediaListeners.forEach((listener) => listener());
+  assert.equal(layout.documentElement.dataset.cardColumns, "4");
+  assert.match(layout.button.textContent, /3열 크게 보기/);
+
+  layout.button.trigger("click");
+  assert.equal(layout.documentElement.dataset.cardColumns, "3");
+  assert.equal(layout.stored.get("pokemonDexCardColumnsV1"), "3");
+
+  layout.media.matches = true;
+  layout.mediaListeners.forEach((listener) => listener());
+  assert.equal(layout.documentElement.dataset.cardColumns, "4");
+  assert.match(layout.button.textContent, /2열 기본 보기/);
 });
 
 test("public collector board reads only directory and existing public projections", async () => {
