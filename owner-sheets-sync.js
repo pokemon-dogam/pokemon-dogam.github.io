@@ -17,6 +17,14 @@
     "pokemon",
     "ar",
   ];
+  const CATEGORY_LABELS = {
+    national: "전국도감",
+    pack: "팩 전종수집",
+    artist: "작가 도감",
+    series: "시리즈 도감",
+    pokemon: "포켓몬 컬렉션",
+    ar: "AR 전종도감",
+  };
   const DOCUMENT_IDS = {
     national: CONFIG.userDocument || "nationalDex",
     pack: "packDex",
@@ -52,6 +60,37 @@
         normalizeEmail(CONFIG.ownerEmail) &&
         normalizeEmail(user.email) === normalizeEmail(CONFIG.ownerEmail),
     );
+  }
+
+  function firestoreSyncError(error, action = "도감 동기화") {
+    const code = String(error?.code || "").toLowerCase();
+    const message = String(error?.message || "");
+    if (
+      code.includes("permission-denied") ||
+      /missing or insufficient permissions/i.test(message)
+    ) {
+      const wrapped = new Error(
+        `${action} 권한을 확인하지 못했습니다. 페이지를 새로고침한 뒤 Google 로그인 상태를 확인하고 다시 시도해 주세요.`,
+      );
+      wrapped.cause = error;
+      return wrapped;
+    }
+    return error instanceof Error
+      ? error
+      : new Error(message || `${action}에 실패했습니다.`);
+  }
+
+  async function ensureFreshOwnerSession() {
+    const user = firebase?.auth?.currentUser || null;
+    if (!isOwner(user)) {
+      throw new Error("사이트의 소유자 Google 로그인을 다시 확인해 주세요.");
+    }
+    if (typeof firebase.authModule.getIdToken === "function") {
+      await firebase.authModule.getIdToken(user, true);
+    } else if (typeof user.getIdToken === "function") {
+      await user.getIdToken(true);
+    }
+    currentUser = user;
   }
 
   function configured() {
@@ -746,7 +785,15 @@
 
   async function loadDocument(category) {
     const ref = await documentRef(category);
-    const snapshot = await firebase.firestoreModule.getDoc(ref);
+    let snapshot;
+    try {
+      snapshot = await firebase.firestoreModule.getDoc(ref);
+    } catch (error) {
+      throw firestoreSyncError(
+        error,
+        `${CATEGORY_LABELS[category] || category} 데이터 읽기`,
+      );
+    }
     return {
       ref,
       data: snapshot.exists()
@@ -839,17 +886,21 @@
           if (boolValue(values[4])) ownedCodes.add(key);
           else ownedCodes.delete(key);
         }
-        await firebase.firestoreModule.setDoc(
-          ref,
-          {
-            baseMode: data.baseMode === "empty" ? "empty" : "legacy",
-            email: currentUser.email || "",
-            displayName: currentUser.displayName || "",
-            ownedCodes: [...ownedCodes],
-            updatedAt: firebase.firestoreModule.serverTimestamp(),
-          },
-          { merge: true },
-        );
+        try {
+          await firebase.firestoreModule.setDoc(
+            ref,
+            {
+              baseMode: data.baseMode === "empty" ? "empty" : "legacy",
+              email: currentUser.email || "",
+              displayName: currentUser.displayName || "",
+              ownedCodes: [...ownedCodes],
+              updatedAt: firebase.firestoreModule.serverTimestamp(),
+            },
+            { merge: true },
+          );
+        } catch (error) {
+          throw firestoreSyncError(error, "팩 전종수집 시트 반영");
+        }
         projectionCategories.push(category);
         applied += rows.length;
         continue;
@@ -897,17 +948,24 @@
         overrides[key] = item;
       }
 
-      await firebase.firestoreModule.setDoc(
-        ref,
-        {
-          baseMode: data.baseMode === "empty" ? "empty" : "legacy",
-          email: currentUser.email || "",
-          displayName: currentUser.displayName || "",
-          overrides,
-          updatedAt: firebase.firestoreModule.serverTimestamp(),
-        },
-        { merge: true },
-      );
+      try {
+        await firebase.firestoreModule.setDoc(
+          ref,
+          {
+            baseMode: data.baseMode === "empty" ? "empty" : "legacy",
+            email: currentUser.email || "",
+            displayName: currentUser.displayName || "",
+            overrides,
+            updatedAt: firebase.firestoreModule.serverTimestamp(),
+          },
+          { merge: true },
+        );
+      } catch (error) {
+        throw firestoreSyncError(
+          error,
+          `${CATEGORY_LABELS[category] || category} 시트 반영`,
+        );
+      }
       projectionCategories.push(category);
       applied += rows.length;
     }
@@ -916,7 +974,7 @@
       projectionCategories.map((category) => syncCollectorProjection(category)),
     );
 
-    return { applied, skipped };
+    return { applied, skipped, projectionCategories };
   }
 
   async function syncAll({ showAlert = false } = {}) {
@@ -932,22 +990,23 @@
     setSyncStatus("동기화 중…", "loading");
 
     try {
+      await ensureFreshOwnerSession();
       const [catalogs, documents, sheetRows] = await Promise.all([
         loadCatalogs(),
         loadAllDocuments(),
         readSheetRows(),
       ]);
-      const { applied, skipped } = await applySheetChanges(
-        sheetRows,
-        catalogs,
-        documents,
-      );
+      const { applied, skipped, projectionCategories } =
+        await applySheetChanges(sheetRows, catalogs, documents);
       const nextDocuments = applied ? await loadAllDocuments() : documents;
       const rows = VALID_CATEGORIES.flatMap((category) =>
         buildRowsForCategory(category, catalogs, nextDocuments[category].data),
       );
 
       await replaceSheetRows(rows);
+      if (!projectionCategories.includes("pack")) {
+        await syncCollectorProjection("pack");
+      }
       setPending(false);
       setLastSync();
       setSyncStatus(`동기화 완료 · ${rows.length.toLocaleString()}개`, "success");
@@ -967,7 +1026,8 @@
     } catch (error) {
       console.error("Google Sheets 동기화 실패", error);
       setSyncStatus("동기화 실패", "error");
-      if (showAlert) alert(error.message || "동기화하지 못했습니다.");
+      const displayError = firestoreSyncError(error);
+      if (showAlert) alert(displayError.message || "동기화하지 못했습니다.");
     } finally {
       busy = false;
       setUiBusy(false);

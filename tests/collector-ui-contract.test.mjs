@@ -308,6 +308,9 @@ test("owner Sheets writes also refresh an enabled public projection", async () =
     "pack and card-catalog Sheet writes must both refresh projections",
   );
   assert.match(ownerSync, /projectionCategories[.]map/);
+  assert.match(ownerSync, /projectionCategories[.]includes\("pack"\)/);
+  assert.match(ownerSync, /getIdToken\(user, true\)/);
+  assert.match(ownerSync, /권한을 확인하지 못했습니다/);
   assert.ok(
     dashboard.indexOf("collector-public-sync.js") <
       dashboard.indexOf("owner-sheets-sync.js"),
