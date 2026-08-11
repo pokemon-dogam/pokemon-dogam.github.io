@@ -97,21 +97,58 @@ test("collector settings restores the existing login before showing its sign-in 
   assert.equal(settingsClient.includes('prompt: "select_account"'), false);
 });
 
-test("collector navigation stays directly below the dashboard and includes the public board", async () => {
+test("profile management leaves the sidebar and public collectors stays below dashboard", async () => {
   const navigation = await source("collector-nav.js");
-  assert.match(navigation, /dashboard[.]after\(settings\)/);
-  assert.match(navigation, /settings[.]after\(directory\)/);
+  assert.match(navigation, /settings[?][.]remove\(\)/);
+  assert.match(navigation, /dashboard[.]after\(directory\)/);
+  assert.equal(navigation.includes('"도감 관리"'), false);
   assert.match(navigation, /공개 컬렉터/);
   for (const [page] of Object.values(collectionPages)) {
-    assert.match(await source(page), /collector-nav[.]js\?v=20260811-1/);
+    assert.match(await source(page), /collector-nav[.]js\?v=20260811-2/);
   }
   const settingsPage = await source("collector-settings.html");
-  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-1/);
+  assert.match(settingsPage, /collector-nav[.]js\?v=20260811-2/);
+  assert.match(settingsPage, /<title>내 프로필 관리/);
+  assert.match(settingsPage, /<h1 id="page-title">내 프로필 관리<\/h1>/);
   for (const page of [settingsPage, await source("collectors.html")]) {
-    const nav = page.slice(page.indexOf('<nav class="collection-nav">'));
-    assert.ok(nav.indexOf('href="./collector-settings.html"') > nav.indexOf('href="./"'));
-    assert.ok(nav.indexOf('href="./collectors.html"') > nav.indexOf('href="./collector-settings.html"'));
+    const navStart = page.indexOf('<nav class="collection-nav">');
+    const nav = page.slice(navStart, page.indexOf("</nav>", navStart));
+    assert.equal(nav.includes('href="./collector-settings.html"'), false);
+    assert.ok(nav.indexOf('href="./collectors.html"') > nav.indexOf('href="./"'));
     assert.ok(nav.indexOf('href="./national.html"') > nav.indexOf('href="./collectors.html"'));
+  }
+});
+
+test("the signed-in account name opens profile management", async () => {
+  const navigation = await source("collector-nav.js");
+  const css = await source("collector.css");
+  assert.match(navigation, /PROFILE_SETTINGS_HREF = "[.]\/collector-settings[.]html"/);
+  assert.match(navigation, /status[.]tagName !== "A"/);
+  assert.match(navigation, /panel[.]classList[.]contains\("is-account"\)/);
+  assert.match(navigation, /status[.]href = PROFILE_SETTINGS_HREF/);
+  assert.match(navigation, /내 프로필 관리 열기/);
+  assert.match(css, /#firebase-auth-status[.]firebase-profile-link/);
+});
+
+test("every collection defaults to four desktop columns and can switch to three", async () => {
+  const navigation = await source("collector-nav.js");
+  const commonCss = await source("styles.css");
+  const collectorCss = await source("collector.css");
+  const packCss = await source("packs.css");
+
+  assert.equal(/@media \(min-width: 1500px\)[\s\S]*?[.]card-grid[\s\S]*?repeat\(5/.test(commonCss), false);
+  assert.match(commonCss, /[.]card-grid \{[\s\S]*?repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.match(packCss, /[.]promo-pack-grid \{[\s\S]*?repeat\(4, minmax\(0, 1fr\)\)/);
+  for (const grid of ["card-grid", "pack-grid", "promo-pack-grid"]) {
+    assert.match(collectorCss, new RegExp(`data-card-columns="4"[^}]*[.]${grid}`));
+    assert.match(collectorCss, new RegExp(`data-card-columns="3"[^}]*[.]${grid}`));
+  }
+  assert.match(navigation, /pokemonDexCardColumnsV1/);
+  assert.match(navigation, /3열 크게 보기/);
+  assert.match(navigation, /4열 기본 보기/);
+  assert.match(navigation, /localStorage[.]setItem/);
+  for (const [page] of Object.values(collectionPages)) {
+    assert.match(await source(page), /collector[.]css\?v=20260811-2/);
   }
 });
 

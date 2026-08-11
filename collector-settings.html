@@ -8,20 +8,20 @@
       content="컬렉터 프로필, 대시보드 표시 도감과 도감별 공개 범위를 관리합니다."
     />
     <meta name="theme-color" content="#17233f" />
-    <title>도감 관리 | MY POKÉMON DEX</title>
+    <title>내 프로필 관리 | MY POKÉMON DEX</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css?v=20260730-3" />
     <link rel="stylesheet" href="./legal.css?v=20260806-1" />
     <link rel="stylesheet" href="./collection-manager.css?v=20260729-1" />
-    <link rel="stylesheet" href="./collector.css?v=20260811-1" />
+    <link rel="stylesheet" href="./collector.css?v=20260811-2" />
     <script src="./firebase-config.js?v=20260727-2" defer></script>
     <script src="./site-metrics.js?v=20260729-1" defer></script>
     <script src="./image-protection.js?v=20260806-1" defer></script>
     <script src="./legal.js?v=20260806-1" defer></script>
     <script src="./collector-collection-registry.js?v=20260810-6" defer></script>
     <script src="./collector-public-sync.js?v=20260810-6" defer></script>
-    <script src="./collector-nav.js?v=20260811-1" defer></script>
-    <script src="./collector-settings.js?v=20260811-1" defer></script>
+    <script src="./collector-nav.js?v=20260811-2" defer></script>
+    <script src="./collector-settings.js?v=20260811-2" defer></script>
   </head>
   <body data-page="collector-settings">
     <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -43,10 +43,6 @@
           <a class="collection-link" href="./">
             <span class="collection-icon" aria-hidden="true">DB</span>
             <span><strong>통합 대시보드</strong><small>ALL COLLECTIONS</small></span>
-          </a>
-          <a class="collection-link is-active" href="./collector-settings.html" aria-current="page">
-            <span class="collection-icon collection-icon--red" aria-hidden="true">CS</span>
-            <span><strong>도감 관리</strong><small>PROFILE · SHARING</small></span>
           </a>
           <a class="collection-link" href="./collectors.html">
             <span class="collection-icon" aria-hidden="true">PB</span>
@@ -89,7 +85,7 @@
           <div class="hero-glow hero-glow--two" aria-hidden="true"></div>
           <div class="hero-content">
             <p class="eyebrow">COLLECTOR PROFILE · COLLECTION SETTINGS</p>
-            <h1 id="page-title">도감 관리</h1>
+            <h1 id="page-title">내 프로필 관리</h1>
             <p class="hero-description">
               대시보드에 표시할 도감과 다른 사람에게 보여줄 범위를<br />
               서로 독립적으로 설정할 수 있습니다.
@@ -103,7 +99,7 @@
 
         <section id="collector-signin-gate" class="collector-signin-gate" aria-live="polite" hidden>
           <div>
-            <strong>Google 로그인 후 도감 설정을 관리할 수 있습니다.</strong>
+            <strong>Google 로그인 후 내 프로필과 도감 설정을 관리할 수 있습니다.</strong>
             <p>기존 도감 데이터는 로그인과 관계없이 변경하거나 초기화하지 않습니다.</p>
           </div>
           <button id="collector-signin" class="primary-button" type="button">Google 로그인</button>
@@ -214,7 +210,7 @@
     </div>
 
     <div id="collector-settings-error" class="app-error" role="alert" hidden>
-      <strong>도감 관리 화면을 불러오지 못했습니다.</strong>
+      <strong>내 프로필 관리 화면을 불러오지 못했습니다.</strong>
       <span>기존 도감 데이터에는 영향을 주지 않았습니다.</span>
     </div>
   </body>

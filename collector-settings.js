@@ -915,7 +915,7 @@
       await renderSettings();
       setStatus(elements.settingsStatus, "");
     } catch (error) {
-      console.error("도감 관리 초기화 실패", error);
+      console.error("내 프로필 관리 초기화 실패", error);
       updateAuthUi("Firebase 연결 오류");
       elements.error.hidden = false;
     }
