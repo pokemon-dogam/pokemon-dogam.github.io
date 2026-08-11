@@ -1,24 +1,14 @@
 #!/usr/bin/env python3
-import re
+import json
 import requests
-from bs4 import BeautifulSoup
 
-url = "https://pokemoncard.co.kr/cards"
-response = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0", "Accept-Language": "ko-KR,ko;q=0.9"})
-print("STATUS", response.status_code)
-print("FINAL", response.url)
-print("LENGTH", len(response.text))
-response.raise_for_status()
-soup = BeautifulSoup(response.text, "html.parser")
-print("SCRIPTS")
-for script in soup.find_all("script", src=True):
-    print(script.get("src"))
-print("FORMS")
-for form in soup.find_all("form"):
-    print("FORM", form.get("method"), form.get("action"))
-    for field in form.find_all(["input", "select", "button"]):
-        print(" FIELD", field.name, field.get("name"), field.get("type"), field.get("value"), field.get("id"))
-print("ENDPOINT_LIKE")
-for match in sorted(set(re.findall(r"[\"']([^\"']*(?:api|cards|search)[^\"']*)[\"']", response.text, re.I))):
-    if len(match) < 300:
-        print(match)
+for name in ("깨비참", "피카츄", "푸크린"):
+    url = "https://api.tcgdex.net/v2/ko/cards"
+    response = requests.get(url, params={"name": name}, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
+    print("NAME", name, "STATUS", response.status_code, "URL", response.url)
+    print("TEXT_HEAD", response.text[:300])
+    if response.ok:
+        payload = response.json()
+        print("COUNT", len(payload) if isinstance(payload, list) else type(payload).__name__)
+        if isinstance(payload, list):
+            print(json.dumps(payload[:3], ensure_ascii=False, indent=2))
