@@ -360,6 +360,32 @@ service cloud.firestore {
       return setting.data.visibility == "public";
     }
 
+    function publicSettingExistsAfter(userId, collectionId) {
+      let settingPath =
+        /databases/$(database)/documents/users/$(userId)/collectionSettings/$(collectionId);
+      return existsAfter(settingPath)
+        && getAfter(settingPath).data.visibility == "public";
+    }
+
+    function hasPublicCollectionAfter(userId) {
+      return publicSettingExistsAfter(userId, "national")
+        || publicSettingExistsAfter(userId, "pack")
+        || publicSettingExistsAfter(userId, "artist")
+        || publicSettingExistsAfter(userId, "series")
+        || publicSettingExistsAfter(userId, "pokemon")
+        || publicSettingExistsAfter(userId, "ar")
+        || publicSettingExistsAfter(userId, "people");
+    }
+
+    function validPublicCollectorDirectory(publicId) {
+      return isPublicIdOwnerAfter(publicId)
+        && request.resource.data.keys().hasAll(["publicId", "updatedAt"])
+        && request.resource.data.keys().hasOnly(["publicId", "updatedAt"])
+        && request.resource.data.publicId == publicId
+        && request.resource.data.updatedAt == request.time
+        && hasPublicCollectionAfter(request.auth.uid);
+    }
+
     function sharedSettingEnabled(userId, collectionId, shareId) {
       let setting = getAfter(
         /databases/$(database)/documents/users/$(userId)/collectionSettings/$(collectionId)
@@ -674,6 +700,14 @@ service cloud.firestore {
           /databases/$(database)/documents/users/$(request.auth.uid)/profile/main
         ).data.publicId == publicId;
       allow update, delete: if false;
+    }
+
+    // PUBLIC 도감이 하나 이상인 프로필의 무작위 공개 ID만 보드에 등재합니다.
+    // 닉네임·소개·도감 projection은 기존 공개 경로에서 별도로 읽습니다.
+    match /publicCollectorDirectory/{publicId} {
+      allow get, list: if true;
+      allow create, update: if validPublicCollectorDirectory(publicId);
+      allow delete: if isPublicIdOwner(publicId);
     }
 
     // 공개 프로필에는 닉네임과 소개만 복제합니다.

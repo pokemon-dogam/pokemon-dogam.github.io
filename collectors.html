@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="PUBLIC 도감을 공개한 포켓몬카드 컬렉터와 컬렉션을 둘러봅니다."
+    />
+    <meta name="theme-color" content="#17233f" />
+    <title>공개 컬렉터 | MY POKÉMON DEX</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=20260730-3" />
+    <link rel="stylesheet" href="./legal.css?v=20260806-1" />
+    <link rel="stylesheet" href="./collection-manager.css?v=20260729-1" />
+    <link rel="stylesheet" href="./collector.css?v=20260811-1" />
+    <script src="./firebase-config.js?v=20260727-2" defer></script>
+    <script src="./site-metrics.js?v=20260729-1" defer></script>
+    <script src="./legal.js?v=20260806-1" defer></script>
+    <script src="./collector-collection-registry.js?v=20260810-6" defer></script>
+    <script src="./collector-nav.js?v=20260811-1" defer></script>
+    <script src="./collector-directory.js?v=20260811-1" defer></script>
+  </head>
+  <body data-page="collector-directory">
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="MY POKÉMON DEX 홈">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-copy">
+          <strong>MY POKÉMON DEX</strong>
+          <small>COLLECTION ARCHIVE</small>
+        </span>
+      </a>
+      <span class="header-chip">PUBLIC BOARD</span>
+    </header>
+
+    <div class="site-layout">
+      <aside class="sidebar" aria-label="도감 메뉴">
+        <div class="sidebar-label">MY COLLECTIONS</div>
+        <nav class="collection-nav">
+          <a class="collection-link" href="./">
+            <span class="collection-icon" aria-hidden="true">DB</span>
+            <span><strong>통합 대시보드</strong><small>ALL COLLECTIONS</small></span>
+          </a>
+          <a class="collection-link" href="./collector-settings.html">
+            <span class="collection-icon" aria-hidden="true">CS</span>
+            <span><strong>도감 관리</strong><small>PROFILE · SHARING</small></span>
+          </a>
+          <a class="collection-link is-active" href="./collectors.html" aria-current="page">
+            <span class="collection-icon collection-icon--red" aria-hidden="true">PB</span>
+            <span><strong>공개 컬렉터</strong><small>PUBLIC BOARD</small></span>
+          </a>
+          <a class="collection-link" href="./national.html">
+            <span class="collection-icon" aria-hidden="true">01</span>
+            <span><strong>전국도감</strong><small>1세대–9세대</small></span>
+          </a>
+          <a class="collection-link" href="./packs.html">
+            <span class="collection-icon" aria-hidden="true">02</span>
+            <span><strong>팩 전종수집</strong><small>S · SV · M · PROMO</small></span>
+          </a>
+          <a class="collection-link" href="./artists.html">
+            <span class="collection-icon" aria-hidden="true">03</span>
+            <span><strong>작가 도감</strong><small>29 ARTISTS</small></span>
+          </a>
+          <a class="collection-link" href="./series.html">
+            <span class="collection-icon" aria-hidden="true">04</span>
+            <span><strong>시리즈 도감</strong><small>31 SETS</small></span>
+          </a>
+          <a class="collection-link" href="./pokemon-collections.html">
+            <span class="collection-icon" aria-hidden="true">05</span>
+            <span><strong>포켓몬 컬렉션</strong><small>47 POKÉMON</small></span>
+          </a>
+          <a class="collection-link" href="./ar.html">
+            <span class="collection-icon collection-icon--ar" aria-hidden="true">06</span>
+            <span><strong>AR 전종도감</strong><small>SV · M · 498 CARDS</small></span>
+          </a>
+          <a class="collection-link" href="./people.html">
+            <span class="collection-icon" aria-hidden="true">07</span>
+            <span><strong>인물도감</strong><small>TRAINER ARCHIVE</small></span>
+          </a>
+        </nav>
+        <div class="sidebar-note">
+          <span aria-hidden="true">✦</span>
+          PUBLIC으로 설정한 도감만 공개 컬렉터 보드와 프로필에 표시됩니다.
+        </div>
+      </aside>
+
+      <main id="main-content" class="main-content collector-directory-main">
+        <section class="hero collector-directory-hero" aria-labelledby="page-title">
+          <div class="hero-glow hero-glow--one" aria-hidden="true"></div>
+          <div class="hero-glow hero-glow--two" aria-hidden="true"></div>
+          <div class="hero-content">
+            <p class="eyebrow">PUBLIC COLLECTORS · COMMUNITY BOARD</p>
+            <h1 id="page-title">공개 컬렉터</h1>
+            <p class="hero-description">
+              컬렉터들이 PUBLIC으로 공개한 포켓몬카드 도감을<br />
+              닉네임과 컬렉션별로 둘러보세요.
+            </p>
+          </div>
+          <div class="collector-directory-badge">
+            <strong>PUBLIC ONLY</strong>
+            <small>PRIVATE·UNLISTED 도감과<br />Google 계정정보는 표시하지 않습니다.</small>
+          </div>
+        </section>
+
+        <section class="catalog-panel collector-directory-panel" aria-labelledby="collector-directory-title">
+          <div class="catalog-heading">
+            <div>
+              <p class="section-kicker">COLLECTOR BOARD</p>
+              <h2 id="collector-directory-title">컬렉터 둘러보기</h2>
+            </div>
+            <p class="catalog-caption">카드를 선택하면 해당 컬렉터의 공개 프로필로 이동합니다.</p>
+          </div>
+
+          <div class="collector-directory-toolbar">
+            <label class="collector-directory-search">
+              <span class="sr-only">컬렉터 검색</span>
+              <input
+                id="collector-directory-search"
+                type="search"
+                autocomplete="off"
+                placeholder="닉네임·소개·공개 도감 검색"
+              />
+            </label>
+            <p id="collector-directory-count" class="collector-directory-count" aria-live="polite">
+              공개 컬렉터 <strong>—</strong>명
+            </p>
+          </div>
+
+          <div id="collector-directory-loading" class="collector-directory-state" role="status">
+            <span class="collector-loading-dot" aria-hidden="true"></span>
+            <strong>공개 컬렉터를 불러오는 중입니다.</strong>
+            <p>PUBLIC으로 공유된 도감만 확인하고 있습니다.</p>
+          </div>
+
+          <div id="collector-directory-grid" class="collector-directory-grid" hidden></div>
+
+          <div id="collector-directory-empty" class="collector-directory-state" hidden>
+            <strong>조건에 맞는 공개 컬렉터가 없습니다.</strong>
+            <p>검색어를 바꾸거나, 도감 관리에서 내 도감을 PUBLIC으로 공개해 보세요.</p>
+            <a href="./collector-settings.html">내 도감 공개 설정</a>
+          </div>
+
+          <div id="collector-directory-error" class="collector-directory-state collector-directory-state--error" role="alert" hidden>
+            <strong>공개 컬렉터 보드를 불러오지 못했습니다.</strong>
+            <p>잠시 후 새로고침해 주세요. 개인 도감 데이터에는 영향을 주지 않습니다.</p>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <div class="site-footer-main">
+            <nav class="site-footer-links" aria-label="정책 및 문의">
+              <a href="./privacy.html">개인정보처리방침</a>
+              <a href="./terms.html">이용약관</a>
+              <a href="mailto:pokemon.dogam.support@gmail.com">문의·삭제 요청</a>
+              <a href="https://pokemoncard.co.kr/" target="_blank" rel="noopener noreferrer">포켓몬 카드 공식 사이트 ↗</a>
+            </nav>
+            <p>본 사이트는 개인이 운영하는 비공식 팬 사이트이며, 포켓몬 관련 권리자 및 ㈜포켓몬코리아와 제휴·승인·후원 관계가 없습니다.</p>
+            <p>Pokémon 및 관련 명칭·상표·캐릭터, 카드 이미지와 카드 텍스트의 권리는 각 권리자에게 있습니다. ©<span data-current-year>2026</span> Pokémon. ©1995–<span data-current-year>2026</span> Nintendo/Creatures Inc./GAME FREAK inc.</p>
+          </div>
+          <p class="site-footer-note">PUBLIC 도감이 없는 프로필은 공개 컬렉터 보드에 표시되지 않습니다.</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

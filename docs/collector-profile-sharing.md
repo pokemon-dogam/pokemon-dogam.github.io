@@ -2,10 +2,10 @@
 
 ## 작업 기준
 
-- 시작 `main` SHA: `752b4132d3678ce12b6ba94196461ce7f1381a64`
-- 작업 브랜치: `feature/collector-profile-sharing`
+- 공개 보드 확장 기준 `main` SHA: `13d0827374bd87107d76bd87e43232d00a4bd98f`
+- 공개 보드 작업 브랜치: `agent/public-collector-board`
 - 원칙: 기존 도감 문서·필드·공유 방식은 그대로 두고 신규 경로만 추가
-- 운영 상태: 기능 브랜치 구현이며 Firebase Rules·GitHub Pages 미배포
+- 운영 상태: 프로필·공유 기능 운영 반영 완료, 공개 컬렉터 보드 확장 작업
 
 ## 기능 범위
 
@@ -15,6 +15,7 @@
 - 7개 도감의 대시보드 표시와 공개 범위를 서로 독립적으로 설정
 - `private`, `unlisted`, `public` 도감별 공개
 - 공개 프로필과 기존 도감 UI를 재사용한 읽기 전용 상세 화면
+- PUBLIC 도감이 하나 이상인 프로필만 자동 등재하는 공개 컬렉터 보드
 
 리더보드, 좋아요, 팔로우, 댓글, DM, 거래 자동화는 포함하지 않습니다.
 
@@ -62,6 +63,7 @@ projection만 후속 갱신하며, 프로필·공개 설정 변경을 Sheets 카
 | `collectorNicknames/{normalized}` | `claimed: true`만 포함 | exact get만 허용, list 차단 |
 | `publicProfiles/{publicId}` | 닉네임과 소개 | 공개 exact get, 최상위 list 차단 |
 | `publicProfiles/{publicId}/collections/{collectionId}` | 안전한 공개 projection | 공개 get/list, 소유자만 쓰기 |
+| `publicCollectorDirectory/{publicId}` | 무작위 `publicId`, 갱신 시각 | 공개 get/list, PUBLIC 도감 소유자만 쓰기 |
 | `sharedCollections/{shareId}` | 안전한 공개 projection | 추측 곤란한 exact get만, list 차단 |
 
 공개 projection 스키마는 다음 필드로 제한합니다.
@@ -80,6 +82,11 @@ promoOwnedCount
 이메일, UID, Google 표시 이름, 내부 Firestore 경로, 관리자 정보, 메모, 수량,
 교환 상태, 실제 보유 카드 상세와 `customPromoPacks`는 projection에 들어갈 수
 없도록 Rules의 `keys().hasOnly(...)`로 제한합니다.
+
+공개 보드는 `publicProfiles` 전체 list를 열지 않습니다. PUBLIC 도감이 하나 이상일
+때만 별도의 디렉터리에 무작위 `publicId`를 등재하고, 화면이 해당 ID의 공개 프로필과
+PUBLIC projection을 각각 읽습니다. PRIVATE·UNLISTED 도감만 남으면 디렉터리 항목을
+삭제하며, 오래된 항목이 남더라도 PUBLIC projection이 0개이면 화면에서 제외합니다.
 
 ## 닉네임과 URL
 

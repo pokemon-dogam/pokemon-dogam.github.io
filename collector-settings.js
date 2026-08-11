@@ -195,6 +195,58 @@
     };
   }
 
+  function directoryRef(publicId = profile?.publicId) {
+    return firebase.firestoreModule.doc(
+      firebase.db,
+      "publicCollectorDirectory",
+      publicId,
+    );
+  }
+
+  function hasPublicCollection(changedCollectionId = "", nextSetting = null) {
+    return registry.COLLECTION_ORDER.some((collectionId) => {
+      const setting =
+        collectionId === changedCollectionId && nextSetting
+          ? nextSetting
+          : settings.get(collectionId)?.value;
+      return setting?.visibility === "public";
+    });
+  }
+
+  function directoryPayload() {
+    return {
+      publicId: profile.publicId,
+      updatedAt: firebase.firestoreModule.serverTimestamp(),
+    };
+  }
+
+  async function reconcileDirectoryEntry() {
+    if (!profile?.profileCompleted) return;
+    try {
+      const reference = directoryRef();
+      const snapshot = await firebase.firestoreModule.getDoc(reference);
+      const shouldBeListed = hasPublicCollection();
+      if (shouldBeListed && !snapshot.exists()) {
+        await firebase.firestoreModule.setDoc(reference, directoryPayload());
+      } else if (!shouldBeListed && snapshot.exists()) {
+        await firebase.firestoreModule.deleteDoc(reference);
+      }
+    } catch (error) {
+      console.warn("공개 컬렉터 보드 등록 상태를 확인하지 못했습니다.", error);
+    }
+  }
+
+  function syncDirectoryInBatch(batch, collectionId, nextSetting) {
+    if (!profile?.profileCompleted) return;
+    const wasListed = hasPublicCollection();
+    const shouldBeListed = hasPublicCollection(collectionId, nextSetting);
+    if (shouldBeListed) {
+      batch.set(directoryRef(), directoryPayload());
+    } else if (wasListed) {
+      batch.delete(directoryRef());
+    }
+  }
+
   async function createProfile(fields) {
     const nicknameRef = firebase.firestoreModule.doc(
       firebase.db,
@@ -496,7 +548,7 @@
   }
 
   function visibilityLabel(value) {
-    if (value === "public") return "PUBLIC · 공개 프로필에 표시";
+    if (value === "public") return "PUBLIC · 프로필·공개 보드에 표시";
     if (value === "unlisted") return "UNLISTED · 링크를 가진 사람만";
     return "PRIVATE · 나만 보기";
   }
@@ -527,7 +579,7 @@
           <select data-setting="visibility">
             <option value="private">PRIVATE · 나만 보기</option>
             <option value="unlisted">UNLISTED · 링크 공개</option>
-            <option value="public">PUBLIC · 프로필 공개</option>
+            <option value="public">PUBLIC · 프로필·공개 보드</option>
           </select>
         </label>
         <div class="collector-setting-share" hidden>
@@ -707,6 +759,7 @@
       if (previousShareOwnerReference) {
         batch.delete(previousShareOwnerReference);
       }
+      syncDirectoryInBatch(batch, collectionId, next);
       await batch.commit();
     }
 
@@ -788,7 +841,6 @@
   async function signIn() {
     if (!firebase) return;
     const provider = new firebase.authModule.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
     try {
       await firebase.authModule.signInWithPopup(firebase.auth, provider);
       window.location.reload();
@@ -805,6 +857,10 @@
   }
 
   async function firstAuthUser(auth, authModule) {
+    if (typeof auth.authStateReady === "function") {
+      await auth.authStateReady();
+      return auth.currentUser || null;
+    }
     return new Promise((resolve, reject) => {
       let unsubscribe = () => {};
       unsubscribe = authModule.onAuthStateChanged(
@@ -836,7 +892,11 @@
         ? appModule.getApp()
         : appModule.initializeApp(CONFIG.config);
       const auth = authModule.getAuth(app);
-      await authModule.setPersistence(auth, authModule.browserLocalPersistence);
+      try {
+        await authModule.setPersistence(auth, authModule.browserLocalPersistence);
+      } catch (error) {
+        console.warn("로그인 유지 설정을 적용하지 못했지만 현재 세션 확인을 계속합니다.", error);
+      }
       firebase = {
         app,
         auth,
@@ -850,6 +910,7 @@
 
       setStatus(elements.settingsStatus, "도감 설정을 불러오는 중입니다.", "loading");
       await Promise.all([loadProfile(), loadSettings(), loadSourceDocuments()]);
+      await reconcileDirectoryEntry();
       renderProfile();
       await renderSettings();
       setStatus(elements.settingsStatus, "");

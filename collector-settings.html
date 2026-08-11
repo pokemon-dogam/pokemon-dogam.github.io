@@ -13,14 +13,15 @@
     <link rel="stylesheet" href="./styles.css?v=20260730-3" />
     <link rel="stylesheet" href="./legal.css?v=20260806-1" />
     <link rel="stylesheet" href="./collection-manager.css?v=20260729-1" />
-    <link rel="stylesheet" href="./collector.css?v=20260810-6" />
+    <link rel="stylesheet" href="./collector.css?v=20260811-1" />
     <script src="./firebase-config.js?v=20260727-2" defer></script>
     <script src="./site-metrics.js?v=20260729-1" defer></script>
     <script src="./image-protection.js?v=20260806-1" defer></script>
     <script src="./legal.js?v=20260806-1" defer></script>
     <script src="./collector-collection-registry.js?v=20260810-6" defer></script>
     <script src="./collector-public-sync.js?v=20260810-6" defer></script>
-    <script src="./collector-settings.js?v=20260810-6" defer></script>
+    <script src="./collector-nav.js?v=20260811-1" defer></script>
+    <script src="./collector-settings.js?v=20260811-1" defer></script>
   </head>
   <body data-page="collector-settings">
     <a class="skip-link" href="#main-content">본문으로 바로가기</a>
@@ -42,6 +43,14 @@
           <a class="collection-link" href="./">
             <span class="collection-icon" aria-hidden="true">DB</span>
             <span><strong>통합 대시보드</strong><small>ALL COLLECTIONS</small></span>
+          </a>
+          <a class="collection-link is-active" href="./collector-settings.html" aria-current="page">
+            <span class="collection-icon collection-icon--red" aria-hidden="true">CS</span>
+            <span><strong>도감 관리</strong><small>PROFILE · SHARING</small></span>
+          </a>
+          <a class="collection-link" href="./collectors.html">
+            <span class="collection-icon" aria-hidden="true">PB</span>
+            <span><strong>공개 컬렉터</strong><small>PUBLIC BOARD</small></span>
           </a>
           <a class="collection-link" href="./national.html">
             <span class="collection-icon" aria-hidden="true">01</span>
@@ -71,10 +80,6 @@
             <span class="collection-icon" aria-hidden="true">07</span>
             <span><strong>인물도감</strong><small>TRAINER ARCHIVE</small></span>
           </a>
-          <a class="collection-link is-active" href="./collector-settings.html" aria-current="page">
-            <span class="collection-icon collection-icon--red" aria-hidden="true">CS</span>
-            <span><strong>도감 관리</strong><small>PROFILE · SHARING</small></span>
-          </a>
         </nav>
       </aside>
 
@@ -96,7 +101,7 @@
           </div>
         </section>
 
-        <section id="collector-signin-gate" class="collector-signin-gate" aria-live="polite">
+        <section id="collector-signin-gate" class="collector-signin-gate" aria-live="polite" hidden>
           <div>
             <strong>Google 로그인 후 도감 설정을 관리할 수 있습니다.</strong>
             <p>기존 도감 데이터는 로그인과 관계없이 변경하거나 초기화하지 않습니다.</p>
@@ -178,11 +183,11 @@
               <div class="collector-setting-legend" aria-label="공개 범위 설명">
                 <span><i data-visibility="private"></i>나만 보기</span>
                 <span><i data-visibility="unlisted"></i>링크 공개</span>
-                <span><i data-visibility="public"></i>프로필 공개</span>
+                <span><i data-visibility="public"></i>프로필·공개 보드</span>
               </div>
             </div>
             <p class="collector-settings-help">
-              대시보드 표시를 꺼도 실제 도감 데이터는 삭제되지 않습니다. 공개 범위도 대시보드 표시와 별도로 작동합니다.
+              대시보드 표시를 꺼도 실제 도감 데이터는 삭제되지 않습니다. PUBLIC 도감이 하나 이상이면 공개 컬렉터 보드에도 자동으로 표시됩니다.
             </p>
             <div id="collector-settings-grid" class="collector-settings-grid" aria-live="polite"></div>
             <p id="collector-settings-status" class="collector-form-status" aria-live="polite"></p>
