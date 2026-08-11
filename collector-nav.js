@@ -53,6 +53,10 @@
     const directoryTitle = directory.querySelector("strong");
     if (directoryTitle) directoryTitle.textContent = "도감 갤러리";
 
+    const pokemonCollections = nav.querySelector('[href*="pokemon-collections.html"]');
+    const pokemonCount = pokemonCollections?.querySelector("small");
+    if (pokemonCount) pokemonCount.textContent = "67 POKÉMON";
+
     settings?.remove();
     dashboard.after(directory);
 
