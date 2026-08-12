@@ -231,9 +231,7 @@ img {
 }
 
 .collection-link small {
-  margin-top: 4px;
-  color: var(--ink-faint);
-  font-size: 0.69rem;
+  display: none;
 }
 
 .collection-icon {
