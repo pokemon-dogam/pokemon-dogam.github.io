@@ -47,7 +47,7 @@ test("all existing catalogs retain their expected item counts", async () => {
     national: 1025,
     pack: 62,
     artist: 451,
-    series: 4105,
+    series: 4103,
     pokemon: 679,
     ar: 498,
     people: 179,
@@ -119,6 +119,50 @@ test("series catalog includes complete sv5a and sv8a sets in release order", asy
       );
     });
   }
+});
+
+test("every series card has a real display name instead of a numeric code", async () => {
+  const groups = JSON.parse(
+    await readFile(new URL("../data/series.json", import.meta.url), "utf8"),
+  );
+
+  for (const group of groups) {
+    for (const card of group.cards) {
+      const displayName = String(card.name || card.pokemonName || "").trim();
+      assert.notEqual(displayName, "", card.code);
+      assert.notEqual(displayName, card.code, card.code);
+    }
+  }
+
+  const seriesCatalog = await registry.loadCatalog("series");
+  assert.equal(
+    seriesCatalog.items.some((item) => item.name === "sv8_095/106"),
+    false,
+  );
+});
+
+test("series trainer corrections match the reviewed Korean card names", async () => {
+  const groups = JSON.parse(
+    await readFile(new URL("../data/series.json", import.meta.url), "utf8"),
+  );
+  const card = (groupCode, number) =>
+    groups
+      .find((group) => group.code === groupCode)
+      .cards.find((item) => item.code.includes(`_${number}/`));
+
+  assert.equal(card("sv1S", "070").name, "친구수첩");
+  assert.equal(card("sv4K", "059").name, "대지의 그릇");
+  assert.equal(card("sv8", "095").name, "미라클인터컴");
+  assert.equal(card("sv8", "095").pokemonName, undefined);
+  assert.equal(card("sv11W", "082").name, "브레이브뱅글");
+  assert.equal(card("m2a", "166").name, "풍선");
+  assert.equal(card("m4", "082").name, "버블 물 에너지");
+  assert.equal(card("m5", "107").name, "호쾌봄");
+
+  const m5 = groups.find((group) => group.code === "m5");
+  assert.equal(m5.title, "어비스아이 (118/081)");
+  assert.equal(m5.cards.length, 118);
+  assert.equal(m5.cards.at(-1).code, "m5_118/081");
 });
 
 test("legacy national projection matches the current baseline without private fields", async () => {
