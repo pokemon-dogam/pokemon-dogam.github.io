@@ -2,12 +2,14 @@
 
 const $ = (id) => document.getElementById(id);
 const DATA_URL = "./data/ar.json";
+const NATIONAL_DEX_URL = "./data/pokedex.json";
 const EXPECTED_GROUPS = 32;
 const EXPECTED_TOTAL = 498;
 
 let groups = [];
 let allCards = [];
-let selectedCode = "all";
+let nationalCards = [];
+let selectedCode = "national";
 let status = "all";
 let query = "";
 let activeCard = null;
@@ -24,16 +26,29 @@ function pad(number) {
   return String(number).padStart(3, "0");
 }
 
+function padDex(number) {
+  return String(number).padStart(4, "0");
+}
+
 function visibleCards() {
-  return selectedCode === "all"
-    ? allCards
-    : groups.find((group) => group.code === selectedCode)?.cards || [];
+  if (selectedCode === "national") return nationalCards;
+  if (selectedCode === "all") return allCards;
+  return groups.find((group) => group.code === selectedCode)?.cards || [];
 }
 
 function selectedLabel() {
-  if (selectedCode === "all") return "전체 AR 모음";
+  if (selectedCode === "national") return "전국도감 순";
+  if (selectedCode === "all") return "시리즈 발매 순";
   const group = groups.find((item) => item.code === selectedCode);
-  return group ? `${group.code} · ${group.title}` : "전체 AR 모음";
+  return group ? `${group.code} · ${group.title}` : "전국도감 순";
+}
+
+function selectedOrderNote() {
+  if (selectedCode === "national") {
+    return "전국도감 번호 오름차순 · 같은 포켓몬은 공식 발매 순";
+  }
+  if (selectedCode === "all") return "공식 발매 순서 · 카드번호 오름차순";
+  return "세트 카드번호 오름차순";
 }
 
 function badge(owned) {
@@ -63,6 +78,8 @@ function refreshCounts() {
   setText("stat-catalog-total", total);
   setText("stat-catalog-rate", rate);
   setText("selected-name", selectedLabel());
+  const orderNote = document.querySelector(".ar-order-note");
+  if (orderNote) orderNote.textContent = selectedOrderNote();
   setText(
     "selected-progress",
     `${selectedOwned} / ${selectedCards.length}장 · ${pct(selectedOwned, selectedCards.length)}%`,
@@ -217,7 +234,10 @@ function makeCard(card) {
 
   const setName = document.createElement("span");
   setName.className = "ar-card-set";
-  setName.textContent = `${card.setCode} · ${card.setTitle}`;
+  setName.textContent =
+    selectedCode === "national" && card.dexNumber
+      ? `#${padDex(card.dexNumber)} · ${card.setCode} · ${card.setTitle}`
+      : `${card.setCode} · ${card.setTitle}`;
 
   const meta = document.createElement("span");
   meta.className = "card-meta";
@@ -252,6 +272,8 @@ function render() {
       card.setCode,
       card.setTitle,
       card.number,
+      card.dexNumber,
+      card.dexNumber ? `#${padDex(card.dexNumber)}` : "",
     ]
       .join(" ")
       .toLowerCase();
@@ -274,17 +296,80 @@ function render() {
 
 function buildSelect() {
   const select = $("catalog-select");
+  const allViews = document.createElement("optgroup");
+  allViews.label = "전체 보기";
+
+  const national = document.createElement("option");
+  national.value = "national";
+  national.textContent = `전국도감 순 · ${EXPECTED_TOTAL}장`;
+
   const all = document.createElement("option");
   all.value = "all";
-  all.textContent = `전체 AR 모음 · ${EXPECTED_TOTAL}장`;
-  select.append(all);
+  all.textContent = `시리즈 발매 순 · ${EXPECTED_TOTAL}장`;
 
+  allViews.append(national, all);
+  select.append(allViews);
+
+  const seriesViews = document.createElement("optgroup");
+  seriesViews.label = "시리즈별";
   groups.forEach((group) => {
     const option = document.createElement("option");
     option.value = group.code;
     option.textContent = `${group.code} · ${group.title} · ${group.cards.length}장`;
-    select.append(option);
+    seriesViews.append(option);
   });
+  select.append(seriesViews);
+  select.value = selectedCode;
+}
+
+function normalizePokemonName(name) {
+  return String(name || "")
+    .replace(/\s+(ex|V|VMAX|VSTAR)$/i, "")
+    .trim();
+}
+
+function dexCandidates(name) {
+  const normalized = normalizePokemonName(name);
+  const candidates = [normalized];
+
+  if (normalized.includes("의 ")) {
+    candidates.push(normalized.slice(normalized.indexOf("의 ") + 2));
+  }
+
+  const parts = normalized.split(/\s+/);
+  if (parts.length > 1) candidates.push(parts[parts.length - 1]);
+
+  return [...new Set(candidates.filter(Boolean))];
+}
+
+function applyNationalDex(records) {
+  const dexByName = new Map(
+    (records || []).map((record) => [record.nameKo, Number(record.number)]),
+  );
+
+  let unmatched = 0;
+  allCards.forEach((card, releaseIndex) => {
+    card.releaseIndex = releaseIndex;
+    card.dexNumber = null;
+    for (const candidate of dexCandidates(card.name)) {
+      const dexNumber = dexByName.get(candidate);
+      if (dexNumber) {
+        card.dexNumber = dexNumber;
+        break;
+      }
+    }
+    if (!card.dexNumber) unmatched += 1;
+  });
+
+  nationalCards = [...allCards].sort((a, b) => {
+    const aDex = a.dexNumber ?? Number.POSITIVE_INFINITY;
+    const bDex = b.dexNumber ?? Number.POSITIVE_INFINITY;
+    return aDex - bDex || a.releaseIndex - b.releaseIndex;
+  });
+
+  if (unmatched) {
+    console.warn(`전국도감 번호를 찾지 못한 AR 카드가 ${unmatched}장 있습니다.`);
+  }
 }
 
 function normalizeGroups(sourceGroups) {
@@ -308,9 +393,23 @@ function normalizeGroups(sourceGroups) {
 
 async function init() {
   try {
-    const response = await fetch(DATA_URL, { cache: "no-store" });
+    const [response, dexResponse] = await Promise.all([
+      fetch(DATA_URL, { cache: "no-store" }),
+      fetch(NATIONAL_DEX_URL, { cache: "no-store" }),
+    ]);
     if (!response.ok) throw new Error(response.status);
+    if (!dexResponse.ok) throw new Error(dexResponse.status);
     normalizeGroups(await response.json());
+    const dexData = await dexResponse.json();
+    applyNationalDex(dexData.records || []);
+
+    const heroDescription = document.querySelector(".hero-description");
+    if (heroDescription) {
+      heroDescription.textContent =
+        "전국도감 순 또는 공식 발매 순서로 모아보는 AR 컬렉션";
+    }
+    const filterLabel = document.querySelector(".catalog-select .filter-label");
+    if (filterLabel) filterLabel.textContent = "보기 선택";
 
     const account = window.PokemonDexPageAccount;
     if (account) {
