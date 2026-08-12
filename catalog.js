@@ -5,6 +5,7 @@ const mode = document.body.dataset.catalog;
 const SERIES_DATA_URL = "./data/series.json";
 const POKEMON_DATA_URL = "./data/pokemon-collections.json";
 const POKEMON_SEQUENCE_DATA_URL = "./data/pokemon-collections-21-40.json";
+const POKEDEX_DATA_URL = "./data/pokedex.json";
 
 const SERIES_NAMES = Object.freeze({
   sv1S: "스칼렛 ex",
@@ -454,7 +455,15 @@ function render() {
 
   $("catalog-grid").replaceChildren(...shown.map(makeCard));
   setText("result-count", shown.length);
-  $("catalog-empty").hidden = shown.length !== 0;
+  const empty = $("catalog-empty");
+  empty.hidden = shown.length !== 0;
+  const emptyTitle = empty.querySelector("h3");
+  if (emptyTitle) {
+    emptyTitle.textContent =
+      mode === "pokemon" && cards.length === 0
+        ? "카드 데이터 준비 중입니다"
+        : "검색 결과가 없습니다";
+  }
 }
 
 function seriesCardNumber(card) {
@@ -484,17 +493,38 @@ async function fetchJson(url) {
 async function loadCatalogGroups() {
   if (mode === "series") return fetchJson(SERIES_DATA_URL);
 
-  const [baseGroups, sequenceGroups] = await Promise.all([
+  const [baseGroups, sequenceGroups, pokedex] = await Promise.all([
     fetchJson(POKEMON_DATA_URL),
     fetchJson(POKEMON_SEQUENCE_DATA_URL),
+    fetchJson(POKEDEX_DATA_URL),
   ]);
-  const sequenceNames = new Set(sequenceGroups.map((group) => group.name));
-  const originalFirstTwenty = baseGroups.slice(0, 20);
-  const existingSelections = baseGroups
-    .slice(20)
-    .filter((group) => !sequenceNames.has(group.name));
 
-  return [...originalFirstTwenty, ...sequenceGroups, ...existingSelections];
+  // 기존에 카드 데이터가 있는 포켓몬은 그대로 보존하되,
+  // #0001~#1025 전국도감 전체를 선택 목록의 기준으로 사용합니다.
+  const populatedByName = new Map();
+  for (const group of baseGroups) {
+    if (group?.name) populatedByName.set(group.name, group);
+  }
+  for (const group of sequenceGroups) {
+    if (group?.name) populatedByName.set(group.name, group);
+  }
+
+  const records = Array.isArray(pokedex?.records) ? pokedex.records : [];
+  if (records.length !== 1025) {
+    throw new Error(`전국도감 데이터가 1025종이 아닙니다: ${records.length}`);
+  }
+
+  return records.map((record) => {
+    const existing = populatedByName.get(record.nameKo);
+    if (existing) {
+      return { ...existing, dexNumber: record.number };
+    }
+    return {
+      name: record.nameKo,
+      dexNumber: record.number,
+      cards: [],
+    };
+  });
 }
 
 async function init() {
