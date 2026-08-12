@@ -47,7 +47,7 @@ test("all existing catalogs retain their expected item counts", async () => {
     national: 1025,
     pack: 62,
     artist: 451,
-    series: 3772,
+    series: 4105,
     pokemon: 679,
     ar: 498,
     people: 179,
@@ -64,7 +64,7 @@ test("existing nonempty top-level catalog group counts stay unchanged", async ()
     national: 9,
     pack: 3,
     artist: 29,
-    series: 31,
+    series: 33,
     pokemon: 47,
     ar: 31,
     people: 9,
@@ -72,6 +72,52 @@ test("existing nonempty top-level catalog group counts stay unchanged", async ()
   for (const [collectionId, count] of Object.entries(expected)) {
     const catalog = await registry.loadCatalog(collectionId);
     assert.equal(catalog.groups.length, count, collectionId);
+  }
+});
+
+test("series catalog includes complete sv5a and sv8a sets in release order", async () => {
+  const groups = JSON.parse(
+    await readFile(new URL("../data/series.json", import.meta.url), "utf8"),
+  );
+  const expectations = [
+    {
+      code: "sv5a",
+      previous: "sv5M",
+      next: "sv6",
+      count: 96,
+      denominator: "066",
+      imageCode: "SV5a",
+    },
+    {
+      code: "sv8a",
+      previous: "sv8",
+      next: "sv9",
+      count: 237,
+      denominator: "187",
+      imageCode: "SV8a",
+    },
+  ];
+
+  for (const expectation of expectations) {
+    const index = groups.findIndex((group) => group.code === expectation.code);
+    assert.notEqual(index, -1, expectation.code);
+    assert.equal(groups[index - 1]?.code, expectation.previous);
+    assert.equal(groups[index + 1]?.code, expectation.next);
+
+    const cards = groups[index].cards;
+    assert.equal(cards.length, expectation.count, expectation.code);
+    cards.forEach((card, cardIndex) => {
+      const number = String(cardIndex + 1).padStart(3, "0");
+      assert.equal(
+        card.code,
+        `${expectation.code}_${number}/${expectation.denominator}`,
+      );
+      assert.equal(card.order, cardIndex + 1);
+      assert.equal(
+        card.image,
+        `https://cards.image.pokemonkorea.co.kr/data/wmimages/SV/${expectation.imageCode}/${expectation.imageCode}_${number}.png`,
+      );
+    });
   }
 });
 
