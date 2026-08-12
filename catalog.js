@@ -27,6 +27,7 @@ const SERIES_NAMES = Object.freeze({
   sv7: "스텔라미라클",
   sv7a: "낙원드래고나",
   sv8: "초전브레이커",
+  sv8a: "테라스탈 페스타 ex",
   sv9: "배틀파트너즈",
   sv9a: "열풍의 아레나",
   sv10: "로켓단의 영광",
