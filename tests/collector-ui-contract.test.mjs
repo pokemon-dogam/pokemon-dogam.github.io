@@ -154,6 +154,7 @@ function navigationLayoutContext(moduleSource, compact) {
 }
 
 test("every page uses the one-line Digital Card Binder brand and tab title", async () => {
+  const commonCss = await source("styles.css");
   for (const page of sitePages) {
     const html = await source(page);
     assert.match(html, /<title>디지털 카드 바인더<\/title>/, `${page}: browser title`);
@@ -164,10 +165,15 @@ test("every page uses the one-line Digital Card Binder brand and tab title", asy
     );
     assert.equal(html.includes("MY POKÉMON DEX"), false, `${page}: legacy brand`);
     assert.equal(html.includes("COLLECTION ARCHIVE"), false, `${page}: legacy subtitle`);
+    assert.match(html, /styles[.]css[?]v=20260813-2/, `${page}: shared styles version`);
   }
 
   const collectorClient = await source("collector.js");
   assert.match(collectorClient, /document[.]title = "디지털 카드 바인더"/);
+  assert.match(commonCss, /[.]brand-copy strong \{[\s\S]*?font-size: 1[.]06rem/);
+  assert.match(commonCss, /[.]site-header > [.]brand \{[\s\S]*?grid-row: 1;[\s\S]*?align-self: center/);
+  assert.match(commonCss, /[.]site-header > [.]site-header-metrics \{[\s\S]*?grid-column: 2;[\s\S]*?grid-row: 1/);
+  assert.match(commonCss, /[.]site-header > [.]header-chip\[hidden\] \{\s*display: none !important/);
 });
 
 test("every existing collection page loads the public adapter before its manager", async () => {
