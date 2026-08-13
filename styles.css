@@ -146,12 +146,14 @@ img {
 
 .brand-copy {
   display: grid;
+  align-items: center;
   line-height: 1;
 }
 
 .brand-copy strong {
-  font-size: 0.93rem;
-  letter-spacing: 0.09em;
+  font-size: 1.06rem;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 
@@ -1486,6 +1488,7 @@ img {
 .site-header {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: 1fr;
   align-items: center;
   min-height: 68px;
   padding: 0 18px;
@@ -1493,11 +1496,22 @@ img {
 
 .site-header > .brand {
   grid-column: 1;
+  grid-row: 1;
+  align-self: center;
   justify-self: start;
+}
+
+.site-header > .site-header-metrics {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  margin-left: 0;
 }
 
 .site-header > .header-chip {
   grid-column: 2;
+  grid-row: 1;
   justify-self: center;
   margin: 0;
   height: 30px;
@@ -1508,8 +1522,14 @@ img {
   white-space: nowrap;
 }
 
-.site-header > :not(.brand):not(.header-chip) {
+.site-header > .header-chip[hidden] {
+  display: none !important;
+}
+
+.site-header > :not(.brand):not(.header-chip):not(.site-header-metrics) {
   grid-column: 3;
+  grid-row: 1;
+  align-self: center;
   justify-self: end;
 }
 
@@ -1522,14 +1542,20 @@ img {
 
   .site-header > .brand {
     grid-column: 1;
+    grid-row: 1;
+  }
+
+  .brand-copy strong {
+    font-size: 1rem;
   }
 
   .site-header > .header-chip {
     display: none;
   }
 
-  .site-header > :not(.brand):not(.header-chip) {
+  .site-header > :not(.brand):not(.header-chip):not(.site-header-metrics) {
     grid-column: 2;
+    grid-row: 1;
     justify-self: end;
   }
 }
