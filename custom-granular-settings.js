@@ -10,6 +10,7 @@
   let sourceRef = null;
   let dexes = [];
   let draft = {};
+  let hadVisibilityConfig = false;
   let dirty = false;
   let bypassSave = false;
   let initialized = false;
@@ -85,8 +86,19 @@
     document.head.append(style);
   }
 
+  function migrateLegacyVisibility(card) {
+    if (hadVisibilityConfig || !dexes.length) return;
+    const select = card.querySelector('[data-setting="visibility"]');
+    if (select?.value === "public") {
+      dexes.forEach((dex) => {
+        draft[dex.id] = true;
+      });
+    }
+  }
+
   function render(card) {
     if (!card || card.querySelector(".custom-granular-settings")) return;
+    migrateLegacyVisibility(card);
     addStyles();
     const section = document.createElement("div");
     section.className = "custom-granular-settings";
@@ -169,11 +181,12 @@
     const snapshot = await firestoreModule.getDoc(sourceRef);
     const source = snapshot.exists() ? snapshot.data() || {} : {};
     dexes = normalizeDexes(source.customDexes || {});
+    hadVisibilityConfig = Object.prototype.hasOwnProperty.call(source, "customDexVisibility");
     draft = normalizeVisibility(source.customDexVisibility || {});
     dexes.forEach((dex) => {
       if (!Object.prototype.hasOwnProperty.call(draft, dex.id)) draft[dex.id] = false;
     });
-    window.CustomDexVisibilityDraft = { ...draft };
+    if (hadVisibilityConfig) window.CustomDexVisibilityDraft = { ...draft };
     return true;
   }
 
@@ -192,6 +205,7 @@
       { merge: true },
     );
     draft = cleanDraft;
+    hadVisibilityConfig = true;
     window.CustomDexVisibilityDraft = { ...draft };
   }
 
