@@ -5,6 +5,7 @@
   const LOGIN_SELECTOR = "#firebase-login, #dashboard-login-cta";
   const SDK_VERSION = "12.16.0";
   const PROFILE_HREF = "./collector-settings.html";
+  const CURRENT_METRICS_SCRIPT = "./site-metrics.js?v=20260813-2";
 
   function policyLinks(className = "login-policy-links") {
     const wrapper = document.createElement("span");
@@ -26,6 +27,26 @@
     const chip = document.querySelector(".site-header .header-chip");
     if (chip) chip.hidden = true;
     return true;
+  }
+
+  function normalizeSidebarLabels() {
+    document.querySelectorAll(".sidebar-label").forEach((label) => {
+      if (label.textContent.trim().toUpperCase() === "MY COLLECTIONS") {
+        label.textContent = "COLLECTIONS";
+      }
+    });
+  }
+
+  function ensureCurrentSiteMetrics() {
+    if (!document.querySelector(".site-layout")) return;
+    const alreadyLoaded = [...document.scripts].some((script) =>
+      script.src.includes("site-metrics.js?v=20260813-2"),
+    );
+    if (alreadyLoaded) return;
+    const script = document.createElement("script");
+    script.src = CURRENT_METRICS_SCRIPT;
+    script.defer = true;
+    document.head.append(script);
   }
 
   function decorateDashboardLogin() {
@@ -210,6 +231,8 @@
 
   function initialize() {
     updateCopyrightYears();
+    normalizeSidebarLabels();
+    ensureCurrentSiteMetrics();
     decorateDashboardLogin();
     void initializeUniversalAuth();
 
