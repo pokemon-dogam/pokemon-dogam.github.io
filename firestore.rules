@@ -62,7 +62,8 @@ service cloud.firestore {
         || collectionId == "series"
         || collectionId == "pokemon"
         || collectionId == "ar"
-        || collectionId == "people";
+        || collectionId == "people"
+        || collectionId == "custom";
     }
 
     function validPublicId(publicId) {
@@ -344,7 +345,8 @@ service cloud.firestore {
           "ownedCount",
           "totalCount",
           "promoOwnedKeys",
-          "promoOwnedCount"
+          "promoOwnedCount",
+          "customDexes"
         ])
         && request.resource.data.schemaVersion == 1
         && request.resource.data.publicId == publicId
@@ -361,7 +363,19 @@ service cloud.firestore {
         && request.resource.data.promoOwnedKeys.size() <= 1000
         && request.resource.data.promoOwnedCount is int
         && request.resource.data.promoOwnedCount
-          == request.resource.data.promoOwnedKeys.size();
+          == request.resource.data.promoOwnedKeys.size()
+        && (
+          (
+            collectionId == "custom"
+            && request.resource.data.keys().hasAll(["customDexes"])
+            && request.resource.data.customDexes is list
+            && request.resource.data.customDexes.size() <= 30
+          )
+          || (
+            collectionId != "custom"
+            && !request.resource.data.keys().hasAny(["customDexes"])
+          )
+        );
     }
 
     function publicSettingEnabled(userId, collectionId) {
@@ -385,7 +399,8 @@ service cloud.firestore {
         || publicSettingExistsAfter(userId, "series")
         || publicSettingExistsAfter(userId, "pokemon")
         || publicSettingExistsAfter(userId, "ar")
-        || publicSettingExistsAfter(userId, "people");
+        || publicSettingExistsAfter(userId, "people")
+        || publicSettingExistsAfter(userId, "custom");
     }
 
     function validPublicCollectorDirectory(publicId) {
