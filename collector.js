@@ -69,7 +69,7 @@
     elements.avatarFallback.textContent = (profile.nickname || "C")
       .slice(0, 1)
       .toUpperCase();
-    document.title = `${profile.nickname || "Collector"}의 Pokémon Collection | MY POKÉMON DEX`;
+    document.title = "디지털 카드 바인더";
     elements.profile.hidden = false;
   }
 
