@@ -80,6 +80,7 @@
         "MY CUSTOM DEX",
       );
 
+    // 이전 메뉴명: 공개 컬렉터
     const directoryTitle = directory.querySelector("strong");
     if (directoryTitle) directoryTitle.textContent = "도감 갤러리";
 
@@ -204,6 +205,7 @@
   }
 
   function ensureProfileShortcutWithoutPanel() {
+    if (typeof window.setTimeout !== "function") return;
     window.setTimeout(async () => {
       if (document.querySelector("#firebase-auth-panel")) return;
       const config = CONFIG.config || {};
