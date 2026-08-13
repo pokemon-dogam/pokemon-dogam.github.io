@@ -24,6 +24,19 @@
     );
   }
 
+  function normalizedCustomDexes(source) {
+    if (!Array.isArray(source)) return [];
+    return source
+      .map((dex) => {
+        if (!dex || typeof dex !== "object" || Array.isArray(dex)) return null;
+        const id = String(dex.id || "").trim();
+        const title = String(dex.title || "").trim();
+        if (!id || !title) return null;
+        return { id, title };
+      })
+      .filter(Boolean);
+  }
+
   function normalizedProjection(snapshot, publicId) {
     const data = snapshot.data() || {};
     const ownedCount = Math.max(0, Number(data.ownedCount) || 0);
@@ -41,7 +54,33 @@
       collectionId: snapshot.id,
       ownedCount,
       totalCount,
+      customDexes:
+        snapshot.id === "custom"
+          ? normalizedCustomDexes(data.customDexes)
+          : [],
     };
+  }
+
+  function projectionDexCount(projection) {
+    if (projection.collectionId !== "custom") return 1;
+    return projection.customDexes.length || 1;
+  }
+
+  function projectionTagNames(projection) {
+    if (projection.collectionId !== "custom") {
+      return [registry.COLLECTIONS[projection.collectionId].title];
+    }
+    if (projection.customDexes.length) {
+      return projection.customDexes.map((dex) => dex.title);
+    }
+    return [registry.COLLECTIONS.custom?.title || "나만의 도감"];
+  }
+
+  function publicDexCount(projections) {
+    return projections.reduce(
+      (total, projection) => total + projectionDexCount(projection),
+      0,
+    );
   }
 
   async function loadCollector(directorySnapshot, db, firestoreModule) {
@@ -87,6 +126,7 @@
       nickname: String(profile.nickname || "컬렉터").trim() || "컬렉터",
       bio: String(profile.bio || "").trim(),
       projections,
+      dexCount: publicDexCount(projections),
       ownedCount,
       totalCount,
       rate: totalCount ? (ownedCount / totalCount) * 100 : 0,
@@ -105,7 +145,7 @@
     link.href = profileUrl(collector.publicId);
     link.setAttribute(
       "aria-label",
-      `${collector.nickname} 컬렉터의 공개 프로필, 공개 도감 ${collector.projections.length}개`,
+      `${collector.nickname} 컬렉터의 공개 프로필, 공개 도감 ${collector.dexCount}개`,
     );
     link.innerHTML = `
       <div class="collector-directory-card-head">
@@ -129,14 +169,16 @@
       `PUBLIC ID · ${collector.publicId}`;
     link.querySelector(".collector-directory-bio").textContent =
       collector.bio || "한 줄 소개가 없습니다.";
-    const tags = collector.projections.map((projection) => {
-      const tag = document.createElement("span");
-      tag.textContent = registry.COLLECTIONS[projection.collectionId].title;
-      return tag;
-    });
+    const tags = collector.projections
+      .flatMap((projection) => projectionTagNames(projection))
+      .map((name) => {
+        const tag = document.createElement("span");
+        tag.textContent = name;
+        return tag;
+      });
     link.querySelector(".collector-directory-tags").replaceChildren(...tags);
     const summaries = link.querySelectorAll(".collector-directory-summary strong");
-    summaries[0].textContent = `${collector.projections.length}개`;
+    summaries[0].textContent = `${collector.dexCount}개`;
     summaries[1].textContent = `${collector.ownedCount.toLocaleString("ko-KR")} / ${collector.totalCount.toLocaleString("ko-KR")}`;
     link.querySelector(".collector-directory-rate").textContent =
       `${collector.rate.toFixed(1)}%`;
@@ -153,7 +195,7 @@
   function matchesSearch(collector, query) {
     if (!query) return true;
     const collectionNames = collector.projections
-      .map((projection) => registry.COLLECTIONS[projection.collectionId].title)
+      .flatMap((projection) => projectionTagNames(projection))
       .join(" ");
     return normalizedSearch(
       `${collector.nickname} ${collector.bio} ${collectionNames}`,
