@@ -48,6 +48,14 @@
         "도감 갤러리",
         "PUBLIC BOARD",
       );
+    const customDex =
+      nav.querySelector('[href*="custom.html"]') ||
+      navigationLink(
+        "./custom.html",
+        "08",
+        "나만의 도감",
+        "MY CUSTOM DEX",
+      );
 
     // 이전 메뉴명: 공개 컬렉터
     const directoryTitle = directory.querySelector("strong");
@@ -59,12 +67,22 @@
 
     settings?.remove();
     dashboard.after(directory);
+    if (!customDex.parentElement) {
+      const people = nav.querySelector('[href*="people.html"]');
+      if (people) people.after(customDex);
+      else nav.append(customDex);
+    }
 
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    const active = currentPage === "collectors.html";
-    directory.classList.toggle("is-active", active);
-    if (active) directory.setAttribute("aria-current", "page");
+    const directoryActive = currentPage === "collectors.html";
+    directory.classList.toggle("is-active", directoryActive);
+    if (directoryActive) directory.setAttribute("aria-current", "page");
     else directory.removeAttribute("aria-current");
+
+    const customActive = currentPage === "custom.html";
+    customDex.classList.toggle("is-active", customActive);
+    if (customActive) customDex.setAttribute("aria-current", "page");
+    else customDex.removeAttribute("aria-current");
   }
 
   function decorateAccountProfileEntry(panel) {
@@ -240,7 +258,7 @@
   }
 
   function addHeroActions() {
-    if (["collector-settings", "collector-directory"].includes(document.body.dataset.page)) {
+    if (["collector-settings", "collector-directory", "custom-dex"].includes(document.body.dataset.page)) {
       return;
     }
     const heroContent = document.querySelector(".hero .hero-content");
