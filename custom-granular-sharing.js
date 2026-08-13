@@ -10,11 +10,19 @@
     return String(value || "").trim();
   }
 
-  function visibilityMap(sourceDocument = {}) {
+  function configuredVisibilitySource(sourceDocument = {}) {
     const draft = window.CustomDexVisibilityDraft;
-    const source = draft && typeof draft === "object" && !Array.isArray(draft)
-      ? draft
-      : sourceDocument.customDexVisibility;
+    if (draft && typeof draft === "object" && !Array.isArray(draft)) {
+      return draft;
+    }
+    if (Object.prototype.hasOwnProperty.call(sourceDocument, "customDexVisibility")) {
+      return sourceDocument.customDexVisibility;
+    }
+    return null;
+  }
+
+  function visibilityMap(sourceDocument = {}) {
+    const source = configuredVisibilitySource(sourceDocument);
     if (!source || typeof source !== "object" || Array.isArray(source)) return {};
     const result = {};
     Object.entries(source).forEach(([id, value]) => {
@@ -43,6 +51,12 @@
       publicId,
     );
     if (collectionId !== "custom") return projection;
+
+    // 기존에 '나만의 도감 전체'를 PUBLIC으로 쓰던 사용자는 세부 설정을
+    // 처음 저장하기 전까지 기존 공개 상태를 그대로 유지합니다.
+    if (configuredVisibilitySource(sourceDocument || {}) === null) {
+      return projection;
+    }
 
     const allowed = publicDexIds(sourceDocument || {});
     const dexes = (Array.isArray(projection.customDexes) ? projection.customDexes : [])
