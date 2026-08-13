@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="원하는 테마와 카드로 직접 만드는 나만의 포켓몬 카드 도감">
+    <meta name="theme-color" content="#17233f">
+    <title>나만의 도감 | MY POKÉMON DEX</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css?v=20260812-2">
+    <link rel="stylesheet" href="./legal.css?v=20260806-1">
+    <link rel="stylesheet" href="./catalog.css?v=20260727-3">
+    <link rel="stylesheet" href="./collector.css?v=20260811-3">
+    <link rel="stylesheet" href="./custom.css?v=20260813-1">
+    <script src="./firebase-config.js?v=20260727-2" defer></script>
+    <script src="./site-metrics.js?v=20260729-1" defer></script>
+    <script src="./image-protection.js?v=20260806-1" defer></script>
+    <script src="./legal.js?v=20260806-1" defer></script>
+    <script src="./collector-collection-registry.js?v=20260811-3" defer></script>
+    <script src="./collector-nav.js?v=20260813-1" defer></script>
+    <script src="./custom.js?v=20260813-1" defer></script>
+  </head>
+  <body data-page="custom-dex">
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="MY POKÉMON DEX 홈">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-copy"><strong>MY POKÉMON DEX</strong><small>COLLECTION ARCHIVE</small></span>
+      </a>
+      <span class="header-chip">MY CUSTOM DEX</span>
+    </header>
+
+    <div class="site-layout">
+      <aside class="sidebar" aria-label="도감 메뉴">
+        <div class="sidebar-label">MY COLLECTIONS</div>
+        <nav class="collection-nav">
+          <a class="collection-link" href="./"><span class="collection-icon" aria-hidden="true">DB</span><span><strong>통합 대시보드</strong><small>ALL COLLECTIONS</small></span></a>
+          <a class="collection-link" href="./national.html"><span class="collection-icon collection-icon--red" aria-hidden="true">01</span><span><strong>전국도감</strong><small>1세대–9세대</small></span></a>
+          <a class="collection-link" href="./packs.html"><span class="collection-icon" aria-hidden="true">02</span><span><strong>팩 전종수집</strong><small>S · SV · M · PROMO</small></span></a>
+          <a class="collection-link" href="./artists.html"><span class="collection-icon" aria-hidden="true">03</span><span><strong>작가 도감</strong><small>29 ARTISTS</small></span></a>
+          <a class="collection-link" href="./series.html"><span class="collection-icon" aria-hidden="true">04</span><span><strong>시리즈 도감</strong><small>33 SETS</small></span></a>
+          <a class="collection-link" href="./pokemon-collections.html"><span class="collection-icon" aria-hidden="true">05</span><span><strong>포켓몬 컬렉션</strong><small>67 POKÉMON</small></span></a>
+          <a class="collection-link" href="./ar.html"><span class="collection-icon collection-icon--ar" aria-hidden="true">06</span><span><strong>AR 전종도감</strong><small>SV · M · 498 CARDS</small></span></a>
+          <a class="collection-link" href="./people.html"><span class="collection-icon" aria-hidden="true">07</span><span><strong>인물도감</strong><small>TRAINER ARCHIVE</small></span></a>
+          <a class="collection-link is-active" href="./custom.html" aria-current="page"><span class="collection-icon" aria-hidden="true">08</span><span><strong>나만의 도감</strong><small>MY CUSTOM DEX</small></span></a>
+        </nav>
+        <div class="sidebar-note"><span aria-hidden="true">✦</span>원하는 테마와 카드로 직접 도감을 만들 수 있습니다.</div>
+      </aside>
+
+      <main id="main-content" class="main-content">
+        <section class="hero custom-hero">
+          <span class="hero-glow hero-glow--one" aria-hidden="true"></span>
+          <span class="hero-glow hero-glow--two" aria-hidden="true"></span>
+          <div class="hero-content">
+            <p class="eyebrow">MY CUSTOM DEX · COLLECTION 08</p>
+            <h1>나만의 도감</h1>
+            <p class="hero-description">잠자는 포켓몬, 최애 피카츄, 구매 목표처럼 내가 원하는 주제로 직접 만들고 채워가는 개인 카드 도감</p>
+          </div>
+          <div class="hero-progress">
+            <div class="progress-ring"><div><strong id="custom-dex-count">0</strong><span>DEXES</span></div></div>
+            <div class="hero-progress-copy">
+              <span>내 커스텀 도감</span>
+              <strong><b id="custom-card-count">0</b><small>장 등록</small></strong>
+              <p>보유 <b id="custom-owned-count">0</b>장</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="custom-auth-bar" role="status">
+          <div class="custom-auth-copy"><span class="custom-auth-dot" aria-hidden="true"></span><strong id="custom-auth-status">로그인 상태 확인 중</strong></div>
+          <div class="custom-auth-actions">
+            <button id="custom-login" class="primary-button" type="button">Google 로그인</button>
+            <button id="custom-logout" class="manager-button" type="button" hidden>로그아웃</button>
+          </div>
+        </div>
+
+        <section class="catalog-panel" aria-labelledby="custom-section-title">
+          <div class="catalog-heading">
+            <div><p class="section-kicker">BUILD YOUR OWN COLLECTION</p><h2 id="custom-section-title">내 테마 도감</h2></div>
+            <p class="catalog-caption">같은 카드를 여러 도감에 넣을 수 있으며, 각 도감의 카드 순서와 보유 상태를 따로 관리합니다.</p>
+          </div>
+
+          <div class="custom-shell">
+            <aside class="custom-sidebar-panel" aria-label="내 도감 목록">
+              <div class="custom-sidebar-heading">
+                <div><strong>도감 목록</strong><br><small>최대 30개</small></div>
+                <button id="new-dex-button" class="primary-button" type="button" disabled>+ 새 도감</button>
+              </div>
+              <div id="custom-dex-list" class="custom-dex-list"></div>
+            </aside>
+
+            <section class="custom-workspace-panel">
+              <div id="custom-no-selection" class="custom-no-selection">
+                <div><strong>나만의 도감을 만들어보세요.</strong><span>제목과 설명을 정하고, 시리즈 카드 검색 또는 직접 입력으로 원하는 카드만 골라 추가할 수 있습니다.</span></div>
+              </div>
+
+              <div id="custom-workspace" hidden>
+                <div class="custom-workspace-heading">
+                  <div class="custom-workspace-copy">
+                    <p class="section-kicker">CURRENT CUSTOM DEX</p>
+                    <h2 id="selected-dex-title"></h2>
+                    <p id="selected-dex-description"></p>
+                    <div id="selected-dex-progress" class="custom-progress"></div>
+                  </div>
+                  <div class="custom-toolbar">
+                    <button id="add-card-button" class="primary-button" type="button">+ 카드 추가</button>
+                    <button id="edit-dex-button" class="manager-button" type="button">도감 수정</button>
+                    <button id="delete-dex-button" class="manager-button danger-button" type="button">도감 삭제</button>
+                  </div>
+                </div>
+
+                <div class="custom-workspace-filter">
+                  <label class="search-field"><span class="search-icon" aria-hidden="true"></span><span class="sr-only">도감 안 카드 검색</span><input id="custom-search" type="search" autocomplete="off" placeholder="카드명 · 세트 · 카드번호 검색"></label>
+                  <div id="custom-status" class="segmented-control" role="group" aria-label="보유 상태 선택">
+                    <button class="is-active" type="button" data-status="all">전체</button>
+                    <button type="button" data-status="owned">보유</button>
+                    <button type="button" data-status="missing">미보유</button>
+                  </div>
+                </div>
+
+                <div class="custom-results-bar">
+                  <p>검색 결과 <strong id="custom-result-count">0</strong>장</p>
+                  <span class="custom-sort-hint">카드를 드래그하거나 ↑ ↓ 버튼으로 순서를 바꿀 수 있습니다.</span>
+                </div>
+                <div id="custom-card-grid" class="card-grid"></div>
+                <div id="custom-card-empty" class="empty-state" hidden><span class="empty-ball"><span></span></span><h3>표시할 카드가 없습니다</h3><p>카드를 추가하거나 필터를 변경해보세요.</p></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <div class="site-footer-main">
+            <nav class="site-footer-links" aria-label="정책 및 문의"><a href="./privacy.html">개인정보처리방침</a><a href="./terms.html">이용약관</a><a href="mailto:pokemon.dogam.support@gmail.com">문의·삭제 요청</a><a href="https://pokemoncard.co.kr/" target="_blank" rel="noopener noreferrer">포켓몬 카드 공식 사이트 ↗</a></nav>
+            <p>본 사이트는 개인이 운영하는 비공식 팬 사이트이며, 포켓몬 관련 권리자 및 ㈜포켓몬코리아와 제휴·승인·후원 관계가 없습니다.</p>
+            <p>Pokémon 및 관련 명칭·상표·캐릭터, 카드 이미지와 카드 텍스트의 권리는 각 권리자에게 있습니다. ©<span data-current-year>2026</span> Pokémon. ©1995–<span data-current-year>2026</span> Nintendo/Creatures Inc./GAME FREAK inc.</p>
+          </div>
+          <p class="site-footer-note">나만의 도감 데이터는 로그인한 계정에만 저장됩니다.</p>
+        </footer>
+      </main>
+    </div>
+
+    <dialog id="dex-dialog" class="custom-dialog">
+      <form id="dex-form" class="custom-dialog-inner">
+        <div class="custom-dialog-heading"><div><p class="section-kicker">CUSTOM DEX</p><h2 id="dex-dialog-title">새 도감 만들기</h2></div><button id="dex-dialog-close" class="custom-dialog-close" type="button" aria-label="닫기">×</button></div>
+        <div class="custom-form-grid">
+          <label><span>도감 제목</span><input id="dex-title-input" type="text" maxlength="60" required placeholder="예: 잠자는 포켓몬 도감"></label>
+          <label><span>설명</span><textarea id="dex-description-input" maxlength="180" rows="3" placeholder="어떤 카드를 모으는 도감인지 간단히 적어주세요."></textarea></label>
+        </div>
+        <div class="custom-dialog-actions"><button id="dex-cancel-button" class="custom-secondary-button" type="button">취소</button><button id="dex-save-button" class="primary-button" type="submit">도감 만들기</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="card-picker-dialog" class="custom-dialog custom-picker-dialog">
+      <div class="custom-dialog-inner">
+        <div class="custom-dialog-heading"><div><p class="section-kicker">ADD CARDS</p><h2>카드 추가</h2></div><button id="card-picker-close" class="custom-dialog-close" type="button" aria-label="닫기">×</button></div>
+        <label class="custom-picker-search"><span class="sr-only">추가할 카드 검색</span><input id="card-picker-search" type="search" autocomplete="off" placeholder="포켓몬명 · 세트코드 · 카드번호 검색"></label>
+        <div class="custom-picker-meta"><span>현재 시리즈 도감의 카드 DB에서 검색합니다.</span><span><b id="card-picker-count">0</b>개 표시</span></div>
+        <div id="card-picker-results" class="custom-picker-results"></div>
+        <div id="card-picker-empty" class="custom-empty-card" hidden><strong>검색 결과가 없습니다.</strong><span>아래 직접 추가를 사용하면 사이트 DB에 없는 카드도 넣을 수 있습니다.</span></div>
+        <details id="manual-card-details" class="custom-manual-details">
+          <summary>사이트 DB에 없는 카드 직접 추가</summary>
+          <form id="manual-card-form" class="custom-form-grid">
+            <label><span>카드명</span><input id="manual-card-name" type="text" maxlength="80" required placeholder="예: 피카츄"></label>
+            <label><span>세트 코드</span><input id="manual-set-code" type="text" maxlength="30" placeholder="예: sv2a"></label>
+            <label><span>카드번호</span><input id="manual-card-number" type="text" maxlength="40" placeholder="예: 173/165"></label>
+            <label><span>이미지 URL</span><input id="manual-image-url" type="url" maxlength="600" required placeholder="https://..."></label>
+            <div class="custom-dialog-actions"><button class="primary-button" type="submit">직접 추가</button></div>
+          </form>
+        </details>
+      </div>
+    </dialog>
+
+    <div id="custom-error" class="app-error" hidden><strong>나만의 도감을 불러오지 못했습니다.</strong><span>페이지를 새로고침해 주세요.</span></div>
+  </body>
+</html>
