@@ -14,7 +14,6 @@ const collectionPages = {
   people: ["people.html", "firebase-people-manager.js"],
 };
 const sitePages = [
-  "index.html",
   "national.html",
   "packs.html",
   "artists.html",
@@ -153,7 +152,22 @@ function navigationLayoutContext(moduleSource, compact) {
   };
 }
 
-test("every page uses the one-line Digital Card Binder brand and tab title", async () => {
+test("retired homepage points only to the new site", async () => {
+  const html = await source("index.html");
+  const target = "https://digital-card-binder.github.io/";
+  const hrefs = [...html.matchAll(/\bhref="([^"]+)"/g)].map((match) => match[1]);
+
+  assert.deepEqual(hrefs, [target, target, target]);
+  assert.match(
+    html,
+    /http-equiv="refresh"\s+content="5; url=https:\/\/digital-card-binder[.]github[.]io\/"/,
+  );
+  assert.match(html, /디지털 카드 바인더가<br \/>새 주소로 이전되었습니다[.]/);
+  assert.equal(html.includes("<script"), false);
+  assert.equal(html.toLowerCase().includes("firebase"), false);
+});
+
+test("every active page uses the one-line Digital Card Binder brand and tab title", async () => {
   const commonCss = await source("styles.css");
   for (const page of sitePages) {
     const html = await source(page);
@@ -475,7 +489,6 @@ test("nickname creation and rename use server-backed Firestore transactions", as
 
 test("owner Sheets writes also refresh an enabled public projection", async () => {
   const ownerSync = await source("owner-sheets-sync.js");
-  const dashboard = await source("index.html");
   assert.match(ownerSync, /CollectorPublicSync[?][.]syncCollectionWithRetry/);
   assert.ok(
     [...ownerSync.matchAll(/projectionCategories[.]push\(category\)/g)].length >= 2,
@@ -485,9 +498,4 @@ test("owner Sheets writes also refresh an enabled public projection", async () =
   assert.match(ownerSync, /projectionCategories[.]includes\("pack"\)/);
   assert.match(ownerSync, /getIdToken\(user, true\)/);
   assert.match(ownerSync, /권한을 확인하지 못했습니다/);
-  assert.ok(
-    dashboard.indexOf("collector-public-sync.js") <
-      dashboard.indexOf("owner-sheets-sync.js"),
-    "dashboard must load projection sync before owner Sheets sync",
-  );
 });
