@@ -2,6 +2,7 @@
 
 (function () {
   const registry = window.CollectorCollectionRegistry;
+  const CONFIG = window.POKEMON_DEX_FIREBASE || {};
   const PROFILE_SETTINGS_HREF = "./collector-settings.html";
   const CARD_COLUMNS_STORAGE_KEY = "pokemonDexCardColumnsV1";
   const COMPACT_CARD_COLUMNS_STORAGE_KEY = "pokemonDexCompactCardColumnsV1";
@@ -33,6 +34,28 @@
     return link;
   }
 
+  function targetPage(link) {
+    try {
+      const url = new URL(link.getAttribute("href") || "", window.location.href);
+      return url.pathname.split("/").pop() || "index.html";
+    } catch {
+      return "";
+    }
+  }
+
+  function normalizeNavigationState(nav) {
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+    const activePage = currentPage === "collector.html" ? "collectors.html" : currentPage;
+    nav.querySelectorAll(".collection-link").forEach((link) => {
+      const active = targetPage(link) === activePage;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+      const icon = link.querySelector(".collection-icon");
+      if (icon) icon.classList.toggle("collection-icon--red", active);
+    });
+  }
+
   function arrangeCollectorNavigation() {
     const nav = document.querySelector(".collection-nav");
     if (!nav) return;
@@ -57,7 +80,6 @@
         "MY CUSTOM DEX",
       );
 
-    // 이전 메뉴명: 공개 컬렉터
     const directoryTitle = directory.querySelector("strong");
     if (directoryTitle) directoryTitle.textContent = "도감 갤러리";
 
@@ -67,22 +89,10 @@
 
     settings?.remove();
     dashboard.after(directory);
-    if (!customDex.parentElement) {
-      const people = nav.querySelector('[href*="people.html"]');
-      if (people) people.after(customDex);
-      else nav.append(customDex);
-    }
-
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    const directoryActive = currentPage === "collectors.html";
-    directory.classList.toggle("is-active", directoryActive);
-    if (directoryActive) directory.setAttribute("aria-current", "page");
-    else directory.removeAttribute("aria-current");
-
-    const customActive = currentPage === "custom.html";
-    customDex.classList.toggle("is-active", customActive);
-    if (customActive) customDex.setAttribute("aria-current", "page");
-    else customDex.removeAttribute("aria-current");
+    const people = nav.querySelector('[href*="people.html"]');
+    if (people) people.after(customDex);
+    else nav.append(customDex);
+    normalizeNavigationState(nav);
   }
 
   function decorateAccountProfileEntry(panel) {
@@ -114,9 +124,10 @@
       return;
     }
 
+    status.textContent = "프로필설정";
     status.href = PROFILE_SETTINGS_HREF;
     status.title = "내 프로필 관리";
-    status.setAttribute("aria-label", `${status.textContent} · 내 프로필 관리 열기`);
+    status.setAttribute("aria-label", "프로필설정 · 내 프로필 관리 열기");
     if (window.location.pathname.endsWith("/collector-settings.html")) {
       status.setAttribute("aria-current", "page");
     } else {
@@ -160,6 +171,61 @@
       childList: true,
       subtree: true,
     });
+  }
+
+  async function firstAuthUser(auth, authModule) {
+    if (typeof auth.authStateReady === "function") {
+      await auth.authStateReady();
+      return auth.currentUser || null;
+    }
+    return new Promise((resolve, reject) => {
+      let unsubscribe = () => {};
+      unsubscribe = authModule.onAuthStateChanged(
+        auth,
+        (user) => {
+          unsubscribe();
+          resolve(user || null);
+        },
+        reject,
+      );
+    });
+  }
+
+  function replaceHeaderChipWithProfileShortcut() {
+    const chip = document.querySelector(".header-chip");
+    if (!chip || chip.matches("a[href*='collector-settings.html']")) return;
+    const link = document.createElement("a");
+    link.className = chip.className;
+    link.href = PROFILE_SETTINGS_HREF;
+    link.textContent = "프로필설정";
+    link.title = "내 프로필 관리";
+    link.setAttribute("aria-label", "프로필설정 · 내 프로필 관리 열기");
+    chip.replaceWith(link);
+  }
+
+  function ensureProfileShortcutWithoutPanel() {
+    window.setTimeout(async () => {
+      if (document.querySelector("#firebase-auth-panel")) return;
+      const config = CONFIG.config || {};
+      if (!CONFIG.enabled || !config.apiKey || !config.authDomain || !config.projectId) return;
+      try {
+        const SDK_VERSION = "12.16.0";
+        const [appModule, authModule] = await Promise.all([
+          import(`https://www.gstatic.com/firebasejs/${SDK_VERSION}/firebase-app.js`),
+          import(`https://www.gstatic.com/firebasejs/${SDK_VERSION}/firebase-auth.js`),
+        ]);
+        const app = appModule.getApps().length
+          ? appModule.getApp()
+          : appModule.initializeApp(config);
+        const auth = authModule.getAuth(app);
+        const user = await firstAuthUser(auth, authModule);
+        if (user && !document.querySelector("#firebase-auth-panel")) {
+          replaceHeaderChipWithProfileShortcut();
+        }
+      } catch (error) {
+        console.warn("프로필설정 바로가기를 확인하지 못했습니다.", error);
+      }
+    }, 700);
   }
 
   function activeCardLayoutMode() {
@@ -258,7 +324,7 @@
   }
 
   function addHeroActions() {
-    if (["collector-settings", "collector-directory", "custom-dex"].includes(document.body.dataset.page)) {
+    if (["collector-settings", "collector-directory", "collector-public", "custom-dex"].includes(document.body.dataset.page)) {
       return;
     }
     const heroContent = document.querySelector(".hero .hero-content");
@@ -338,6 +404,7 @@
   window.addEventListener("pokemon-dex:public-sync-error", showPublicSyncWarning);
   arrangeCollectorNavigation();
   watchAccountProfileEntry();
+  ensureProfileShortcutWithoutPanel();
   addCardLayoutToggle();
   addHeroActions();
 })();
