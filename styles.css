@@ -152,6 +152,7 @@ img {
 .brand-copy strong {
   font-size: 0.93rem;
   letter-spacing: 0.09em;
+  white-space: nowrap;
 }
 
 .brand-copy small {

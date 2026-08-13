@@ -178,7 +178,7 @@
     panel.innerHTML = `
       <strong>이 공유 도감을 열 수 없습니다.</strong>
       <p></p>
-      <a href="./">MY POKÉMON DEX 홈으로</a>
+      <a href="./">디지털 카드 바인더 홈으로</a>
     `;
     panel.querySelector("p").textContent =
       error?.message || "공개 범위가 변경되었거나 링크가 올바르지 않습니다.";

@@ -13,6 +13,22 @@ const collectionPages = {
   ar: ["ar.html", "firebase-page-manager.js"],
   people: ["people.html", "firebase-people-manager.js"],
 };
+const sitePages = [
+  "index.html",
+  "national.html",
+  "packs.html",
+  "artists.html",
+  "series.html",
+  "pokemon-collections.html",
+  "ar.html",
+  "people.html",
+  "custom.html",
+  "collectors.html",
+  "collector.html",
+  "collector-settings.html",
+  "privacy.html",
+  "terms.html",
+];
 
 async function source(file) {
   return readFile(new URL(`../${file}`, import.meta.url), "utf8");
@@ -137,6 +153,23 @@ function navigationLayoutContext(moduleSource, compact) {
   };
 }
 
+test("every page uses the one-line Digital Card Binder brand and tab title", async () => {
+  for (const page of sitePages) {
+    const html = await source(page);
+    assert.match(html, /<title>디지털 카드 바인더<\/title>/, `${page}: browser title`);
+    assert.match(
+      html,
+      /<span class="brand-copy">\s*<strong>디지털 카드 바인더<\/strong>\s*<\/span>/,
+      `${page}: one-line brand`,
+    );
+    assert.equal(html.includes("MY POKÉMON DEX"), false, `${page}: legacy brand`);
+    assert.equal(html.includes("COLLECTION ARCHIVE"), false, `${page}: legacy subtitle`);
+  }
+
+  const collectorClient = await source("collector.js");
+  assert.match(collectorClient, /document[.]title = "디지털 카드 바인더"/);
+});
+
 test("every existing collection page loads the public adapter before its manager", async () => {
   for (const [collectionId, [page, manager]] of Object.entries(collectionPages)) {
     const html = await source(page);
@@ -198,7 +231,7 @@ test("profile management leaves the sidebar and public collectors stays below da
   }
   const settingsPage = await source("collector-settings.html");
   assert.match(settingsPage, /collector-nav[.]js\?v=20260812-1/);
-  assert.match(settingsPage, /<title>내 프로필 관리/);
+  assert.match(settingsPage, /<title>디지털 카드 바인더<\/title>/);
   assert.match(settingsPage, /<h1 id="page-title">내 프로필 관리<\/h1>/);
   for (const page of [settingsPage, await source("collectors.html")]) {
     const navStart = page.indexOf('<nav class="collection-nav">');
