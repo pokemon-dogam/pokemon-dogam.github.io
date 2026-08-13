@@ -36,7 +36,103 @@
 }
 
 .firebase-auth-panel {
+  display: flex;
+  align-items: center;
   flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 6px 7px 6px 10px;
+  box-shadow: 0 5px 16px rgba(23, 35, 63, 0.05);
+}
+
+.firebase-auth-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #a8adba;
+  box-shadow: 0 0 0 3px rgba(168, 173, 186, 0.13);
+}
+
+.firebase-auth-panel.is-account .firebase-auth-dot {
+  background: #21a179;
+  box-shadow: 0 0 0 3px rgba(33, 161, 121, 0.13);
+}
+
+.firebase-auth-panel.is-owner .firebase-auth-dot {
+  background: #2a75bb;
+  box-shadow: 0 0 0 3px rgba(42, 117, 187, 0.14);
+}
+
+.firebase-auth-panel.is-shared-readonly .firebase-auth-dot {
+  background: #7b5fd6;
+  box-shadow: 0 0 0 3px rgba(123, 95, 214, 0.14);
+}
+
+#firebase-auth-status {
+  max-width: 230px;
+  overflow: hidden;
+  color: #73798a;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#firebase-auth-status.firebase-profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #596078;
+  text-decoration: none;
+}
+
+#firebase-auth-status.firebase-profile-link::after {
+  content: "›";
+  color: #9aa0ae;
+  font-size: 0.8rem;
+}
+
+#firebase-auth-status.firebase-profile-link:hover {
+  color: var(--blue);
+}
+
+.firebase-auth-panel button {
+  min-height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: #17233f;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+
+.firebase-auth-panel button:hover {
+  background: #26365b;
+}
+
+.firebase-auth-panel button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.firebase-auth-panel button:focus-visible {
+  outline: 3px solid rgba(42, 117, 187, 0.25);
+  outline-offset: 2px;
+}
+
+.firebase-auth-panel button[hidden] {
+  display: none !important;
+}
+
+.has-universal-auth-panel .custom-auth-bar {
+  display: none !important;
 }
 
 .login-policy-links {
@@ -302,10 +398,25 @@
   margin-top: 24px;
 }
 
+@media (max-width: 1080px) {
+  #firebase-auth-status {
+    max-width: 155px;
+  }
+}
+
 @media (max-width: 760px) {
   .site-footer-note {
     max-width: none;
     text-align: left;
+  }
+
+  .firebase-auth-panel {
+    gap: 6px;
+    padding-left: 8px;
+  }
+
+  #firebase-auth-status {
+    max-width: 110px;
   }
 
   .login-policy-links {
@@ -333,14 +444,34 @@
 }
 
 @media (max-width: 560px) {
+  .site-header {
+    gap: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .brand-copy {
+    display: none;
+  }
+
+  .firebase-auth-panel {
+    position: relative;
+  }
+
+  .firebase-auth-panel .firebase-auth-dot,
+  .firebase-auth-panel #firebase-auth-status {
+    display: none;
+  }
+
   .firebase-auth-panel .login-policy-links {
     position: absolute;
     top: calc(100% + 4px);
     right: 7px;
   }
 
-  .firebase-auth-panel {
-    position: relative;
+  .firebase-auth-panel button {
+    font-size: 0.58rem;
+    padding: 6px 8px;
   }
 }
 
@@ -349,7 +480,8 @@
   .legal-back-link,
   .legal-toc,
   .site-footer-links,
-  .login-policy-links {
+  .login-policy-links,
+  .firebase-auth-panel {
     display: none !important;
   }
 
