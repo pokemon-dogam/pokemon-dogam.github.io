@@ -11,6 +11,7 @@
   let user = null;
   let profile = null;
   let setting = null;
+  let publicDexIds = null;
   let syncTimer = 0;
   let syncing = false;
 
@@ -31,30 +32,38 @@
     return Promise.resolve();
   }
 
+  function selectedDexIsPublic() {
+    const dexId = selectedDexId();
+    if (!dexId) return false;
+    // null은 세부 공개 설정을 한 번도 저장하지 않은 기존 전체 공개 상태입니다.
+    return publicDexIds === null || publicDexIds.has(dexId);
+  }
+
   function shareUrl() {
     const dexId = selectedDexId();
-    if (!dexId || !setting || setting.visibility === "private") return "";
+    if (
+      !dexId ||
+      !setting ||
+      setting.visibility !== "public" ||
+      !profile?.publicId ||
+      !selectedDexIsPublic()
+    ) {
+      return "";
+    }
     const url = new URL("./custom.html", window.location.href);
+    url.searchParams.set("collector", profile.publicId);
     url.searchParams.set("dex", dexId);
-    if (setting.visibility === "public" && profile?.publicId) {
-      url.searchParams.set("collector", profile.publicId);
-      return url.href;
-    }
-    if (setting.visibility === "unlisted" && setting.shareId) {
-      url.hash = new URLSearchParams({ share: setting.shareId }).toString();
-      return url.href;
-    }
-    return "";
+    return url.href;
   }
 
   function updateShareButton() {
     const button = document.querySelector("#custom-share-button");
     if (!button) return;
     const url = shareUrl();
-    button.textContent = url ? "공유 링크 복사" : "공유 설정";
+    button.textContent = url ? "이 도감 공유 링크 복사" : "이 도감 공개 설정";
     button.title = url
-      ? "현재 선택한 나만의 도감 링크를 복사합니다."
-      : "내 프로필 관리에서 나만의 도감 공개 범위를 설정합니다.";
+      ? "현재 선택한 나만의 도감의 PUBLIC 링크를 복사합니다."
+      : "프로필설정에서 현재 도감의 공개 범위를 설정합니다.";
   }
 
   function ensureShareButton() {
@@ -64,7 +73,7 @@
     button.id = "custom-share-button";
     button.className = "manager-button";
     button.type = "button";
-    button.textContent = "공유 설정";
+    button.textContent = "이 도감 공개 설정";
     button.addEventListener("click", async () => {
       const url = shareUrl();
       if (!url) {
@@ -90,23 +99,42 @@
   }
 
   async function loadContext() {
-    const [profileSnapshot, settingSnapshot] = await Promise.all([
+    const sourceReference = sync.sourceRef(
+      firebase.firestoreModule,
+      firebase.db,
+      user.uid,
+      "custom",
+    );
+    const [profileSnapshot, settingSnapshot, sourceSnapshot] = await Promise.all([
       firebase.firestoreModule.getDoc(
         sync.profileRef(firebase.firestoreModule, firebase.db, user.uid),
       ),
       firebase.firestoreModule.getDoc(
         sync.settingRef(firebase.firestoreModule, firebase.db, user.uid, "custom"),
       ),
+      firebase.firestoreModule.getDoc(sourceReference),
     ]);
     profile = profileSnapshot.exists() ? profileSnapshot.data() || null : null;
     setting = registry.normalizeSetting(
       "custom",
       settingSnapshot.exists() ? settingSnapshot.data() || {} : null,
     );
+    const source = sourceSnapshot.exists() ? sourceSnapshot.data() || {} : {};
+    if (Object.prototype.hasOwnProperty.call(source, "customDexVisibility")) {
+      publicDexIds = registry.customPublicDexIds
+        ? registry.customPublicDexIds(source)
+        : new Set(
+            Object.entries(source.customDexVisibility || {})
+              .filter(([, value]) => value === true || value === "public")
+              .map(([id]) => id),
+          );
+    } else {
+      publicDexIds = null;
+    }
   }
 
   async function syncNow() {
-    if (!firebase || !user || !setting || setting.visibility === "private" || syncing) return;
+    if (!firebase || !user || !setting || setting.visibility !== "public" || syncing) return;
     syncing = true;
     try {
       await sync.syncCollectionWithRetry({
@@ -115,6 +143,8 @@
         user,
         collectionId: "custom",
       });
+      await loadContext();
+      updateShareButton();
     } catch (error) {
       console.warn("나만의 도감 공개 projection 갱신 실패", error);
     } finally {
@@ -124,7 +154,7 @@
 
   function scheduleSync() {
     updateShareButton();
-    if (!setting || setting.visibility === "private") return;
+    if (!setting || setting.visibility !== "public") return;
     window.clearTimeout(syncTimer);
     syncTimer = window.setTimeout(() => void syncNow(), 1200);
   }

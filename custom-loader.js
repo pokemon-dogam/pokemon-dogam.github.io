@@ -10,7 +10,7 @@
   function load(src, onload) {
     const script = document.createElement("script");
     script.src = src;
-    script.defer = true;
+    script.async = false;
     if (onload) script.addEventListener("load", onload, { once: true });
     document.head.append(script);
   }
@@ -20,7 +20,9 @@
     return;
   }
 
-  load("./custom.js?v=20260813-2", () => {
-    load("./custom-sync.js?v=20260813-1");
+  load("./custom-granular-sharing.js?v=20260813-1", () => {
+    load("./custom.js?v=20260813-2", () => {
+      load("./custom-sync.js?v=20260813-2");
+    });
   });
 })();

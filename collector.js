@@ -22,6 +22,11 @@
   const LOAD_ERROR_MESSAGE =
     "공개 컬렉터 프로필을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.";
 
+  function clean(value, limit = 0) {
+    const text = String(value || "").trim();
+    return limit ? text.slice(0, limit) : text;
+  }
+
   function configured() {
     const config = CONFIG.config || {};
     return Boolean(
@@ -68,6 +73,24 @@
     elements.profile.hidden = false;
   }
 
+  function normalizeCustomDexes(source) {
+    if (!Array.isArray(source)) return [];
+    return source.slice(0, 30).map((dex) => {
+      if (!dex || typeof dex !== "object" || Array.isArray(dex)) return null;
+      const id = clean(dex.id, 120);
+      const title = clean(dex.title, 60);
+      if (!id || !title) return null;
+      const cards = Array.isArray(dex.cards) ? dex.cards.slice(0, 1500) : [];
+      return {
+        id,
+        title,
+        description: clean(dex.description, 180) || "직접 만든 테마 카드 도감",
+        totalCount: cards.length,
+        ownedCount: cards.filter((card) => Boolean(card?.owned)).length,
+      };
+    }).filter(Boolean);
+  }
+
   function normalizedProjection(snapshot) {
     const data = snapshot.data() || {};
     if (
@@ -88,28 +111,28 @@
       ownedCount: Math.min(totalCount, ownedKeys.length),
       totalCount,
       promoOwnedCount: promoOwnedKeys.length,
+      customDexes: snapshot.id === "custom"
+        ? normalizeCustomDexes(data.customDexes)
+        : [],
     };
   }
 
-  function createCollectionCard(projection) {
-    const meta = registry.COLLECTIONS[projection.collectionId];
-    const rate = projection.totalCount
-      ? Number(((projection.ownedCount / projection.totalCount) * 100).toFixed(1))
+  function createCardShell({ number, title, description, href, ownedCount, totalCount, unit = "장", promoOwnedCount = 0 }) {
+    const rate = totalCount
+      ? Number(((ownedCount / totalCount) * 100).toFixed(1))
       : 0;
     const link = document.createElement("a");
-    const url = new URL(meta.href, window.location.href);
-    url.searchParams.set("collector", publicId);
-    link.href = url.href;
+    link.href = href;
     link.className = "collector-public-card";
     link.style.setProperty("--rate", rate);
     link.setAttribute(
       "aria-label",
-      `${meta.title} ${projection.ownedCount}/${projection.totalCount}${meta.unit}, ${rate.toFixed(1)}%`,
+      `${title} ${ownedCount}/${totalCount}${unit}, ${rate.toFixed(1)}%`,
     );
     link.innerHTML = `
       <div>
         <div class="collector-public-card-top">
-          <span class="collector-public-card-number" aria-hidden="true">${meta.number}</span>
+          <span class="collector-public-card-number" aria-hidden="true">${number}</span>
           <span class="collector-public-card-rate">${rate.toFixed(1)}%</span>
         </div>
         <h3></h3>
@@ -120,19 +143,52 @@
         <div class="collector-public-card-progress" aria-hidden="true"><span></span></div>
       </div>
     `;
-    link.querySelector("h3").textContent = meta.title;
-    link.querySelector("p").textContent = meta.description;
+    link.querySelector("h3").textContent = title;
+    link.querySelector("p").textContent = description;
     link.querySelector(".collector-public-card-count strong").textContent =
-      projection.ownedCount.toLocaleString("ko-KR");
+      ownedCount.toLocaleString("ko-KR");
     link.querySelector(".collector-public-card-count span").textContent =
-      `/ ${projection.totalCount.toLocaleString("ko-KR")}${meta.unit}`;
-    if (projection.collectionId === "pack" && projection.promoOwnedCount > 0) {
+      `/ ${totalCount.toLocaleString("ko-KR")}${unit}`;
+    if (promoOwnedCount > 0) {
       const promo = document.createElement("small");
       promo.className = "collector-public-card-promo";
-      promo.textContent = `프로모 ${projection.promoOwnedCount.toLocaleString("ko-KR")}종`;
+      promo.textContent = `프로모 ${promoOwnedCount.toLocaleString("ko-KR")}종`;
       link.querySelector(".collector-public-card-count").after(promo);
     }
     return link;
+  }
+
+  function createCollectionCard(projection) {
+    const meta = registry.COLLECTIONS[projection.collectionId];
+    const url = new URL(meta.href, window.location.href);
+    url.searchParams.set("collector", publicId);
+    return createCardShell({
+      number: meta.number,
+      title: meta.title,
+      description: meta.description,
+      href: url.href,
+      ownedCount: projection.ownedCount,
+      totalCount: projection.totalCount,
+      unit: meta.unit,
+      promoOwnedCount: projection.collectionId === "pack"
+        ? projection.promoOwnedCount
+        : 0,
+    });
+  }
+
+  function createCustomDexCard(dex) {
+    const url = new URL("./custom.html", window.location.href);
+    url.searchParams.set("collector", publicId);
+    url.searchParams.set("dex", dex.id);
+    return createCardShell({
+      number: "08",
+      title: dex.title,
+      description: dex.description,
+      href: url.href,
+      ownedCount: dex.ownedCount,
+      totalCount: dex.totalCount,
+      unit: "장",
+    });
   }
 
   function renderCollections(projections) {
@@ -142,9 +198,15 @@
     projections.sort(
       (a, b) => order.get(a.collectionId) - order.get(b.collectionId),
     );
-    elements.grid.replaceChildren(...projections.map(createCollectionCard));
-    elements.empty.hidden = projections.length > 0;
-    elements.grid.hidden = projections.length === 0;
+    const cards = projections.flatMap((projection) => {
+      if (projection.collectionId === "custom") {
+        return projection.customDexes.map(createCustomDexCard);
+      }
+      return [createCollectionCard(projection)];
+    });
+    elements.grid.replaceChildren(...cards);
+    elements.empty.hidden = cards.length > 0;
+    elements.grid.hidden = cards.length === 0;
     elements.collections.hidden = false;
   }
 
